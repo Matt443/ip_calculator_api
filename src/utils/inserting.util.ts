@@ -1,4 +1,4 @@
-import { mongooseIdValidation } from '@/middlewares/Validation.middlewares.js'
+import { mongooseIdValidation } from '@/utils/validation.util.js'
 import { IpAddressType } from '@/types/ip.types'
 import mongoose from 'mongoose'
 /**

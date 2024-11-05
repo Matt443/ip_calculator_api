@@ -3,7 +3,7 @@ import {
     mongooseIdValidation,
     stringValidation,
     validationWithRegex
-} from '@/middlewares/Validation.middlewares.js';
+} from '@/utils/validation.util.js';
 
 const emails = {
     complicated: 'example.example21.example@example.com',
