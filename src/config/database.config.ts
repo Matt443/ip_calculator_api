@@ -5,7 +5,6 @@ import 'dotenv/config';
  * @requires DB_URL in .env file;
  */
 export const connectDB = async (): Promise<void> => {
-    console.log(process.env.DB_URL)
     if (!process.env.DB_URL || process.env.DB_URL === undefined || process.env.DB_URL === '') process.exit(1)
     try {
         mongoose.connect(process.env.DB_URL);

@@ -22,11 +22,10 @@ describe('connectDB Function', () => {
       const mongooseConnectSpy = jest.spyOn(mongoose, 'connect').mockResolvedValueOnce(mongoose);
   
       await connectDB();
-      console.log(process.env.DB_URL)
       expect(mongooseConnectSpy).toHaveBeenCalledWith(process.env.DB_URL);
       expect(exitSpy).not.toHaveBeenCalled(); // Ensure process.exit was not called
     });
-
+    
   it('should call process.exit(1) if DB_URL is missing', async () => {
     delete process.env.DB_URL; // Ensure DB_URL is not set
 
@@ -44,10 +43,3 @@ describe('connectDB Function', () => {
   });
 
 });
-
-
-// describe('Testig database connection', () => {
-//     it('Should connect to the database', async () => {
-        
-//     })
-// })

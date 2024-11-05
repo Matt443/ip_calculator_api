@@ -25,6 +25,12 @@ const IpMaskSchema = new Schema<IpMaskType>({
         required: true,
         min: 0,
         max: 255
+    },
+    shorthand: {
+        type: Number, 
+        required: true,
+        min: 0,
+        max: 32
     }
 });
 

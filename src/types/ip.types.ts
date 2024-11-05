@@ -10,6 +10,7 @@ export type IpMaskType = {
     secondOctet: number;
     thirdOctet: number;
     fourthOctet: number;
+    shorthand: number;
 };
 
 export type IpClassType = {

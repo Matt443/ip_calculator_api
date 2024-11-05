@@ -19,4 +19,4 @@ const IpMaskSchema = new Schema<IpClassType>({
     }
 });
 
-export const IpMask = mongoose.model<IpClassType>('IpMask', IpMaskSchema);
+export const IpClass = mongoose.model<IpClassType>('IpClass', IpMaskSchema);
