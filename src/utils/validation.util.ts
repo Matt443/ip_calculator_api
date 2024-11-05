@@ -1,4 +1,4 @@
-import { IpAddressType } from "@/types/ip.types";
+import { IpAddressType } from '@/types/ip.types';
 
 /**
  *
@@ -44,23 +44,23 @@ export function mongooseIdValidation(id: string): boolean {
 }
 
 /**
- * 
- * @param {IpAddressType} ipAdress 
+ *
+ * @param {IpAddressType} ipAdress
  * @returns {boolean} true if adress is valid
  */
 
-export const IpAddressValidation = (ipAdress:IpAddressType):boolean => {
-    return ipAdress.every((octet:number) => {
-        return octetValidation(octet)
-    }) 
-}
+export const IpAddressValidation = (ipAdress: IpAddressType): boolean => {
+    return ipAdress.every((octet: number) => {
+        return octetValidation(octet);
+    });
+};
 
 /**
- * 
- * @param {number} octet  
+ *
+ * @param {number} octet
  * @returns {boolean} - true if param octet is number and is between 0 and 255
  */
-export const octetValidation = (octet:number) => {
+export const octetValidation = (octet: number) => {
     if (!isNaN(octet) && typeof octet !== 'number' && octet > -1 && octet < 256) return true;
     return false;
-}
+};

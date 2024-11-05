@@ -1,7 +1,7 @@
-import { IpAddressType } from "@/types/ip.types";
+import { IpAddressType } from '@/types/ip.types';
 
-export const getNetworkAdress = (ipAdress:IpAddressType) => {
+export const getNetworkAdress = (ipAdress: IpAddressType) => {
     const ipAdressBinary = Object.keys(ipAdress).map((propertyName) => {
-        return 
-    })
-}
+        return;
+    });
+};
