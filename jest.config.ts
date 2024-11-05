@@ -5,12 +5,12 @@ const config: Config = {
         ...createDefaultPreset().transform
     },
     moduleNameMapper: {
-        '^@/(.*)\\.js$': '<rootDir>/src/$1.ts',
+        '^@/(.*)\\.js$': '<rootDir>/src/$1.ts'
     },
     testEnvironment: 'node',
     preset: 'ts-jest/presets/default-esm',
     extensionsToTreatAsEsm: ['.ts'],
-    moduleFileExtensions: ['ts', 'js'],
+    moduleFileExtensions: ['ts', 'js']
 };
 
 export default config;

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { type IpMaskType } from '../types/ip.types.js';
+import { type IpMaskType } from '../types/models.types.js';
 
 const IpMaskSchema = new Schema<IpMaskType>({
     firstOctet: {
@@ -27,7 +27,7 @@ const IpMaskSchema = new Schema<IpMaskType>({
         max: 255
     },
     shorthand: {
-        type: Number, 
+        type: Number,
         required: true,
         min: 0,
         max: 32

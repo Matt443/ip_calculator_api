@@ -30,11 +30,10 @@ describe('Checking ip adress model', () => {
             await IpAddress.create({
                 firstOctet: 255,
                 secondOctet: 255,
-                thirdOctet: 255,
+                thirdOctet: 255
             });
-
         } catch (e) {
-            expect(e).toBeInstanceOf(Error)
+            expect(e).toBeInstanceOf(Error);
         }
     });
 });

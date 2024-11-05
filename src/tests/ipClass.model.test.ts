@@ -2,12 +2,11 @@ import { connectDB } from '@/config/database.config.js';
 import { IpClass } from '@/models/ipClass.model.js';
 import mongoose from 'mongoose';
 
-
 const sampleIpClass = {
     ipMax: new mongoose.Types.ObjectId('672a17abaf5c260208c3dc6f'),
-    ipMin :new mongoose.Types.ObjectId('672a17dae666fbfc46c7d386'),
-    className: "C"
-}
+    ipMin: new mongoose.Types.ObjectId('672a17dae666fbfc46c7d386'),
+    className: 'C'
+};
 
 describe('Checking ip adress model', () => {
     it('should create a ip class in database', async () => {
@@ -15,11 +14,11 @@ describe('Checking ip adress model', () => {
         try {
             const newIpClass = await IpClass.create(sampleIpClass);
 
-            const { ipMax, ipMin, className,_id } = newIpClass;
+            const { ipMax, ipMin, className, _id } = newIpClass;
 
             expect(ipMax).toEqual(new mongoose.Types.ObjectId(sampleIpClass.ipMax));
             expect(ipMin).toEqual(new mongoose.Types.ObjectId(sampleIpClass.ipMin));
-            expect(className).toBe('C')
+            expect(className).toBe('C');
 
             await IpClass.deleteOne({ _id });
         } catch (e) {
@@ -32,7 +31,7 @@ describe('Checking ip adress model', () => {
         try {
             await IpClass.create({
                 ipMax: new mongoose.Types.ObjectId('672a17abaf5c260208c3dc6f'),
-                className: "C"
+                className: 'C'
             });
         } catch (e) {
             await expect(e).toBeInstanceOf(Error);

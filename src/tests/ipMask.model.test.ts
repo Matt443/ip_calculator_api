@@ -7,7 +7,7 @@ const sampleIpMask = {
     thirdOctet: 255,
     fourthOctet: 0,
     shorthand: 24
-}
+};
 
 describe('Testing ipmask model', () => {
     it('Should create api mask in database', async () => {
@@ -25,22 +25,19 @@ describe('Testing ipmask model', () => {
             expect(shorthand).toBe(24);
 
             await IpMask.deleteOne({ _id });
+        } catch (e) {
+            console.log(e);
         }
-        catch(e) {
-            console.log(e)
-        }
-    })
+    });
 
     it('Should not create api mask in database and throw an error', async () => {
         await connectDB();
 
         try {
-            sampleIpMask.shorthand = 33
+            sampleIpMask.shorthand = 33;
             await IpMask.create(sampleIpMask);
-
+        } catch (e) {
+            expect(e).toBeInstanceOf(Error);
         }
-        catch(e) {
-            expect(e).toBeInstanceOf(Error)
-        }
-    })
-})
+    });
+});

@@ -5,11 +5,12 @@ import 'dotenv/config';
  * @requires DB_URL in .env file;
  */
 export const connectDB = async (): Promise<void> => {
-    if (!process.env.DB_URL || process.env.DB_URL === undefined || process.env.DB_URL === '') process.exit(1)
+    if (!process.env.DB_URL || process.env.DB_URL === undefined || process.env.DB_URL === '')
+        process.exit(1);
     try {
         mongoose.connect(process.env.DB_URL);
     } catch (e) {
         console.log('Cannot connect to the database', e);
-        process.exitCode = 1
+        process.exitCode = 1;
     }
 };

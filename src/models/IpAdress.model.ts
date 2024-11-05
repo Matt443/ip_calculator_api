@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IpAddressType } from '../types/ip.types.js';
+import { IpAddressType } from '../types/models.types.js';
 
 const IpAddressSchema = new Schema<IpAddressType>({
     firstOctet: {

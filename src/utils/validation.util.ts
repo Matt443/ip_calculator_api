@@ -1,3 +1,5 @@
+import { IpAddressType } from "@/types/ip.types";
+
 /**
  *
  * @param emailToValidate - data to be validated
@@ -39,4 +41,26 @@ export const validationWithRegex = (stringToValidate: string, regex: RegExp): bo
 export function mongooseIdValidation(id: string): boolean {
     if (typeof id !== 'string' || id.length !== 24) return false;
     return true;
+}
+
+/**
+ * 
+ * @param {IpAddressType} ipAdress 
+ * @returns {boolean} true if adress is valid
+ */
+
+export const IpAddressValidation = (ipAdress:IpAddressType):boolean => {
+    return ipAdress.every((octet:number) => {
+        return octetValidation(octet)
+    }) 
+}
+
+/**
+ * 
+ * @param {number} octet  
+ * @returns {boolean} - true if param octet is number and is between 0 and 255
+ */
+export const octetValidation = (octet:number) => {
+    if (!isNaN(octet) && typeof octet !== 'number' && octet > -1 && octet < 256) return true;
+    return false;
 }

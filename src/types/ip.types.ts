@@ -1,20 +1,4 @@
-export type IpAddressType = {
-    firstOctet: number;
-    secondOctet: number;
-    thirdOctet: number;
-    fourthOctet: number;
-};
+export type IpAddressType = Array<number>
 
-export type IpMaskType = {
-    firstOctet: number;
-    secondOctet: number;
-    thirdOctet: number;
-    fourthOctet: number;
-    shorthand: number;
-};
+export type IpAddresBinaryType = Array<string>;
 
-export type IpClassType = {
-    ipMin: IpAddressType;
-    ipMax: IpAddressType;
-    className: string;
-};
