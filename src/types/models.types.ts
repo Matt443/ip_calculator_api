@@ -5,13 +5,6 @@ export type IpAddressType = {
     fourthOctet: number;
 };
 
-export type IpAddresBinaryType = {
-    firstOctet: string;
-    secondOctet: string;
-    thirdOctet: string;
-    fourthOctet: string;
-};
-
 export type IpMaskType = {
     firstOctet: number;
     secondOctet: number;

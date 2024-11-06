@@ -33,7 +33,7 @@
         "typescript": "^5.6.3"
     },
     "scripts": {
-        "test": "jest --watchAll",
+        "test": "jest --watchAll --coverage",
         "start": "node src/index.js",
         "watch": "nodemon --exec node --loader ts-node/esm src/index.ts",
         "nodemon": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",

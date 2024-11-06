@@ -1,14 +1,16 @@
-import { ERROR_MESSAGES } from '@/constants/errors.constants.js';
+import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import {
     calculateShorthand,
     concatBinary,
     ipToBinary,
     toBinary
 } from '@/utils/calculating.util.js';
-
-const sampleIpAdress = [255, 255, 255, 0];
-const sampleIpAdress_wrong = [-1, 255, 255, 0];
-const sampleIpBinaryAdress = ['11111111', '11111111', '11111111', '00000000'];
+import {
+    sampleIpAdress,
+    sampleIpAdress_wrong,
+    sampleIpBinaryAdress,
+    sampleIpMask
+} from '@/constant/samples.constant.js';
 
 describe('Testing toBinary function', () => {
     it('Should convert to binary', () => {
@@ -27,10 +29,10 @@ describe('Testing toBinary function', () => {
 describe('Testing ipToBinary function', () => {
     it('Should convert whole ip adress to binary', () => {
         expect(ipToBinary(sampleIpAdress)).toEqual([
-            '11111111',
-            '11111111',
-            '11111111',
-            '00000000'
+            '11000000',
+            '10101000',
+            '00000000',
+            '00000001'
         ]);
     });
     it('Should return false because of minus value', () => {
@@ -40,7 +42,7 @@ describe('Testing ipToBinary function', () => {
 
 describe('Testing calculateShorthand function', () => {
     it('Should convert to a short hand', () => {
-        expect(calculateShorthand(sampleIpAdress)).toBe(24);
+        expect(calculateShorthand(sampleIpMask)).toBe(16);
     });
     it('Should return false because of minus value', () => {
         expect(() => calculateShorthand(sampleIpAdress_wrong)).toThrow(ERROR_MESSAGES.utils.binary);

@@ -1,31 +1,19 @@
 import {
     emailValidation,
+    ipAddressValidation,
     mongooseIdValidation,
+    octetValidation,
     stringValidation,
     validationWithRegex
 } from '@/utils/validation.util.js';
-
-const emails = {
-    complicated: 'example.example21.example@example.com',
-    simple: 'example@example.com',
-    super_complicated: 'example.example21.example@example.123.example.com',
-    wrong: 'example@@example.com'
-};
-
-const strings = {
-    complicated: 'We gonna to give you $$$ @!!!...-  1000% of money?',
-    simple: 'test',
-    wrong: '<script>alert("Hello world")</script>'
-};
-
-const validatorTester = (data: string, callback: Function, result: boolean): void => {
-    expect(callback(data)).toBe(result);
-};
-
-const texts = {
-    pass: 'Should pass validation',
-    fail: 'Should not pass validation'
-};
+import {
+    emails,
+    strings,
+    validatorTester,
+    texts,
+    sampleIpAdress,
+    sampleIpAdress_wrong
+} from '@/constant/samples.constant.js';
 
 describe('Testing email validation', () => {
     it(texts.pass + '(simple)', () => {
@@ -78,5 +66,26 @@ describe('Mongoose id validation', () => {
     });
     it(texts.fail, () => {
         expect(mongooseIdValidation('64c183349sd7baba26fc6755c')).toBe(false);
+    });
+});
+
+describe('Testing ipAddressValidation function', () => {
+    it('Should validate api adress', () => {
+        expect(ipAddressValidation(sampleIpAdress)).toBe(true);
+    });
+    it('Should validate api adress', () => {
+        expect(ipAddressValidation(sampleIpAdress_wrong)).toBe(false);
+    });
+});
+
+describe('Testing ipAddressValidation function', () => {
+    it('Should return true after validation', () => {
+        expect(octetValidation(sampleIpAdress[1])).toBe(true);
+    });
+    it('Should return false after validation', () => {
+        expect(octetValidation(sampleIpAdress_wrong[0])).toBe(false);
+    });
+    it('Should return false after validation', () => {
+        expect(octetValidation(sampleIpAdress_wrong[2])).toBe(false);
     });
 });

@@ -49,7 +49,7 @@ export function mongooseIdValidation(id: string): boolean {
  * @returns {boolean} true if adress is valid
  */
 
-export const IpAddressValidation = (ipAdress: IpAddressType): boolean => {
+export const ipAddressValidation = (ipAdress: IpAddressType): boolean => {
     return ipAdress.every((octet: number) => {
         return octetValidation(octet);
     });
@@ -61,6 +61,6 @@ export const IpAddressValidation = (ipAdress: IpAddressType): boolean => {
  * @returns {boolean} - true if param octet is number and is between 0 and 255
  */
 export const octetValidation = (octet: number) => {
-    if (!isNaN(octet) && typeof octet !== 'number' && octet > -1 && octet < 256) return true;
+    if (!isNaN(octet) && typeof octet === 'number' && octet > -1 && octet < 256) return true;
     return false;
 };

@@ -1,6 +1,6 @@
 import { IpAddressType } from '@/types/ip.types';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
-import { ERROR_MESSAGES } from '@/constants/errors.constants.js';
+import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 /**
  *
  * @param {number} decimal - number to be convert
@@ -40,4 +40,44 @@ export const calculateShorthand = (ipAddress: IpAddressType): number => {
  */
 export const concatBinary = (ipAdress: IpAddresBinaryType): string => {
     return ipAdress.join('');
+};
+
+/**
+ *
+ * @param ipOctetBinary - binary number from ip adress
+ * @param maskOctet - mask octet as a decimal number
+ * @param fillWith - char to fill right site
+ * @returns {number} - binary number to calculate octet
+ */
+export const calculatePartial = (ipOctetBinary: string, maskOctet: number, fillWith: string) => {
+    const onesInMask: number = calculateShorthand([maskOctet]);
+    const leftSide: string = ipOctetBinary.slice(0, onesInMask);
+    console.log(leftSide.padEnd(8, fillWith));
+    return parseInt(leftSide.padEnd(8, fillWith), 2);
+};
+
+/**
+ *
+ * @param {IpAddressType} ipAdress
+ * @param {IpAddressType} ipMask
+ * @param {string} filler "0" or "1"
+ * @param {number} ifZero what should return as octet if single octet is 0
+ * @returns {IpAddressType} - calculates address (network - filler = "0" or broadcast - filler = "1")
+ */
+
+export const calculateAdress = (
+    ipAdress: IpAddressType,
+    ipMask: IpAddressType,
+    filler: string,
+    ifZero: number
+): IpAddressType => {
+    const ipAdressBinary: IpAddresBinaryType = ipToBinary(ipAdress);
+
+    const networkIp = ipAdress.map((octet: number, index: number) => {
+        if (ipMask[index] === 0) return ifZero;
+        if (ipMask[index] === 255) return octet;
+
+        return calculatePartial(ipAdressBinary[index], ipMask[index], filler);
+    });
+    return networkIp;
 };
