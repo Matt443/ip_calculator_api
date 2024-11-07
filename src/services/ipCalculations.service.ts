@@ -1,4 +1,4 @@
-import { IpAddressType, subnetsSetting } from '@/types/ip.types';
+import { IpAddressType } from '@/types/ip.types';
 import {
     calculateAdress,
     calculateShorthand,

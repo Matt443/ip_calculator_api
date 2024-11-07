@@ -2,11 +2,9 @@ export type IpAddressType = Array<number>;
 
 export type IpAddresBinaryType = Array<string>;
 
-// export type subnetsSetting = {} & ({ subnetsHostQuantity:number} | {subnetsQuantity:number})
-
-interface MenuItemProps {
+interface subnetSetting {
     subnetsQuantity: number;
     subnetsHostQuantity: number;
 }
 
-export type subnetsSetting = Pick<MenuItemProps, 'subnetsHostQuantity' | 'subnetsQuantity'>;
+export type subnetSettingType = Pick<subnetSetting, 'subnetsHostQuantity' | 'subnetsQuantity'>;

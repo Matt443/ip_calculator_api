@@ -135,8 +135,8 @@ export function calculateSubnetsQuantity(numberOfHosts: number, ipMask: IpAddres
 }
 
 export function moveInAddress(forward: boolean, ipAddress: IpAddressType): IpAddressType {
-    let modyficator = -1;
-    const newIp = [...ipAddress];
+    let modyficator: number = -1;
+    const newIp: IpAddressType = [...ipAddress];
 
     if (forward) modyficator = 1;
 
@@ -153,7 +153,7 @@ export function moveInAddress(forward: boolean, ipAddress: IpAddressType): IpAdd
  */
 export function ipBalanser(ipAddress: IpAddressType): IpAddressType {
     if (ipAddressValidation(ipAddress)) return ipAddress;
-    const modificationSet = {
+    const modificationSet: { modyficator: number; newVal: number } = {
         modyficator: -1,
         newVal: 255
     };
@@ -164,8 +164,8 @@ export function ipBalanser(ipAddress: IpAddressType): IpAddressType {
         modificationSet.newVal = 0;
     }
 
-    let indexToChange = -1;
-    const ipAddressCopy = [...ipAddress];
+    let indexToChange: number = -1;
+    const ipAddressCopy: IpAddressType = [...ipAddress];
 
     //Finding indexes to change
     ipAddress
@@ -214,6 +214,6 @@ export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddr
  */
 
 export function converIpToDecimal(ipAddres: IpAddressType): number {
-    const initialValue = 0;
+    const initialValue: number = 0;
     return ipAddres.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue);
 }
