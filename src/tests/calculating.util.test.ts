@@ -3,10 +3,13 @@ import {
     calculateShorthand,
     concatBinary,
     ipToBinary,
-    toBinary
+    toBinary,
+    whereZerosStart
 } from '@/utils/calculating.util.js';
 import {
+    sampleHostList,
     sampleIpAdress,
+    sampleIpAdress_complicated,
     sampleIpAdress_wrong,
     sampleIpBinaryAdress,
     sampleIpMask
@@ -49,8 +52,23 @@ describe('Testing calculateShorthand function', () => {
     });
 });
 
-describe('Testing concatBinary', () => {
+describe('Testing concatBinary function', () => {
     it('Should contate ip adress', () => {
         expect(concatBinary(sampleIpBinaryAdress)).toBe('11111111111111111111111100000000');
+    });
+});
+
+describe('Testing whereZerosStart function', () => {
+    it('Should return an index where zeros in ip address start', () => {
+        expect(whereZerosStart(sampleIpMask)).toBe(2);
+    });
+    it('Should return an index where zeros in ip address start', () => {
+        expect(whereZerosStart([255, 255, 255, 128])).toBe(3);
+    });
+    it('Should return an index where zeros in ip address start', () => {
+        expect(whereZerosStart([255, 255, 255, 255])).toBe(3);
+    });
+    it('Should return an index where zeros in ip address start', () => {
+        expect(whereZerosStart([0, 0, 0, 0])).toBe(0);
     });
 });

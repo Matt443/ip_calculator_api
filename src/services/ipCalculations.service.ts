@@ -1,5 +1,5 @@
 import { IpAddressType } from '@/types/ip.types';
-import { calculateAdress } from '@/utils/calculating.util.js';
+import { calculateAdress, calculateShorthand } from '@/utils/calculating.util.js';
 
 /**
  *
@@ -25,4 +25,18 @@ export const getBroadcastAddress = (
     ipMask: IpAddressType
 ): IpAddressType => {
     return calculateAdress(ipAdress, ipMask, '1', 255);
+};
+
+/**
+ *
+ * @param {IpAddressType} ipMask
+ * @returns number of hosts
+ */
+export const getNumberOfHosts = (ipMask: IpAddressType): number => {
+    const quantityOfZeros: number = 32 - calculateShorthand(ipMask);
+
+    if (quantityOfZeros === 0) return 0;
+    if (quantityOfZeros === 1) return 1;
+
+    return Math.pow(2, quantityOfZeros) - 2;
 };

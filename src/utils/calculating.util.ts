@@ -52,7 +52,7 @@ export const concatBinary = (ipAdress: IpAddresBinaryType): string => {
 export const calculatePartial = (ipOctetBinary: string, maskOctet: number, fillWith: string) => {
     const onesInMask: number = calculateShorthand([maskOctet]);
     const leftSide: string = ipOctetBinary.slice(0, onesInMask);
-    console.log(leftSide.padEnd(8, fillWith));
+
     return parseInt(leftSide.padEnd(8, fillWith), 2);
 };
 
@@ -80,4 +80,22 @@ export const calculateAdress = (
         return calculatePartial(ipAdressBinary[index], ipMask[index], filler);
     });
     return networkIp;
+};
+
+/**
+ *
+ * @param ipAdress
+ * @returns a index of octet where 0 start to occur in binary ipadress representation
+ */
+export const whereZerosStart = (ipAdress: IpAddressType): number => {
+    //determine where to start incrementing
+    let octetToStart: number = 3;
+
+    ipAdress.every((octet: number, index: number) => {
+        if (octet === 255) return true;
+
+        octetToStart = index;
+        return false;
+    });
+    return octetToStart;
 };

@@ -1,4 +1,8 @@
-import { getBroadcastAddress, getNetworkAddress } from '@/services/ipCalculations.service.js';
+import {
+    getBroadcastAddress,
+    getNetworkAddress,
+    getNumberOfHosts
+} from '@/services/ipCalculations.service.js';
 import {
     dataSets,
     dataSetType,
@@ -39,5 +43,23 @@ describe('Testing calculatePartial function', () => {
                 dataSet.expected
             );
         });
+    });
+});
+
+describe('Testing getNumberOfHosts function', () => {
+    it('Should return number of host', () => {
+        expect(getNumberOfHosts(sampleIpMask)).toBe(65534);
+    });
+
+    it('Should return number of host', () => {
+        expect(getNumberOfHosts(sampleIpMask_complicated)).toBe(32766);
+    });
+
+    it('Should return number of host', () => {
+        expect(getNumberOfHosts([255, 255, 255, 255])).toBe(0);
+    });
+
+    it('Should return number of host', () => {
+        expect(getNumberOfHosts([255, 255, 255, 254])).toBe(1);
     });
 });
