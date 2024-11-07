@@ -90,21 +90,12 @@ export const dataSets: Array<dataSetType> = [
     }
 ];
 
-export const sampleHostList: { simple: IpAddressType[]; complicated: IpAddressType[] } = {
-    simple: [
-        [192, 168, 0, 1],
-        [192, 168, 0, 2],
-        [192, 168, 0, 3],
-        [192, 168, 0, 4],
-        [192, 168, 0, 5],
-        [192, 168, 0, 6]
-    ],
-    complicated: [
-        [192, 168, 253, 0],
-        [192, 168, 254, 0],
-        [192, 168, 255, 0],
-        [192, 168, 255, 0],
-        [192, 168, 255, 0],
-        [192, 168, 255, 0]
-    ]
+export const sampleIpRange: { min: IpAddressType; max: IpAddressType } = {
+    min: [192, 168, 0, 1],
+    max: [192, 168, 0, 255]
+};
+
+export const sampleIpRange_complicated: { min: IpAddressType; max: IpAddressType } = {
+    min: [192, 168, 255, 1],
+    max: [192, 168, 255, 126]
 };

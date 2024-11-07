@@ -3,11 +3,11 @@ import {
     calculateShorthand,
     concatBinary,
     ipToBinary,
+    moveInAddress,
     toBinary,
     whereZerosStart
 } from '@/utils/calculating.util.js';
 import {
-    sampleHostList,
     sampleIpAdress,
     sampleIpAdress_complicated,
     sampleIpAdress_wrong,

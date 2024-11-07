@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
  * @param idsArray - array of strings with mongodb ids
  * @returns {IpAddressType} - array of ids
  */
-export const createObjectIDs = (idsArray: Array<string>): Array<mongoose.Types.ObjectId> => {
+export function createObjectIDs(idsArray: Array<string>): Array<mongoose.Types.ObjectId> {
     const resultTable: Array<mongoose.Types.ObjectId> = [];
 
     idsArray.every((id: string) => {
@@ -17,4 +17,4 @@ export const createObjectIDs = (idsArray: Array<string>): Array<mongoose.Types.O
     });
 
     return resultTable;
-};
+}

@@ -1,7 +1,8 @@
 import {
     getBroadcastAddress,
     getNetworkAddress,
-    getNumberOfHosts
+    getNumberOfHosts,
+    isIpInRange
 } from '@/services/ipCalculations.service.js';
 import {
     dataSets,
@@ -10,6 +11,8 @@ import {
     sampleIpAdress_complicated,
     sampleIpMask,
     sampleIpMask_complicated,
+    sampleIpRange,
+    sampleIpRange_complicated,
     texts
 } from '@/constant/samples.constant.js';
 import { calculatePartial } from '@/utils/calculating.util.js';
@@ -61,5 +64,33 @@ describe('Testing getNumberOfHosts function', () => {
 
     it('Should return number of host', () => {
         expect(getNumberOfHosts([255, 255, 255, 254])).toBe(1);
+    });
+});
+
+describe('Testing isIpInRange function', () => {
+    it('Should check if ip is in range and return true', () => {
+        expect(
+            isIpInRange(sampleIpAdress, sampleIpMask, sampleIpRange.min, sampleIpRange.max)
+        ).toBe(true);
+    });
+    it('Should check if ip is in range and return true', () => {
+        expect(
+            isIpInRange(
+                sampleIpAdress_complicated,
+                sampleIpMask_complicated,
+                sampleIpRange_complicated.min,
+                sampleIpRange_complicated.max
+            )
+        ).toBe(true);
+    });
+    it('Should check if ip is in range and return false', () => {
+        expect(
+            isIpInRange(
+                [192, 168, 255, 127],
+                sampleIpMask_complicated,
+                sampleIpRange_complicated.min,
+                sampleIpRange_complicated.max
+            )
+        ).toBe(false);
     });
 });

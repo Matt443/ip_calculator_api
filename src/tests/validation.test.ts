@@ -1,6 +1,7 @@
 import {
     emailValidation,
     ipAddressValidation,
+    isInRange,
     mongooseIdValidation,
     octetValidation,
     stringValidation,
@@ -77,7 +78,6 @@ describe('Testing ipAddressValidation function', () => {
         expect(ipAddressValidation(sampleIpAdress_wrong)).toBe(false);
     });
 });
-
 describe('Testing ipAddressValidation function', () => {
     it('Should return true after validation', () => {
         expect(octetValidation(sampleIpAdress[1])).toBe(true);
@@ -87,5 +87,14 @@ describe('Testing ipAddressValidation function', () => {
     });
     it('Should return false after validation', () => {
         expect(octetValidation(sampleIpAdress_wrong[2])).toBe(false);
+    });
+});
+
+describe('Testing is in range function', () => {
+    it('Should validate if value is in the range', () => {
+        expect(isInRange(1, 0, 2)).toBe(true);
+    });
+    it('Should validate if value is in the range', () => {
+        expect(isInRange(3, 0, 2)).toBe(false);
     });
 });
