@@ -75,3 +75,29 @@ export function octetValidation(octet: number) {
 export function isInRange(value: number, min: number, max: number): boolean {
     return value <= max && value >= min;
 }
+
+/**
+ *
+ * @param {number} numberValue
+ * @param {number} base
+ * @returns {number} Returns the power to which the base must be raised to obtain the numberValue
+ */
+export function powerOf(numberValue: number, base: number): number {
+    if (numberValue === 1) return 0;
+
+    if (numberValue < 0 || numberValue % base !== 0 || numberValue > Number.MAX_SAFE_INTEGER)
+        return -1;
+
+    const currentNumber: { power: number; value: number } = {
+        power: 0,
+        value: 1
+    };
+    while (currentNumber.value <= numberValue) {
+        currentNumber.value = Math.pow(base, currentNumber.power);
+        if (currentNumber.value === numberValue) return currentNumber.power;
+
+        currentNumber.power++;
+    }
+
+    return -1;
+}

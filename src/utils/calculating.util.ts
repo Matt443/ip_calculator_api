@@ -6,7 +6,7 @@ import {
     getNumberOfHosts,
     isIpInRange
 } from '@/services/ipCalculations.service.js';
-import { ipAddressValidation, isInRange } from './validation.util';
+import { ipAddressValidation, isInRange, powerOf } from './validation.util';
 /**
  *
  * @param {number} decimal - number to be convert
@@ -46,14 +46,17 @@ export function calculateShorthand(ipAddress: IpAddressType): number {
  */
 
 export function calculateFromShorthand(shorthand: number): IpAddressType {
-    let ipBinary = '';
-    ipBinary.padEnd(shorthand, '1');
-    ipBinary.padEnd(32, '0');
-    const ipAddres: IpAddressType = [];
-    for (let index: number = 0; index < 32; index + 8) {
-        ipAddres.push(Number(ipBinary.slice(index, index + 8)));
+    if (!isInRange(shorthand, 0, 32)) return [];
+
+    let ipBinary: string = '';
+    ipBinary = ipBinary.padEnd(shorthand, '1');
+    ipBinary = ipBinary.padEnd(32, '0');
+    const ipAddress: IpAddressType = [];
+
+    for (let index: number = 0; index < 32; index += 8) {
+        ipAddress.push(parseInt(ipBinary.substring(index, index + 8), 2));
     }
-    return ipAddres;
+    return ipAddress;
 }
 
 /**
@@ -72,7 +75,11 @@ export function concatBinary(ipAdress: IpAddresBinaryType): string {
  * @param fillWith - char to fill right site
  * @returns {number} - binary number to calculate octet
  */
-export function calculatePartial(ipOctetBinary: string, maskOctet: number, fillWith: string) {
+export function calculatePartial(
+    ipOctetBinary: string,
+    maskOctet: number,
+    fillWith: string
+): number {
     const onesInMask: number = calculateShorthand([maskOctet]);
     const leftSide: string = ipOctetBinary.slice(0, onesInMask);
 
@@ -111,6 +118,7 @@ export function calculateAdress(
  * @returns {number} a index of octet where "0" start to occur in binary ipadress representation
  */
 export function whereZerosStart(ipAdress: IpAddressType): number {
+    if (!ipAddressValidation(ipAdress)) return -1;
     //determine where to start incrementing
     let octetToStart: number = 3;
 
@@ -131,7 +139,18 @@ export function whereZerosStart(ipAdress: IpAddressType): number {
  */
 
 export function calculateSubnetsQuantity(numberOfHosts: number, ipMask: IpAddressType): number {
-    return getNumberOfHosts(ipMask) / numberOfHosts;
+    let hostWith = numberOfHosts + 2;
+    if (
+        !isInRange(numberOfHosts, 0, 4294967296) ||
+        !ipAddressValidation(ipMask) ||
+        powerOf(hostWith, 2) === -1
+    )
+        return -1;
+
+    const possibleHosts = getNumberOfHosts(ipMask) + 2;
+    if (possibleHosts === 0 || numberOfHosts >= possibleHosts) return -1;
+
+    return Math.round(possibleHosts / hostWith);
 }
 
 export function moveInAddress(forward: boolean, ipAddress: IpAddressType): IpAddressType {
@@ -141,7 +160,7 @@ export function moveInAddress(forward: boolean, ipAddress: IpAddressType): IpAdd
     if (forward) modyficator = 1;
 
     newIp[3] += modyficator;
-    if (!ipAddressValidation(newIp)) return ipBalanser(newIp);
+    if (!ipAddressValidation(newIp)) return ipBalancer(newIp);
 
     return newIp;
 }
@@ -151,7 +170,7 @@ export function moveInAddress(forward: boolean, ipAddress: IpAddressType): IpAdd
  * @param {IpAddressType} ipAddress
  * @returns {IpAddressType} corrected ip adress if possible, if correction isn't possible returns 0;
  */
-export function ipBalanser(ipAddress: IpAddressType): IpAddressType {
+export function ipBalancer(ipAddress: IpAddressType): IpAddressType {
     if (ipAddressValidation(ipAddress)) return ipAddress;
     const modificationSet: { modyficator: number; newVal: number } = {
         modyficator: -1,
@@ -200,7 +219,7 @@ export function ipBalanser(ipAddress: IpAddressType): IpAddressType {
  * @param {boolean} secondIpAddress
  * @returns {boolean} checks if one adress if the same like another
  */
-export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddressType) {
+export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddressType): boolean {
     return firstIpAddress.every((octet: number, index) => {
         if (octet === secondIpAddress[index]) return true;
         return false;
@@ -214,6 +233,11 @@ export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddr
  */
 
 export function converIpToDecimal(ipAddres: IpAddressType): number {
+    if (!ipAddressValidation(ipAddres)) return -1;
+
     const initialValue: number = 0;
-    return ipAddres.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue);
+    return ipAddres.reduce(
+        (acc, octet, index) => acc + Math.pow(256, 3 - index) * octet,
+        initialValue
+    );
 }

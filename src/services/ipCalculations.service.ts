@@ -35,8 +35,7 @@ export function getBroadcastAddress(ipAdress: IpAddressType, ipMask: IpAddressTy
 export function getNumberOfHosts(ipMask: IpAddressType): number {
     const quantityOfZeros: number = 32 - calculateShorthand(ipMask);
 
-    if (quantityOfZeros === 0) return 0;
-    if (quantityOfZeros === 1) return 1;
+    if (quantityOfZeros === 0 || quantityOfZeros === 1) return 0;
 
     return Math.pow(2, quantityOfZeros) - 2;
 }

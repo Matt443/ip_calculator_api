@@ -63,7 +63,7 @@ describe('Testing getNumberOfHosts function', () => {
     });
 
     it('Should return number of host', () => {
-        expect(getNumberOfHosts([255, 255, 255, 254])).toBe(1);
+        expect(getNumberOfHosts([255, 255, 255, 254])).toBe(0);
     });
 });
 

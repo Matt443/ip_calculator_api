@@ -99,3 +99,57 @@ export const sampleIpRange_complicated: { min: IpAddressType; max: IpAddressType
     min: [192, 168, 255, 1],
     max: [192, 168, 255, 126]
 };
+
+interface IpsToEdit {
+    ip: IpAddressType;
+}
+
+export type IpToFixType = IpsToEdit & { fixed: IpAddressType };
+
+export type IpToMoveType = IpsToEdit & { moved: IpAddressType; forwards: boolean };
+
+export type IpToCompareType = IpsToEdit & { secondIp: IpAddressType };
+
+export const ipsToFix: { fixable: IpToFixType[]; notFixable: IpToFixType[] } = {
+    fixable: [
+        { ip: [255, 255, 255, 255], fixed: [255, 255, 255, 255] },
+        { ip: [192, 168, 0, -1], fixed: [192, 167, 255, 255] },
+        { ip: [192, 0, 0, -1], fixed: [191, 255, 255, 255] },
+        { ip: [0, 2, 0, -1], fixed: [0, 1, 255, 255] },
+        { ip: [0, 2, 0, 256], fixed: [0, 2, 1, 0] },
+        { ip: [1, 0, 0, -1], fixed: [0, 255, 255, 255] }
+    ],
+    notFixable: [
+        { ip: [-1, 0, 0, 0], fixed: [] },
+        { ip: [0, 0, 0, -1], fixed: [] },
+        { ip: [255, 255, 255, 256], fixed: [] }
+    ]
+};
+
+export const ipsToMove: { possible: IpToMoveType[]; notPossible: IpToMoveType[] } = {
+    possible: [
+        { forwards: false, ip: [192, 168, 0, 0], moved: [192, 167, 255, 255] },
+        { forwards: false, ip: [192, 0, 0, 0], moved: [191, 255, 255, 255] },
+        { forwards: false, ip: [0, 2, 0, 0], moved: [0, 1, 255, 255] },
+        { forwards: true, ip: [0, 0, 0, 0], moved: [0, 0, 0, 1] },
+        { forwards: true, ip: [254, 255, 255, 255], moved: [255, 0, 0, 0] },
+        { forwards: true, ip: [255, 255, 254, 255], moved: [255, 255, 255, 0] }
+    ],
+    notPossible: [
+        { forwards: true, ip: [255, 255, 255, 255], moved: [] },
+        { forwards: false, ip: [0, 0, 0, 0], moved: [] }
+    ]
+};
+
+export const ipToCompare: { yes: IpToCompareType[]; no: IpToCompareType[] } = {
+    yes: [
+        { ip: [192, 168, 0, 1], secondIp: [192, 168, 0, 1] },
+        { ip: [255, 255, 255, 255], secondIp: [255, 255, 255, 255] },
+        { ip: [0, 0, 0, 0], secondIp: [0, 0, 0, 0] }
+    ],
+    no: [
+        { ip: [0, 0, 0, 0], secondIp: [0, 0, 0, 1] },
+        { ip: [255, 255, 255, 254], secondIp: [255, 255, 255, 255] },
+        { ip: [192, 168, 0, 2], secondIp: [192, 168, 0, 1] }
+    ]
+};
