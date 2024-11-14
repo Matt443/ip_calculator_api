@@ -1,11 +1,16 @@
-import { IpAddressType } from '@/types/ip.types';
+import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
 import {
     calculateAdress,
     calculateShorthand,
     calculateSubnetsQuantity,
+    getAllSubnets,
+    getMaxSubnets,
+    ipBinaryToDefault,
+    newMaskForSubnet,
+    toBinary,
     whereZerosStart
 } from '@/utils/calculating.util.js';
-import { isInRange } from '@/utils/validation.util.js';
+import { ipAddressValidation, isInRange, powerOf } from '@/utils/validation.util.js';
 
 /**
  *
@@ -63,9 +68,34 @@ export function isIpInRange(
     });
 }
 
-// export function getSubnets(networkAddress:IpAddressType, ipMask:IpAddressType, {subnetsHostQuantity, subnetsQuantity}:subnetsSetting):IpAddressType[] {
-//     if (typeof subnetsQuantity !== 'undefined') {
-//         subnetsQuantity = calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
-//     }
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @param {IpAddressType} ipMask
+ * @param {subnetSettingType} subnetsSetting
+ * @returns {NetworkInfoType[]} all subnets with certain amount of hosts or certain amount of subnets
+ */
+export function getSubnets(
+    ipAddress: IpAddressType,
+    ipMask: IpAddressType,
+    { subnetsHostQuantity, subnetsQuantity }: subnetSettingType
+): NetworkInfoType[] {
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error('Bad ip address');
+    const maxPossibleSubnets = getMaxSubnets(ipMask);
+    const maskShorthand = calculateShorthand(ipMask);
 
-// }
+    if (typeof subnetsQuantity === 'undefined') {
+        subnetsQuantity = calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
+    }
+
+    if (maxPossibleSubnets > maxPossibleSubnets) return [];
+
+    const newMaskBinary = newMaskForSubnet(ipMask, subnetsQuantity, maskShorthand);
+
+    const newMask: IpAddressType = ipBinaryToDefault(newMaskBinary);
+
+    ipAddress = getNetworkAddress(ipAddress, ipMask);
+
+    return getAllSubnets(ipAddress, newMask, 0, subnetsQuantity);
+}

@@ -1,12 +1,18 @@
-import { IpAddressType } from '@/types/ip.types';
+import {
+    IpAddressDottedType,
+    IpAddressInfoType,
+    IpAddressType,
+    NetworkInfoType
+} from '@/types/ip.types';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import {
     getBroadcastAddress,
-    getNumberOfHosts,
-    isIpInRange
+    getNetworkAddress,
+    getNumberOfHosts
 } from '@/services/ipCalculations.service.js';
 import { ipAddressValidation, isInRange, powerOf } from './validation.util';
+import { replaceInString } from './common';
 /**
  *
  * @param {number} decimal - number to be convert
@@ -51,11 +57,9 @@ export function calculateFromShorthand(shorthand: number): IpAddressType {
     let ipBinary: string = '';
     ipBinary = ipBinary.padEnd(shorthand, '1');
     ipBinary = ipBinary.padEnd(32, '0');
-    const ipAddress: IpAddressType = [];
 
-    for (let index: number = 0; index < 32; index += 8) {
-        ipAddress.push(parseInt(ipBinary.substring(index, index + 8), 2));
-    }
+    const ipAddress: IpAddressType = binaryMergedToDefault(ipBinary);
+
     return ipAddress;
 }
 
@@ -232,7 +236,7 @@ export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddr
  * @returns {number} decimal representation of ip adress
  */
 
-export function converIpToDecimal(ipAddres: IpAddressType): number {
+export function ipToDecimal(ipAddres: IpAddressType): number {
     if (!ipAddressValidation(ipAddres)) return -1;
 
     const initialValue: number = 0;
@@ -240,4 +244,194 @@ export function converIpToDecimal(ipAddres: IpAddressType): number {
         (acc, octet, index) => acc + Math.pow(256, 3 - index) * octet,
         initialValue
     );
+}
+
+/**
+ *
+ * @param {IpAddressType} ipMask
+ * @returns {number} max possible quantity of subnets
+ */
+export function getMaxSubnets(ipMask: IpAddressType): number {
+    return Math.pow(2, 30 - calculateShorthand(ipMask));
+}
+
+/**
+ *
+ * @param {IpAddressType} ipMask
+ * @param {number} subnetsQuantity
+ * @param {number} maskShorthand
+ * @returns {IpAddresBinaryType} mask for new subnets in binary
+ */
+export function newMaskForSubnet(
+    ipMask: IpAddressType,
+    subnetsQuantity: number,
+    maskShorthand: number
+): IpAddresBinaryType {
+    if (subnetsQuantity < 0 || !ipAddressValidation(ipMask)) return [];
+
+    const bitsToTake: number = powerOf(subnetsQuantity, 2);
+
+    const ipMaskBinary: string[] = ipToBinary(ipMask);
+
+    const newMaskBinary = replaceInString(
+        ipMaskBinary.join(''),
+        maskShorthand,
+        maskShorthand + bitsToTake,
+        '1'.padEnd(bitsToTake, '1')
+    );
+
+    return binaryMergedToUnmerged(newMaskBinary);
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @param {IpAddressType} ipMask
+ * @returns {NetworkInfoType} complete info about a network
+ */
+export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType): NetworkInfoType {
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error('Bad ip address');
+
+    const networkAddress: IpAddressType = getNetworkAddress(ipAddress, ipMask);
+    const broadcastAddress: IpAddressType = getBroadcastAddress(ipAddress, ipMask);
+
+    const hosts = {
+        first: moveInAddress(true, networkAddress),
+        last: moveInAddress(false, broadcastAddress)
+    };
+
+    const networkInfo = {
+        networkAddress: createAdressConversions(networkAddress),
+        broadcastAddress: createAdressConversions(broadcastAddress),
+        ipMask,
+        hosts: {
+            first: createAdressConversions(hosts.first),
+            last: createAdressConversions(hosts.last),
+            quantity: getNumberOfHosts(ipMask)
+        }
+    };
+
+    return networkInfo;
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @returns {IpAddressType} object with all conversions of ip address
+ */
+export function createAdressConversions(ipAddress: IpAddressType): IpAddressInfoType {
+    if (!ipAddressValidation(ipAddress)) throw Error('Bad ip address');
+    return {
+        ip: ipAddress,
+        decimal: ipToDecimal(ipAddress),
+        binary: ipToBinary(ipAddress),
+        dotted: ipToDotted(ipAddress)
+    };
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @param {IpAddressType} ipMask
+ * @param {number} index index of subnet to create
+ * @param {number} subnetsQuantity
+ * @param {NetworkInfoType[]} subnetsArray array to push results
+ * @returns {NetworkInfoType[]} returns all subnets in the network
+ */
+
+export function getAllSubnets(
+    ipAddress: IpAddressType,
+    ipMask: IpAddressType,
+    index: number,
+    subnetsQuantity: number,
+    subnetsArray: NetworkInfoType[] = []
+): NetworkInfoType[] {
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error('Bad ip address');
+
+    if (index >= subnetsQuantity) return subnetsArray;
+
+    //Maybe back to recursion
+    for (let i = 0; i < subnetsQuantity; i++) {
+        const subnet: NetworkInfoType = getSingleNetwork(ipAddress, ipMask);
+        subnetsArray.push(subnet);
+
+        ipAddress = moveInAddress(true, subnet.broadcastAddress.ip);
+    }
+
+    return subnetsArray;
+}
+
+/**
+ *
+ * @param {IpAddresBinaryType} ipAddresBinary
+ * @returns {IpAddressType} returns four element array with ip octets
+ */
+
+export function ipBinaryToDefault(ipAddresBinary: IpAddresBinaryType): IpAddressType {
+    return ipAddresBinary.map((octet: string) => {
+        return parseInt(octet, 2);
+    });
+}
+
+/**
+ *
+ * @param {string} ipAddress
+ * @returns {IpAddressType} returns four element array with ip octets
+ */
+
+export function ipDottedToDefault(ipAddress: IpAddressDottedType): IpAddressType {
+    const ip: string[] = ipAddress.split('.');
+
+    return ip.map((octet: string) => parseInt(octet, 10));
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddres
+ * @returns {string} ip address as a dotted string
+ */
+
+export function ipToDotted(ipAddres: IpAddressType): string {
+    return ipAddres.join('.');
+}
+
+/**
+ *
+ * @param {string} binaryString
+ * @param {number} index index of a octet
+ * @param {IpAddresBinaryType} ipAddressBinary array to return
+ * @returns {IpAddresBinaryType} four element array with binary representation of a ip adress
+ */
+export function binaryMergedToUnmerged(
+    binaryString: string,
+    index: number = 0,
+    ipAddressBinary: IpAddresBinaryType = []
+): IpAddresBinaryType {
+    if (index >= 32) return ipAddressBinary;
+
+    ipAddressBinary.push(binaryString.substring(index, index + 8));
+
+    return binaryMergedToUnmerged(binaryString, index + 8, ipAddressBinary);
+}
+
+/**
+ *
+ * @param {string} binaryString
+ * @param {number} index
+ * @param {IpAddressType} ipAddress
+ * @returns returns four element array with ip octets
+ */
+
+export function binaryMergedToDefault(
+    binaryString: string,
+    index: number = 0,
+    ipAddress: IpAddressType = []
+): IpAddressType {
+    if (index >= 32) return ipAddress;
+
+    ipAddress.push(parseInt(binaryString.substring(index, index + 8), 2));
+
+    return binaryMergedToDefault(binaryString, index + 8, ipAddress);
 }

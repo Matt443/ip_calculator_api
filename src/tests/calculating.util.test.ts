@@ -4,7 +4,7 @@ import {
     calculateShorthand,
     calculateSubnetsQuantity,
     concatBinary,
-    converIpToDecimal,
+    ipToDecimal,
     ipBalancer,
     ipToBinary,
     isIpEqual,
@@ -168,14 +168,14 @@ describe('Testing isIpEqual function', () => {
     });
 });
 
-describe('Testing convertIpToDecimal function', () => {
+describe('Testing ipToDecimal function', () => {
     it('Should convert ip to decimal form', () => {
-        expect(converIpToDecimal([192, 168, 1, 1])).toBe(3232235777);
-        expect(converIpToDecimal([0, 0, 0, 0])).toBe(0);
-        expect(converIpToDecimal([255, 255, 255, 255])).toBe(4294967295);
+        expect(ipToDecimal([192, 168, 1, 1])).toBe(3232235777);
+        expect(ipToDecimal([0, 0, 0, 0])).toBe(0);
+        expect(ipToDecimal([255, 255, 255, 255])).toBe(4294967295);
     });
     it('Should not convert ip to decimal form because provided adress is not correct', () => {
-        expect(converIpToDecimal([-1, 168, 1, 1])).toBe(-1);
+        expect(ipToDecimal([-1, 168, 1, 1])).toBe(-1);
     });
 });
 
