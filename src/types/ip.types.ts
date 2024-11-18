@@ -9,7 +9,12 @@ interface subnetSetting {
     subnetsHostQuantity: number;
 }
 
-export type subnetSettingType = Pick<subnetSetting, 'subnetsHostQuantity' | 'subnetsQuantity'>;
+type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+export type subnetSettingType = RequireField<
+    subnetSetting,
+    'subnetsQuantity' | 'subnetsHostQuantity'
+>;
 
 export type IpAddressInfoType = {
     ip: IpAddressType;
@@ -21,6 +26,7 @@ export type IpAddressInfoType = {
 export type NetworkInfoType = {
     broadcastAddress: IpAddressInfoType;
     networkAddress: IpAddressInfoType;
+    ipMask: IpAddressInfoType;
     hosts: {
         first: IpAddressInfoType;
         last: IpAddressInfoType;

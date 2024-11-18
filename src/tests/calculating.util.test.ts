@@ -10,17 +10,33 @@ import {
     isIpEqual,
     moveInAddress,
     toBinary,
-    whereZerosStart
+    whereZerosStart,
+    getMaxSubnets,
+    newMaskForSubnet,
+    getSingleNetwork,
+    getAllSubnets,
+    createAddressConversions,
+    ipBinaryToDefault,
+    ipDottedToDefault,
+    ipToDotted,
+    binaryMergedToUnmerged,
+    binaryMergedToDefault,
+    calculatePartial
 } from '@/utils/calculating.util.js';
 import {
     ipsToFix,
+    ipsToGetCompleteInfo,
+    ipsToGetConversions,
+    ipsToGetSubnets,
     ipsToMove,
     ipToCompare,
     IpToCompareType,
     IpToFixType,
+    IpToGetConversionsType,
+    IpToGetInfoType,
+    IpToGetSubnetsType,
     IpToMoveType,
     sampleIpAdress,
-    sampleIpAdress_complicated,
     sampleIpAdress_wrong,
     sampleIpBinaryAdress,
     sampleIpMask,
@@ -187,5 +203,198 @@ describe('Testing calculateFromShorthand function', () => {
     });
     it('Should empty array because number is not correct shorthand definition', () => {
         expect(calculateFromShorthand(-32)).toEqual([]);
+    });
+});
+
+describe('Testing getMaxSubnets function', () => {
+    it('Should return maximal amount of subnets for a certain mask', () => {
+        expect(getMaxSubnets([255, 255, 255, 0])).toBe(64);
+        expect(getMaxSubnets([255, 255, 255, 128])).toBe(32);
+        expect(getMaxSubnets([0, 0, 0, 0])).toBe(1073741824);
+        expect(getMaxSubnets([255, 0, 0, 0])).toBe(4194304);
+    });
+    it('Should return -1 because with this mask subnets cannot be created', () => {
+        expect(getMaxSubnets([300, 255, 255, 255])).toBe(-1);
+        expect(getMaxSubnets([255, 255, 255, 255])).toBe(-1);
+        expect(getMaxSubnets([255, 255, 255, 252])).toBe(-1);
+    });
+});
+
+describe('Testing newMaskForSubnet function', () => {
+    it('Create new submask for given amount of hosts in every subnet', () => {
+        expect(newMaskForSubnet([255, 255, 255, 0], 64, 24)).toEqual([
+            '11111111',
+            '11111111',
+            '11111111',
+            '11111100'
+        ]); // 255.255.255.252
+        expect(newMaskForSubnet([0, 0, 0, 0], 64, 24)).toEqual([
+            '00000000',
+            '00000000',
+            '00000000',
+            '11111100'
+        ]); // 0.0.0.252
+        expect(newMaskForSubnet([255, 255, 255, 0], 2, 24)).toEqual([
+            '11111111',
+            '11111111',
+            '11111111',
+            '10000000'
+        ]); // 255.255.255.128
+    });
+    it('Should return empty array because with this mask new mask cannot be calculated', () => {
+        expect(newMaskForSubnet([300, 300, 300, 0], 64, 30)).toEqual([]); //Bad ip
+        expect(newMaskForSubnet([-1, -300, -30, 0], 64, 30)).toEqual([]); //Bad ip
+        expect(newMaskForSubnet([255, 255, 255, 0], 62, 30)).toEqual([]); //Number of hosts must be power of 2
+        expect(newMaskForSubnet([255, 255, 255, 0], 64, 34)).toEqual([]); //Bad shorthand number
+        expect(newMaskForSubnet([255, 255, 255, 0], 128, 32)).toEqual([]); //Too many subnets for ths mask
+    });
+});
+
+describe('Testing getSingleNetworkFunction', () => {
+    it('Should return complete information about network base on ipAdress and ipMask', () => {
+        ipsToGetCompleteInfo.success.forEach((testSet: IpToGetInfoType) => {
+            expect(getSingleNetwork(testSet.ip, testSet.ipMask)).toEqual(testSet.result);
+        });
+    });
+    it('Should throw error because ips are not correct', () => {
+        ipsToGetCompleteInfo.fail.forEach((testSet: IpToGetInfoType) => {
+            expect(() => {
+                getSingleNetwork(testSet.ip, testSet.ipMask);
+            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+        });
+    });
+});
+
+describe('Testing getAllSubnets function', () => {
+    it('Should return all subnets for given params', () => {
+        ipsToGetSubnets.success.forEach((testSet: IpToGetSubnetsType) => {
+            expect(getAllSubnets(testSet.ip, testSet.ipMask, testSet.subnetsQuantity)).toEqual(
+                testSet.result
+            );
+        });
+    });
+    it('Should return empty array because arguments are not valid', () => {
+        ipsToGetSubnets.fail.forEach((testSet: IpToGetSubnetsType) => {
+            expect(() => {
+                getAllSubnets(testSet.ip, testSet.ipMask, testSet.subnetsQuantity);
+            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+        });
+    });
+    it('Should return empty array because expected amount of array is >1024', () => {
+        expect(getAllSubnets([192, 168, 0, 1], [255, 255, 255, 128], 4096));
+    });
+});
+
+describe('Testing createAddressConversions function', () => {
+    it('Should return complete convertions of ipAdress', () => {
+        ipsToGetConversions.success.forEach((testSet: IpToGetConversionsType) => {
+            expect(createAddressConversions(testSet.ip)).toEqual(testSet.result);
+        });
+    });
+    it('Should throw an error because ip is not valid', () => {
+        ipsToGetConversions.fail.forEach((testSet: IpToGetConversionsType) => {
+            expect(() => {
+                createAddressConversions(testSet.ip);
+            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+        });
+    });
+});
+
+describe('Testing ipBinaryToDefualt function', () => {
+    it('Should convert ipBinaryType to ipAddressType', () => {
+        expect(ipBinaryToDefault(['11111111', '11111111', '11111111', '11111111'])).toEqual([
+            255, 255, 255, 255
+        ]);
+        expect(ipBinaryToDefault(['00000000', '00000000', '00000000', '00000000'])).toEqual([
+            0, 0, 0, 0
+        ]);
+        expect(ipBinaryToDefault(['11000000', '10101000', '00000000', '00000001'])).toEqual([
+            192, 168, 0, 1
+        ]);
+    });
+});
+
+describe('Testing ipDottedToDefault function', () => {
+    it('Should convert dotted ipAdress to ipAdressType', () => {
+        expect(ipDottedToDefault('192.168.0.1')).toEqual(sampleIpAdress);
+        expect(ipDottedToDefault('255.255.255.255')).toEqual([255, 255, 255, 255]);
+        expect(ipDottedToDefault('0.0.0.0')).toEqual([0, 0, 0, 0]);
+    });
+    it('Should not throw an error with bad arg', () => {
+        expect(ipDottedToDefault('255')).toEqual([255]);
+        expect(ipDottedToDefault('')).toEqual([NaN]);
+    });
+});
+
+describe('Testing ipToDotted', () => {
+    it('Should create dotted ip string from ip array', () => {
+        expect(ipToDotted(sampleIpAdress)).toEqual('192.168.0.1');
+        expect(ipToDotted([255, 255, 255, 255])).toEqual('255.255.255.255');
+        expect(ipToDotted([0, 0, 0, 0])).toEqual('0.0.0.0');
+    });
+    it('Should not throw an error with bad arg', () => {
+        expect(ipToDotted([])).toEqual('');
+    });
+});
+
+describe('Testing binaryMergedToUnmerged function', () => {
+    it('Should convert binary ip adress to array with 4 octets binary', () => {
+        expect(binaryMergedToUnmerged('11111111111111111111111111111111')).toEqual([
+            '11111111',
+            '11111111',
+            '11111111',
+            '11111111'
+        ]);
+        expect(binaryMergedToUnmerged('00000000000000000000000000000000')).toEqual([
+            '00000000',
+            '00000000',
+            '00000000',
+            '00000000'
+        ]);
+        expect(binaryMergedToUnmerged('11000000101010000000000000000001')).toEqual([
+            '11000000',
+            '10101000',
+            '00000000',
+            '00000001'
+        ]); //192.168.0.1
+    });
+    it('Should cut binary string every 8 char', () => {
+        expect(binaryMergedToUnmerged('00000001')).toEqual(['00000001']);
+    });
+    it('Should return empty array because binary string is not valid', () => {
+        expect(binaryMergedToUnmerged('1111111')).toEqual([]); //Arg length 7
+        expect(binaryMergedToUnmerged('111111111111111111111111111111111')).toEqual([]); //Arg length 33
+    });
+});
+
+describe('Testing binaryMergedToDefualt function', () => {
+    it('Should convert binary string to the array with four octets', () => {
+        expect(binaryMergedToDefault('11111111111111111111111111111111')).toEqual([
+            255, 255, 255, 255
+        ]);
+        expect(binaryMergedToDefault('00000000000000000000000000000000')).toEqual([0, 0, 0, 0]);
+        expect(binaryMergedToDefault('11000000101010000000000000000001')).toEqual([192, 168, 0, 1]);
+    });
+    it('Should cut binary string every 8 char', () => {
+        expect(binaryMergedToDefault('00000001')).toEqual([1]);
+    });
+    it('Should return empty array because binary string is not valid', () => {
+        expect(binaryMergedToDefault('1111111')).toEqual([]); //Arg length 7
+        expect(binaryMergedToDefault('111111111111111111111111111111111')).toEqual([]); //Arg length 33
+    });
+});
+
+describe('Testing calculate partial function', () => {
+    it('Should calculate one octet with mask and given filler', () => {
+        expect(calculatePartial('11000000', 0, '1')).toEqual(255);
+        expect(calculatePartial('00000000', 192, '1')).toEqual(63);
+        expect(calculatePartial('11111111', 255, '1')).toEqual(255);
+        expect(calculatePartial('11111111', 255, '0')).toEqual(255);
+        expect(calculatePartial('00000000', 255, '0')).toEqual(0);
+    });
+    it('Should return -1 because params are not corret', () => {
+        expect(calculatePartial('111111111', 255, '1')).toBe(-1);
+        expect(calculatePartial('11111111', -1, '1')).toBe(-1);
+        expect(calculatePartial('11111111', 256, '1')).toBe(-1);
     });
 });

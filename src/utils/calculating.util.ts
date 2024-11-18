@@ -11,7 +11,7 @@ import {
     getNetworkAddress,
     getNumberOfHosts
 } from '@/services/ipCalculations.service.js';
-import { ipAddressValidation, isInRange, powerOf } from './validation.util';
+import { ipAddressValidation, isInRange, powerOf, validationWithRegex } from './validation.util';
 import { replaceInString } from './common';
 /**
  *
@@ -77,13 +77,14 @@ export function concatBinary(ipAdress: IpAddresBinaryType): string {
  * @param ipOctetBinary - binary string from ip adress
  * @param maskOctet - mask octet as a decimal number
  * @param fillWith - char to fill right site
- * @returns {number} - binary number to calculate octet
+ * @returns {number} - calculate octed
  */
 export function calculatePartial(
     ipOctetBinary: string,
     maskOctet: number,
     fillWith: string
 ): number {
+    if (!isInRange(maskOctet, 0, 255) || !isInRange(parseInt(ipOctetBinary, 2), 0, 255)) return -1;
     const onesInMask: number = calculateShorthand([maskOctet]);
     const leftSide: string = ipOctetBinary.slice(0, onesInMask);
 
@@ -236,14 +237,13 @@ export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddr
  * @returns {number} decimal representation of ip adress
  */
 
-export function ipToDecimal(ipAddres: IpAddressType): number {
-    if (!ipAddressValidation(ipAddres)) return -1;
+export function ipToDecimal(ipAddress: IpAddressType): number {
+    if (!ipAddressValidation(ipAddress)) return -1;
 
     const initialValue: number = 0;
-    return ipAddres.reduce(
-        (acc, octet, index) => acc + Math.pow(256, 3 - index) * octet,
-        initialValue
-    );
+    return ipAddress.reduce((acc, octet, index) => {
+        return acc + Math.pow(256, 3 - index) * octet;
+    }, initialValue);
 }
 
 /**
@@ -252,7 +252,12 @@ export function ipToDecimal(ipAddres: IpAddressType): number {
  * @returns {number} max possible quantity of subnets
  */
 export function getMaxSubnets(ipMask: IpAddressType): number {
-    return Math.pow(2, 30 - calculateShorthand(ipMask));
+    if (!ipAddressValidation(ipMask)) return -1;
+
+    const subnetsQuantity = Math.pow(2, 30 - calculateShorthand(ipMask));
+
+    if (subnetsQuantity < 2) return -1;
+    return subnetsQuantity;
 }
 
 /**
@@ -267,9 +272,12 @@ export function newMaskForSubnet(
     subnetsQuantity: number,
     maskShorthand: number
 ): IpAddresBinaryType {
-    if (subnetsQuantity < 0 || !ipAddressValidation(ipMask)) return [];
+    if (subnetsQuantity < 0 || !ipAddressValidation(ipMask) || maskShorthand > 32) return [];
 
     const bitsToTake: number = powerOf(subnetsQuantity, 2);
+    const maxSubnets = getMaxSubnets(ipMask);
+
+    if (bitsToTake === -1 || maxSubnets < subnetsQuantity) return [];
 
     const ipMaskBinary: string[] = ipToBinary(ipMask);
 
@@ -279,7 +287,6 @@ export function newMaskForSubnet(
         maskShorthand + bitsToTake,
         '1'.padEnd(bitsToTake, '1')
     );
-
     return binaryMergedToUnmerged(newMaskBinary);
 }
 
@@ -291,7 +298,7 @@ export function newMaskForSubnet(
  */
 export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType): NetworkInfoType {
     if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error('Bad ip address');
+        throw Error(ERROR_MESSAGES.validation.ipAdrress);
 
     const networkAddress: IpAddressType = getNetworkAddress(ipAddress, ipMask);
     const broadcastAddress: IpAddressType = getBroadcastAddress(ipAddress, ipMask);
@@ -302,16 +309,15 @@ export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType
     };
 
     const networkInfo = {
-        networkAddress: createAdressConversions(networkAddress),
-        broadcastAddress: createAdressConversions(broadcastAddress),
-        ipMask,
+        networkAddress: createAddressConversions(networkAddress),
+        broadcastAddress: createAddressConversions(broadcastAddress),
+        ipMask: createAddressConversions(ipMask),
         hosts: {
-            first: createAdressConversions(hosts.first),
-            last: createAdressConversions(hosts.last),
+            first: createAddressConversions(hosts.first),
+            last: createAddressConversions(hosts.last),
             quantity: getNumberOfHosts(ipMask)
         }
     };
-
     return networkInfo;
 }
 
@@ -320,8 +326,8 @@ export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType
  * @param {IpAddressType} ipAddress
  * @returns {IpAddressType} object with all conversions of ip address
  */
-export function createAdressConversions(ipAddress: IpAddressType): IpAddressInfoType {
-    if (!ipAddressValidation(ipAddress)) throw Error('Bad ip address');
+export function createAddressConversions(ipAddress: IpAddressType): IpAddressInfoType {
+    if (!ipAddressValidation(ipAddress)) throw Error(ERROR_MESSAGES.validation.ipAdrress);
     return {
         ip: ipAddress,
         decimal: ipToDecimal(ipAddress),
@@ -343,14 +349,13 @@ export function createAdressConversions(ipAddress: IpAddressType): IpAddressInfo
 export function getAllSubnets(
     ipAddress: IpAddressType,
     ipMask: IpAddressType,
-    index: number,
     subnetsQuantity: number,
     subnetsArray: NetworkInfoType[] = []
 ): NetworkInfoType[] {
-    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error('Bad ip address');
+    if (subnetsQuantity > 1024) return subnetsArray;
 
-    if (index >= subnetsQuantity) return subnetsArray;
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error(ERROR_MESSAGES.validation.ipAdrress);
 
     //Maybe back to recursion
     for (let i = 0; i < subnetsQuantity; i++) {
@@ -409,7 +414,9 @@ export function binaryMergedToUnmerged(
     index: number = 0,
     ipAddressBinary: IpAddresBinaryType = []
 ): IpAddresBinaryType {
-    if (index >= 32) return ipAddressBinary;
+    if (binaryString.length % 8 !== 0) return [];
+
+    if (index >= binaryString.length) return ipAddressBinary;
 
     ipAddressBinary.push(binaryString.substring(index, index + 8));
 
@@ -429,7 +436,9 @@ export function binaryMergedToDefault(
     index: number = 0,
     ipAddress: IpAddressType = []
 ): IpAddressType {
-    if (index >= 32) return ipAddress;
+    if (binaryString.length % 8 !== 0) return [];
+
+    if (index >= binaryString.length) return ipAddress;
 
     ipAddress.push(parseInt(binaryString.substring(index, index + 8), 2));
 

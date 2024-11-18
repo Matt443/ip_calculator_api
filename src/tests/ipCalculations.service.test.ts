@@ -2,11 +2,14 @@ import {
     getBroadcastAddress,
     getNetworkAddress,
     getNumberOfHosts,
+    getSubnets,
     isIpInRange
 } from '@/services/ipCalculations.service.js';
 import {
     dataSets,
     dataSetType,
+    ipsToGetSubnets,
+    IpToGetSubnetsType,
     sampleIpAdress,
     sampleIpAdress_complicated,
     sampleIpMask,
@@ -16,6 +19,7 @@ import {
     texts
 } from '@/constant/samples.constant.js';
 import { calculatePartial } from '@/utils/calculating.util.js';
+import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 
 describe('Testing getNetworkAdress function', () => {
     it(texts.pass, () => {
@@ -92,5 +96,36 @@ describe('Testing isIpInRange function', () => {
                 sampleIpRange_complicated.max
             )
         ).toBe(false);
+    });
+});
+
+describe('Testing getSubnets function', () => {
+    it('Shoudld return all subnets for given number of them or number of hosts in every subnet', () => {
+        ipsToGetSubnets.success.forEach((testSet: IpToGetSubnetsType) => {
+            expect(
+                //@ts-ignore
+                getSubnets(testSet.ip, [255, 255, 255, 0], { subnetsHostQuantity: 126 })
+            ).toEqual(testSet.result);
+        });
+    });
+    it('Shoudld return throw because ip numbers are wrong', () => {
+        ipsToGetSubnets.fail.forEach((testSet: IpToGetSubnetsType) => {
+            expect(() => {
+                //@ts-ignore
+                getSubnets(testSet.ip, testSet.ipMask, {
+                    subnetsHostQuantity: testSet.subnetsQuantity
+                });
+            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+        });
+    });
+    it('Should return empty array because number of subnets is too large', () => {
+        expect(
+            //@ts-ignore
+            getSubnets([192, 168, 0, 1], [255, 255, 255, 0], { subnetsHostQuantity: 16384 })
+        ).toEqual([]);
+        //@ts-ignore
+        expect(getSubnets([192, 168, 0, 1], [255, 255, 255, 0], { subnetsQuantity: 128 })).toEqual(
+            []
+        );
     });
 });

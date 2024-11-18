@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
 import {
     calculateAdress,
@@ -81,7 +82,7 @@ export function getSubnets(
     { subnetsHostQuantity, subnetsQuantity }: subnetSettingType
 ): NetworkInfoType[] {
     if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error('Bad ip address');
+        throw Error(ERROR_MESSAGES.validation.ipAdrress);
     const maxPossibleSubnets = getMaxSubnets(ipMask);
     const maskShorthand = calculateShorthand(ipMask);
 
@@ -89,7 +90,7 @@ export function getSubnets(
         subnetsQuantity = calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
     }
 
-    if (maxPossibleSubnets > maxPossibleSubnets) return [];
+    if (subnetsQuantity > maxPossibleSubnets) return [];
 
     const newMaskBinary = newMaskForSubnet(ipMask, subnetsQuantity, maskShorthand);
 
@@ -97,5 +98,5 @@ export function getSubnets(
 
     ipAddress = getNetworkAddress(ipAddress, ipMask);
 
-    return getAllSubnets(ipAddress, newMask, 0, subnetsQuantity);
+    return getAllSubnets(ipAddress, newMask, subnetsQuantity);
 }

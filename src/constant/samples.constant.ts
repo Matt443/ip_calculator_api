@@ -1,4 +1,4 @@
-import { type IpAddressType } from '@/types/ip.types.js';
+import { IpAddressInfoType, NetworkInfoType, type IpAddressType } from '@/types/ip.types.js';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -110,6 +110,16 @@ export type IpToMoveType = IpsToEdit & { moved: IpAddressType; forwards: boolean
 
 export type IpToCompareType = IpsToEdit & { secondIp: IpAddressType };
 
+export type IpToGetInfoType = IpsToEdit & { ipMask: IpAddressType; result?: NetworkInfoType };
+
+export type IpToGetConversionsType = IpsToEdit & { result?: IpAddressInfoType };
+
+export type IpToGetSubnetsType = IpsToEdit & {
+    ipMask: IpAddressType;
+    subnetsQuantity: number;
+    result?: NetworkInfoType[];
+};
+
 export const ipsToFix: { fixable: IpToFixType[]; notFixable: IpToFixType[] } = {
     fixable: [
         { ip: [255, 255, 255, 255], fixed: [255, 255, 255, 255] },
@@ -152,4 +162,178 @@ export const ipToCompare: { yes: IpToCompareType[]; no: IpToCompareType[] } = {
         { ip: [255, 255, 255, 254], secondIp: [255, 255, 255, 255] },
         { ip: [192, 168, 0, 2], secondIp: [192, 168, 0, 1] }
     ]
+};
+
+export const ipsToGetCompleteInfo: { success: IpToGetInfoType[]; fail: IpToGetInfoType[] } = {
+    success: [
+        {
+            ip: [192, 168, 0, 1],
+            ipMask: [255, 255, 255, 0],
+            result: {
+                networkAddress: {
+                    ip: [192, 168, 0, 0],
+                    decimal: 3232235520,
+                    binary: ['11000000', '10101000', '00000000', '00000000'],
+                    dotted: '192.168.0.0'
+                },
+                broadcastAddress: {
+                    ip: [192, 168, 0, 255],
+                    decimal: 3232235775,
+                    binary: ['11000000', '10101000', '00000000', '11111111'],
+                    dotted: '192.168.0.255'
+                },
+                ipMask: {
+                    ip: [255, 255, 255, 0],
+                    decimal: 4294967040,
+                    binary: ['11111111', '11111111', '11111111', '00000000'],
+                    dotted: '255.255.255.0'
+                },
+                hosts: {
+                    first: {
+                        ip: [192, 168, 0, 1],
+                        decimal: 3232235521,
+                        binary: ['11000000', '10101000', '00000000', '00000001'],
+                        dotted: '192.168.0.1'
+                    },
+                    last: {
+                        ip: [192, 168, 0, 254],
+                        decimal: 3232235774,
+                        binary: ['11000000', '10101000', '00000000', '11111110'],
+                        dotted: '192.168.0.254'
+                    },
+                    quantity: 254
+                }
+            }
+        }
+    ],
+    fail: [
+        { ip: [300, 168, 0, 1], ipMask: [255, 255, 255, 0] },
+        { ip: [192, 168, 0, 1], ipMask: [300, 255, 255, 0] },
+        { ip: [-1, 168, 0, 1], ipMask: [255, 255, 255, 0] },
+        { ip: [192, 168, 0, 1], ipMask: [-1, 255, 255, 0] }
+    ]
+};
+
+export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubnetsType[] } = {
+    success: [
+        {
+            ip: [192, 168, 0, 1],
+            ipMask: [255, 255, 255, 128],
+            subnetsQuantity: 2,
+            result: [
+                {
+                    networkAddress: {
+                        ip: [192, 168, 0, 0],
+                        decimal: 3232235520,
+                        binary: ['11000000', '10101000', '00000000', '00000000'],
+                        dotted: '192.168.0.0'
+                    },
+                    broadcastAddress: {
+                        ip: [192, 168, 0, 127],
+                        decimal: 3232235647,
+                        binary: ['11000000', '10101000', '00000000', '01111111'],
+                        dotted: '192.168.0.127'
+                    },
+                    ipMask: {
+                        ip: [255, 255, 255, 128],
+                        decimal: 4294967168,
+                        binary: ['11111111', '11111111', '11111111', '10000000'],
+                        dotted: '255.255.255.128'
+                    },
+                    hosts: {
+                        first: {
+                            ip: [192, 168, 0, 1],
+                            decimal: 3232235521,
+                            binary: ['11000000', '10101000', '00000000', '00000001'],
+                            dotted: '192.168.0.1'
+                        },
+                        last: {
+                            ip: [192, 168, 0, 126],
+                            decimal: 3232235646,
+                            binary: ['11000000', '10101000', '00000000', '01111110'],
+                            dotted: '192.168.0.126'
+                        },
+                        quantity: 126
+                    }
+                },
+                {
+                    networkAddress: {
+                        ip: [192, 168, 0, 128],
+                        decimal: 3232235648,
+                        binary: ['11000000', '10101000', '00000000', '10000000'],
+                        dotted: '192.168.0.128'
+                    },
+                    broadcastAddress: {
+                        ip: [192, 168, 0, 255],
+                        decimal: 3232235775,
+                        binary: ['11000000', '10101000', '00000000', '11111111'],
+                        dotted: '192.168.0.255'
+                    },
+                    ipMask: {
+                        ip: [255, 255, 255, 128],
+                        decimal: 4294967168,
+                        binary: ['11111111', '11111111', '11111111', '10000000'],
+                        dotted: '255.255.255.128'
+                    },
+                    hosts: {
+                        first: {
+                            ip: [192, 168, 0, 129],
+                            decimal: 3232235649,
+                            binary: ['11000000', '10101000', '00000000', '10000001'],
+                            dotted: '192.168.0.129'
+                        },
+                        last: {
+                            ip: [192, 168, 0, 254],
+                            decimal: 3232235774,
+                            binary: ['11000000', '10101000', '00000000', '11111110'],
+                            dotted: '192.168.0.254'
+                        },
+                        quantity: 126
+                    }
+                }
+            ]
+        }
+    ],
+    fail: [
+        { ip: [300, 168, 0, 1], ipMask: [255, 255, 255, 0], subnetsQuantity: 2 },
+        { ip: [192, 168, 0, 1], ipMask: [300, 255, 255, 0], subnetsQuantity: 2 },
+        { ip: [-1, 168, 0, 1], ipMask: [255, 255, 255, 0], subnetsQuantity: 2 },
+        { ip: [192, 168, 0, 1], ipMask: [-1, 255, 255, 0], subnetsQuantity: 2 }
+    ]
+};
+
+export const ipsToGetConversions: {
+    success: IpToGetConversionsType[];
+    fail: IpToGetConversionsType[];
+} = {
+    success: [
+        {
+            ip: [192, 168, 0, 1],
+            result: {
+                ip: [192, 168, 0, 1],
+                decimal: 3232235521,
+                binary: ['11000000', '10101000', '00000000', '00000001'],
+                dotted: '192.168.0.1'
+            }
+        },
+        {
+            ip: [0, 0, 0, 0],
+            result: {
+                ip: [0, 0, 0, 0],
+                decimal: 0,
+                binary: ['00000000', '00000000', '00000000', '00000000'],
+                dotted: '0.0.0.0'
+            }
+        },
+        {
+            ip: [255, 255, 255, 255],
+            result: {
+                ip: [255, 255, 255, 255],
+                decimal: 4294967295,
+                binary: ['11111111', '11111111', '11111111', '11111111'],
+                dotted: '255.255.255.255'
+            }
+        }
+    ],
+    fail: [{ ip: [192, 300, 255, 255] }, { ip: [192, -1, 255, 255] }]
 };
