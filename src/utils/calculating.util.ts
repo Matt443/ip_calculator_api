@@ -297,9 +297,6 @@ export function newMaskForSubnet(
  * @returns {NetworkInfoType} complete info about a network
  */
 export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType): NetworkInfoType {
-    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error(ERROR_MESSAGES.validation.ipAdrress);
-
     const networkAddress: IpAddressType = getNetworkAddress(ipAddress, ipMask);
     const broadcastAddress: IpAddressType = getBroadcastAddress(ipAddress, ipMask);
 
@@ -353,9 +350,6 @@ export function getAllSubnets(
     subnetsArray: NetworkInfoType[] = []
 ): NetworkInfoType[] {
     if (subnetsQuantity > 1024) return subnetsArray;
-
-    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error(ERROR_MESSAGES.validation.ipAdrress);
 
     //Maybe back to recursion
     for (let i = 0; i < subnetsQuantity; i++) {

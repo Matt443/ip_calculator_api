@@ -19,8 +19,11 @@ import { ipAddressValidation, isInRange, powerOf } from '@/utils/validation.util
  * @param {IpAddressType} ipMask
  * @returns {IpAddressType} - network address for given ip and mask
  */
-export function getNetworkAddress(ipAdress: IpAddressType, ipMask: IpAddressType): IpAddressType {
-    return calculateAdress(ipAdress, ipMask, '0', 0);
+export function getNetworkAddress(ipAddress: IpAddressType, ipMask: IpAddressType): IpAddressType {
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error(ERROR_MESSAGES.validation.ipAdrress);
+
+    return calculateAdress(ipAddress, ipMask, '0', 0);
 }
 
 /**
@@ -29,8 +32,14 @@ export function getNetworkAddress(ipAdress: IpAddressType, ipMask: IpAddressType
  * @param {IpAddressType} ipMask
  * @returns {IpAddressType} - broadcast address for given ip and mask
  */
-export function getBroadcastAddress(ipAdress: IpAddressType, ipMask: IpAddressType): IpAddressType {
-    return calculateAdress(ipAdress, ipMask, '1', 255);
+export function getBroadcastAddress(
+    ipAddress: IpAddressType,
+    ipMask: IpAddressType
+): IpAddressType {
+    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
+        throw Error(ERROR_MESSAGES.validation.ipAdrress);
+
+    return calculateAdress(ipAddress, ipMask, '1', 255);
 }
 
 /**
@@ -39,6 +48,8 @@ export function getBroadcastAddress(ipAdress: IpAddressType, ipMask: IpAddressTy
  * @returns number of hosts
  */
 export function getNumberOfHosts(ipMask: IpAddressType): number {
+    if (!ipAddressValidation(ipMask)) throw Error(ERROR_MESSAGES.validation.ipAdrress);
+
     const quantityOfZeros: number = 32 - calculateShorthand(ipMask);
 
     if (quantityOfZeros === 0 || quantityOfZeros === 1) return 0;
@@ -81,8 +92,6 @@ export function getSubnets(
     ipMask: IpAddressType,
     { subnetsHostQuantity, subnetsQuantity }: subnetSettingType
 ): NetworkInfoType[] {
-    if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error(ERROR_MESSAGES.validation.ipAdrress);
     const maxPossibleSubnets = getMaxSubnets(ipMask);
     const maskShorthand = calculateShorthand(ipMask);
 

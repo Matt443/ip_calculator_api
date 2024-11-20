@@ -1,4 +1,5 @@
 import { IpAddressInfoType, NetworkInfoType, type IpAddressType } from '@/types/ip.types.js';
+import { ERROR_MESSAGES } from './errors.constants';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -118,6 +119,7 @@ export type IpToGetSubnetsType = IpsToEdit & {
     ipMask: IpAddressType;
     subnetsQuantity: number;
     result?: NetworkInfoType[];
+    error?: string;
 };
 
 export const ipsToFix: { fixable: IpToFixType[]; notFixable: IpToFixType[] } = {
@@ -295,10 +297,30 @@ export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubn
         }
     ],
     fail: [
-        { ip: [300, 168, 0, 1], ipMask: [255, 255, 255, 0], subnetsQuantity: 2 },
-        { ip: [192, 168, 0, 1], ipMask: [300, 255, 255, 0], subnetsQuantity: 2 },
-        { ip: [-1, 168, 0, 1], ipMask: [255, 255, 255, 0], subnetsQuantity: 2 },
-        { ip: [192, 168, 0, 1], ipMask: [-1, 255, 255, 0], subnetsQuantity: 2 }
+        {
+            ip: [300, 168, 0, 1],
+            ipMask: [255, 255, 255, 0],
+            subnetsQuantity: 2,
+            error: ERROR_MESSAGES.validation.ipAdrress
+        },
+        {
+            ip: [192, 168, 0, 1],
+            ipMask: [300, 255, 255, 0],
+            subnetsQuantity: 2,
+            error: ERROR_MESSAGES.validation.ipAdrress
+        },
+        {
+            ip: [-1, 168, 0, 1],
+            ipMask: [255, 255, 255, 0],
+            subnetsQuantity: 2,
+            error: ERROR_MESSAGES.validation.ipAdrress
+        },
+        {
+            ip: [192, 168, 0, 1],
+            ipMask: [-1, 255, 255, 0],
+            subnetsQuantity: 2,
+            error: ERROR_MESSAGES.utils.binary
+        }
     ]
 };
 

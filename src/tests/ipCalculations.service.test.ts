@@ -115,7 +115,7 @@ describe('Testing getSubnets function', () => {
                 getSubnets(testSet.ip, testSet.ipMask, {
                     subnetsHostQuantity: testSet.subnetsQuantity
                 });
-            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+            }).toThrow(testSet.error);
         });
     });
     it('Should return empty array because number of subnets is too large', () => {
