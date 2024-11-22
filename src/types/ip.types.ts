@@ -33,3 +33,8 @@ export type NetworkInfoType = {
         quantity: number;
     };
 };
+
+export type subnetSettingVLSM_Type = {
+    hostQuantity: number;
+    power: number;
+};

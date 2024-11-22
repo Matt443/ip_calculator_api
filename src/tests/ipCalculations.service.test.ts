@@ -41,6 +41,11 @@ describe('Testing getBroadcastAdress function', () => {
             192, 168, 255, 255
         ]);
     });
+    it('Should throw an error beacuse ip is not correct', () => {
+        expect(() => getBroadcastAddress([192, 168, 300, 1], [255, 255, 300, 0])).toThrow();
+        expect(() => getBroadcastAddress([192, 168, 0, 1], [255, 255, 300, 0])).toThrow();
+        expect(() => getBroadcastAddress([192, 168, 300, 1], [255, 255, 255, 0])).toThrow();
+    });
 });
 
 describe('Testing calculatePartial function', () => {
@@ -56,18 +61,14 @@ describe('Testing calculatePartial function', () => {
 describe('Testing getNumberOfHosts function', () => {
     it('Should return number of host', () => {
         expect(getNumberOfHosts(sampleIpMask)).toBe(65534);
-    });
-
-    it('Should return number of host', () => {
+        expect(getNumberOfHosts([255, 255, 255, 254])).toBe(0);
         expect(getNumberOfHosts(sampleIpMask_complicated)).toBe(32766);
-    });
-
-    it('Should return number of host', () => {
         expect(getNumberOfHosts([255, 255, 255, 255])).toBe(0);
     });
 
-    it('Should return number of host', () => {
-        expect(getNumberOfHosts([255, 255, 255, 254])).toBe(0);
+    it('Should throw an errow because ip adress is not correct', () => {
+        expect(() => getNumberOfHosts([255, -1, 255, 255])).toThrow();
+        expect(() => getNumberOfHosts([255, 300, 255, 255])).toThrow();
     });
 });
 

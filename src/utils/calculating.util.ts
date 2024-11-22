@@ -2,7 +2,8 @@ import {
     IpAddressDottedType,
     IpAddressInfoType,
     IpAddressType,
-    NetworkInfoType
+    NetworkInfoType,
+    subnetSettingVLSM_Type
 } from '@/types/ip.types';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
@@ -437,4 +438,87 @@ export function binaryMergedToDefault(
     ipAddress.push(parseInt(binaryString.substring(index, index + 8), 2));
 
     return binaryMergedToDefault(binaryString, index + 8, ipAddress);
+}
+
+/**
+ *
+ * @param {number} power
+ * @param {number} value
+ * @param {number} currentPower
+ * @param {number} maxValue @default 1024
+ * @returns an object with the correct host value and a power number to obtain a value
+ */
+
+export function findNextHostQuantity(
+    power: number,
+    value: number = 2,
+    currentPower: number = 1,
+    maxValue: number = 1024
+): subnetSettingVLSM_Type {
+    if (!isInRange(value, 2, maxValue)) throw new Error('Number of host must be a number ');
+    const currentValue: number = Math.pow(power, currentPower);
+    if (currentValue >= value) return { hostQuantity: currentValue, power: currentPower };
+    currentPower++;
+    return findNextHostQuantity(power, value, currentPower);
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddres
+ * @param {IpAddressType[]} masks
+ * @param {number} index @default 0 index to start
+ * @param {NetworkInfoType[]} resultArray @default []
+ * @returns {NetworkInfoType[]} subnets calculated with VLSM method
+ */
+export function getAllSubnetsVLSM(
+    ipAddres: IpAddressType,
+    masks: IpAddressType[],
+    index: number = 0,
+    resultArray: NetworkInfoType[] = []
+): NetworkInfoType[] {
+    if (index >= masks.length) return resultArray;
+
+    const currentNet = getSingleNetwork(ipAddres, masks[index]);
+
+    resultArray.push(currentNet);
+
+    return getAllSubnetsVLSM(
+        moveInAddress(true, currentNet.broadcastAddress.ip),
+        masks,
+        index + 1,
+        resultArray
+    );
+}
+
+/**
+ *
+ * @param {subnetSettingVLSM_Type[]} subnetsSettingsVLSM object with host quanity and power of to obtain this host quantity
+ * @returns {IpAddressType} object with masks for given amount of host
+ */
+export function getMasksVLSM(subnetsSettingsVLSM: subnetSettingVLSM_Type[]): IpAddressType[] {
+    return subnetsSettingsVLSM.map((subnetSetting: subnetSettingVLSM_Type) => {
+        const newMaskBinary = '1'.padEnd(32 - subnetSetting.power, '1').padEnd(32, '0');
+
+        return ipBinaryToDefault(binaryMergedToUnmerged(newMaskBinary));
+    });
+}
+
+/**
+ *
+ * @param {number[]} hostQuantities array with number of hosts
+ * @returns {subnetSettingVLSM_Type[]} object with host quanity and power of to obtain this host quantity
+ */
+export function calculateNumberOfHostsVLSM(hostQuantities: number[]): subnetSettingVLSM_Type[] {
+    return hostQuantities.map((hostQuantity: number) => {
+        let powerOfTwo = powerOf(hostQuantity, 2);
+
+        if (!isInRange(hostQuantity, 1, 1024)) return { hostQuantity: -1, power: -1 };
+
+        //Fixing problem with big masks
+        if (powerOfTwo < 3) powerOfTwo++;
+
+        if (powerOfTwo !== -1) return { hostQuantity: hostQuantity, power: powerOfTwo };
+
+        return findNextHostQuantity(2, hostQuantity);
+    });
 }

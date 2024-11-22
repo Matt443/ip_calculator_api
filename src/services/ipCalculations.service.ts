@@ -1,16 +1,30 @@
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
-import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
 import {
+    IpAddresBinaryType,
+    IpAddressType,
+    NetworkInfoType,
+    subnetSettingType,
+    subnetSettingVLSM_Type
+} from '@/types/ip.types';
+import {
+    binaryMergedToUnmerged,
     calculateAdress,
+    calculateNumberOfHostsVLSM,
     calculateShorthand,
     calculateSubnetsQuantity,
+    concatBinary,
+    findNextHostQuantity,
     getAllSubnets,
+    getAllSubnetsVLSM,
+    getMasksVLSM,
     getMaxSubnets,
     ipBinaryToDefault,
+    ipToBinary,
     newMaskForSubnet,
     toBinary,
     whereZerosStart
 } from '@/utils/calculating.util.js';
+import { replaceInString } from '@/utils/common';
 import { ipAddressValidation, isInRange, powerOf } from '@/utils/validation.util.js';
 
 /**
@@ -108,4 +122,23 @@ export function getSubnets(
     ipAddress = getNetworkAddress(ipAddress, ipMask);
 
     return getAllSubnets(ipAddress, newMask, subnetsQuantity);
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddres
+ * @param {IpAddressType} ipMask
+ * @param {number[]} hostQuantities
+ * @returns {NetworkInfoType[]} an object with complete information of subnets
+ */
+export function getSubnetsVLSM(
+    ipAddres: IpAddressType,
+    ipMask: IpAddressType,
+    hostQuantities: number[]
+): NetworkInfoType[] {
+    const subnetsSettingsVLSM = calculateNumberOfHostsVLSM(hostQuantities);
+    subnetsSettingsVLSM.sort((a, b) => a.power - b.power).reverse();
+    const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM);
+
+    return getAllSubnetsVLSM(ipAddres, masks);
 }
