@@ -3,12 +3,14 @@ import {
     getNetworkAddress,
     getNumberOfHosts,
     getSubnets,
+    getSubnetsVLSM,
     isIpInRange
 } from '@/services/ipCalculations.service.js';
 import {
     dataSets,
     dataSetType,
     ipsToGetSubnets,
+    ipsToGetSubnetsVLSM,
     IpToGetSubnetsType,
     sampleIpAdress,
     sampleIpAdress_complicated,
@@ -129,4 +131,35 @@ describe('Testing getSubnets function', () => {
             []
         );
     });
+});
+
+describe('Testing getSubnetsVLSM function', () => {
+    it('Should return a complete information about subnets for given ip, mask, and host quantitities using VLSM', () => {
+        expect(getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 50])).toEqual(
+            ipsToGetSubnetsVLSM.success[0].results
+        );
+        expect(getSubnetsVLSM([192, 168, 10, 1], [255, 255, 0, 0], [1000, 999, 513])).toEqual(
+            ipsToGetSubnetsVLSM.success[1].results
+        );
+    }),
+        it('Should throw an error because given arguments are not correct', () => {
+            expect(getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [1000, 999, 513])).toEqual(
+                []
+            ); //More requested hosts than possible to adress
+            expect(() => {
+                getSubnetsVLSM([192, 168, 300, 1], [255, 255, 0, 0], [1000, 999, 513]);
+            }).toThrow(); //Bad ip
+            expect(() => {
+                getSubnetsVLSM([192, 168, -1, 1], [255, 255, 0, 0], [1000, 999, 513]);
+            }).toThrow(); //Bad ip
+            expect(() => {
+                getSubnetsVLSM([192, 168, 0, 1], [255, 255, 300, 0], [1000, 999, 513]);
+            }).toThrow(); //Bad Mask
+            expect(() => {
+                getSubnetsVLSM([192, 168, 0, 1], [255, 255, -1, 0], [1000, 999, 513]);
+            }).toThrow(); //Bad Mask
+            expect(() => {
+                getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 0]);
+            }).toThrow(); //Bad Mask
+        });
 });

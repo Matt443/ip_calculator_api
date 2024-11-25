@@ -136,8 +136,18 @@ export function getSubnetsVLSM(
     ipMask: IpAddressType,
     hostQuantities: number[]
 ): NetworkInfoType[] {
+    const maxHosts = getNumberOfHosts(ipMask);
     const subnetsSettingsVLSM = calculateNumberOfHostsVLSM(hostQuantities);
+
     subnetsSettingsVLSM.sort((a, b) => a.power - b.power).reverse();
+
+    let initialValue = 0;
+    const requestedHostQuantity = subnetsSettingsVLSM.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.hostQuantity,
+        initialValue
+    );
+
+    if (requestedHostQuantity - 2 > maxHosts) return [];
     const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM);
 
     return getAllSubnetsVLSM(ipAddres, masks);

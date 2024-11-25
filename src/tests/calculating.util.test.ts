@@ -21,13 +21,18 @@ import {
     ipToDotted,
     binaryMergedToUnmerged,
     binaryMergedToDefault,
-    calculatePartial
+    calculatePartial,
+    findNextHostQuantity,
+    getAllSubnetsVLSM,
+    getMasksVLSM,
+    calculateNumberOfHostsVLSM
 } from '@/utils/calculating.util.js';
 import {
     ipsToFix,
     ipsToGetCompleteInfo,
     ipsToGetConversions,
     ipsToGetSubnets,
+    ipsToGetSubnetsVLSM,
     ipsToMove,
     ipToCompare,
     IpToCompareType,
@@ -35,6 +40,7 @@ import {
     IpToGetConversionsType,
     IpToGetInfoType,
     IpToGetSubnetsType,
+    IpToGetSubnetsVLSMType,
     IpToMoveType,
     sampleIpAdress,
     sampleIpAdress_wrong,
@@ -396,5 +402,93 @@ describe('Testing calculate partial function', () => {
         expect(calculatePartial('111111111', 255, '1')).toBe(-1);
         expect(calculatePartial('11111111', -1, '1')).toBe(-1);
         expect(calculatePartial('11111111', 256, '1')).toBe(-1);
+    });
+});
+
+describe('Testing findNextHostQuantity function', () => {
+    it('Should return first power of given number wchich is equal or greater of given number', () => {
+        expect(findNextHostQuantity(2, 3)).toEqual({ hostQuantity: 4, power: 2 });
+        expect(findNextHostQuantity(2, 100)).toEqual({ hostQuantity: 128, power: 7 });
+        expect(findNextHostQuantity(2, 1000)).toEqual({ hostQuantity: 1024, power: 10 });
+        expect(findNextHostQuantity(4, 16, 1, 1024)).toEqual({ hostQuantity: 16, power: 2 });
+        expect(findNextHostQuantity(2)).toEqual({ hostQuantity: 2, power: 1 });
+    });
+
+    it('Should return object with both values -1 because given parameters are not correct', () => {
+        expect(() => {
+            findNextHostQuantity(2, -3);
+        }).toThrow();
+        expect(() => {
+            findNextHostQuantity(4, 2);
+        }).toThrow();
+    });
+});
+
+describe('Testing getAllSubnetsVLSM function', () => {
+    it('Should return an array with subnets informations', () => {
+        ipsToGetSubnetsVLSM.success.map((ipToGetSubnetsVLSM: IpToGetSubnetsVLSMType) => {
+            expect(getAllSubnetsVLSM(ipToGetSubnetsVLSM.ip, ipToGetSubnetsVLSM.masks)).toEqual(
+                ipToGetSubnetsVLSM.results
+            );
+        });
+    });
+    it('Should throw an error because ip is not correct', () => {
+        ipsToGetSubnetsVLSM.fail.map((ipToGetSubnetsVLSM: IpToGetSubnetsVLSMType) => {
+            expect(() => {
+                getAllSubnetsVLSM(ipToGetSubnetsVLSM.ip, ipToGetSubnetsVLSM.masks);
+            }).toThrow();
+        });
+    });
+});
+
+describe('Testing getMasksVLSM function', () => {
+    it('Should return a mask for given number of hosts', () => {
+        expect(
+            getMasksVLSM([
+                { hostQuantity: 64, power: 6 },
+                { hostQuantity: 128, power: 7 }
+            ])
+        ).toEqual([
+            [255, 255, 255, 192],
+            [255, 255, 255, 128]
+        ]);
+        expect(
+            getMasksVLSM([
+                { hostQuantity: 2, power: 1 },
+                { hostQuantity: 4, power: 2 },
+                { hostQuantity: 1, power: 0 }
+            ])
+        ).toEqual([
+            [255, 255, 255, 252],
+            [255, 255, 255, 248],
+            [255, 255, 255, 254]
+        ]);
+    });
+});
+
+describe('Testing calculateNumberOfHostsVLSM function', () => {
+    it('Should calculate nearest possible number of hosts from given number', () => {
+        expect(calculateNumberOfHostsVLSM([1, 2, 3, 4, 5, 6])).toEqual([
+            { hostQuantity: 1, power: 0 },
+            { hostQuantity: 2, power: 1 },
+            { hostQuantity: 4, power: 2 },
+            { hostQuantity: 4, power: 2 },
+            { hostQuantity: 8, power: 3 },
+            { hostQuantity: 8, power: 3 }
+        ]);
+        expect(calculateNumberOfHostsVLSM([100, 50, 64, 1000])).toEqual([
+            { hostQuantity: 128, power: 7 },
+            { hostQuantity: 64, power: 6 },
+            { hostQuantity: 64, power: 6 },
+            { hostQuantity: 1024, power: 10 }
+        ]);
+    });
+    it('Should throw an error because given number is not correct', () => {
+        expect(() => {
+            calculateNumberOfHostsVLSM([0]);
+        }).toThrow();
+        expect(() => {
+            calculateNumberOfHostsVLSM([1025]);
+        }).toThrow();
     });
 });

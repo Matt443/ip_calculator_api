@@ -455,7 +455,8 @@ export function findNextHostQuantity(
     currentPower: number = 1,
     maxValue: number = 1024
 ): subnetSettingVLSM_Type {
-    if (!isInRange(value, 2, maxValue)) throw new Error('Number of host must be a number ');
+    if (!isInRange(value, power, maxValue))
+        throw new Error('Number of host must be a number between given power and maxValue');
     const currentValue: number = Math.pow(power, currentPower);
     if (currentValue >= value) return { hostQuantity: currentValue, power: currentPower };
     currentPower++;
@@ -497,6 +498,7 @@ export function getAllSubnetsVLSM(
  */
 export function getMasksVLSM(subnetsSettingsVLSM: subnetSettingVLSM_Type[]): IpAddressType[] {
     return subnetsSettingsVLSM.map((subnetSetting: subnetSettingVLSM_Type) => {
+        if (subnetSetting.power < 3) subnetSetting.power++;
         const newMaskBinary = '1'.padEnd(32 - subnetSetting.power, '1').padEnd(32, '0');
 
         return ipBinaryToDefault(binaryMergedToUnmerged(newMaskBinary));
@@ -511,11 +513,6 @@ export function getMasksVLSM(subnetsSettingsVLSM: subnetSettingVLSM_Type[]): IpA
 export function calculateNumberOfHostsVLSM(hostQuantities: number[]): subnetSettingVLSM_Type[] {
     return hostQuantities.map((hostQuantity: number) => {
         let powerOfTwo = powerOf(hostQuantity, 2);
-
-        if (!isInRange(hostQuantity, 1, 1024)) return { hostQuantity: -1, power: -1 };
-
-        //Fixing problem with big masks
-        if (powerOfTwo < 3) powerOfTwo++;
 
         if (powerOfTwo !== -1) return { hostQuantity: hostQuantity, power: powerOfTwo };
 
