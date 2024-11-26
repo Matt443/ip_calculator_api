@@ -1,1 +1,1 @@
-prettier . --write && git add %1 && git commit -m %2
+prettier . --write && npx typedoc .\src\*\*.ts && git add %1 && git commit -m %2
