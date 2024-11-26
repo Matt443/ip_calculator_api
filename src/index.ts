@@ -1,18 +1,18 @@
 import express, { Response, Request } from 'express';
 import 'dotenv/config';
 import { connectDB } from '@/config/database.config.js';
+import ipConversions from './routes/ipConversions.routes';
 
+const router = express.Router();
 const app = express();
 
-app.get('/test', (req: Request, res: Response) => {
-    res.status(200).send('Hello World');
-});
+app.use('/api', ipConversions());
 
 let port = process.env.PORT;
 if (process.env.NODE_ENV === 'test') {
     port = process.env.PORT_TEST;
 }
-app.listen(port, async () => {
+export const server = app.listen(port, async () => {
     await connectDB();
     console.log(`Example app listening on port ${process.env.PORT}`);
 });

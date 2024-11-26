@@ -1,12 +1,16 @@
 import {
     emailValidation,
+    ipAddressBinaryValidation,
     ipAddressValidation,
+    ipAddressTypeValidation,
     isInRange,
     mongooseIdValidation,
     octetValidation,
     powerOf,
     stringValidation,
-    validationWithRegex
+    validationWithRegex,
+    ipAddressDecimalValidation,
+    ipDecimalToDefault
 } from '@/utils/validation.util.js';
 import {
     emails,
@@ -16,6 +20,7 @@ import {
     sampleIpAdress,
     sampleIpAdress_wrong
 } from '@/constant/samples.constant.js';
+import { supportedIpFormats } from '@/constant/supported.constants.js';
 
 describe('Testing email validation', () => {
     it(texts.pass + '(simple)', () => {
@@ -106,5 +111,61 @@ describe('Testing powerOf function', () => {
         expect(powerOf(5, 2)).toBe(-1);
         expect(powerOf(19, 2)).toBe(-1);
         expect(powerOf(Number.MAX_SAFE_INTEGER + 1, 2)).toBe(-1);
+    });
+});
+
+describe('Testing ipAddresTypeValidation function', () => {
+    it('Should check if given type is supported and return true', () => {
+        supportedIpFormats.map((format: string) => {
+            expect(ipAddressTypeValidation(format)).toBe(true);
+        });
+    });
+    it('Should check if given type is supported and return false', () => {
+        expect(ipAddressTypeValidation('1234')).toBe(false);
+        expect(ipAddressTypeValidation('decimals')).toBe(false);
+        expect(ipAddressTypeValidation('defaults')).toBe(false);
+        expect(ipAddressTypeValidation('')).toBe(false);
+    });
+});
+
+describe('Testing ipAddressBinaryValidation function', () => {
+    it('Check if given binary address is correct and return true', () => {
+        expect(ipAddressBinaryValidation('11000000101010000000000000000001')).toBe(true);
+        expect(ipAddressBinaryValidation('11111111111111111111111111111111')).toBe(true);
+        expect(ipAddressBinaryValidation('00000000000000000000000000000000')).toBe(true);
+    });
+    it('Check if given binary address is correct and return false', () => {
+        expect(ipAddressBinaryValidation('1111111111111111111111111111111a')).toBe(false);
+        expect(ipAddressBinaryValidation('1111111111111111111111111111111')).toBe(false);
+        expect(ipAddressBinaryValidation('0')).toBe(false);
+        expect(ipAddressBinaryValidation('')).toBe(false);
+        expect(ipAddressBinaryValidation('192.168.0.1')).toBe(false);
+        expect(ipAddressBinaryValidation('-11111111111111111111111111111111')).toBe(false);
+        expect(ipAddressBinaryValidation('1111111111111111-1111111111111111')).toBe(false);
+        expect(ipAddressBinaryValidation('11111111111111111111111111111111-')).toBe(false);
+    });
+});
+
+describe('Testing ipAddressDecimalValidation', () => {
+    it('Should check if given decimal ip is correct and return true', () => {
+        expect(ipAddressDecimalValidation(0)).toBe(true);
+        expect(ipAddressDecimalValidation(4294967295)).toBe(true);
+        expect(ipAddressDecimalValidation(3232235521)).toBe(true);
+    });
+    it('Should check if given decimal ip is correct and return false', () => {
+        expect(ipAddressDecimalValidation(-1)).toBe(false);
+        expect(ipAddressDecimalValidation(4294967295 + 1)).toBe(false);
+    });
+});
+
+describe('Testing ipDecimalToDefault function', () => {
+    it('Should convert decimal ip to default format', () => {
+        expect(ipDecimalToDefault(0)).toEqual([0, 0, 0, 0]);
+        expect(ipDecimalToDefault(4294967295)).toEqual([255, 255, 255, 255]);
+        expect(ipDecimalToDefault(3232235521)).toEqual([192, 168, 0, 1]);
+    });
+    it('Should return empty array because given ip is not correct', () => {
+        expect(ipDecimalToDefault(-1)).toEqual([]);
+        expect(ipDecimalToDefault(4294967295 + 1)).toEqual([]);
     });
 });

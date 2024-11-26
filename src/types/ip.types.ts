@@ -9,7 +9,7 @@ interface subnetSetting {
     subnetsHostQuantity: number;
 }
 
-type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
+export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 export type subnetSettingType = RequireField<
     subnetSetting,
@@ -37,4 +37,14 @@ export type NetworkInfoType = {
 export type subnetSettingVLSM_Type = {
     hostQuantity: number;
     power: number;
+};
+
+export type IpAnyFormatType = number | string | IpAddressType;
+
+export type IpFormatType = keyof IpValidatorsType;
+
+export type IpValidatorsType = {
+    decimal: (ip: number | string | IpAddressType) => boolean;
+    default: (ip: number | string | IpAddressType) => boolean;
+    binary: (ip: number | string | IpAddressType) => boolean;
 };

@@ -1,7 +1,11 @@
 import { connectDB } from '@/config/database.config.js';
 import mongoose from 'mongoose';
+import { server } from '@/index.js';
 
 describe('connectDB Function', () => {
+    afterEach(async () => {
+        await server.close();
+    });
     let exitSpy: jest.SpyInstance;
 
     beforeAll(() => {

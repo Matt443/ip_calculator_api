@@ -1,4 +1,11 @@
-import { IpAddressType } from '@/types/ip.types';
+import { IpAddressType, IpFormatType } from '@/types/ip.types';
+import {
+    binaryMergedToUnmerged,
+    ipBinaryToDefault,
+    ipDottedToDefault,
+    ipToBinary
+} from './calculating.util';
+import { anyIpAddressStrategy } from '@/types/strategy.types';
 
 /**
  *
@@ -50,9 +57,56 @@ export function mongooseIdValidation(id: string): boolean {
  */
 
 export function ipAddressValidation(ipAdress: IpAddressType): boolean {
+    if (ipAdress.length !== 4) return false;
     return ipAdress.every((octet: number) => {
         return octetValidation(octet);
     });
+}
+
+/**
+ *
+ * @param {string} ip string with binary representation of ip
+ * @returns {boolean} true if address is correct
+ */
+export function ipAddressBinaryValidation(ip: string): boolean {
+    if (!validationWithRegex(ip, new RegExp('^[0-1]{32}$'))) return false;
+
+    const ipDefault: IpAddressType = ipBinaryToDefault(binaryMergedToUnmerged(ip));
+
+    return ipAddressValidation(ipDefault);
+}
+
+/**
+ *
+ * @param {number} ipDecimal
+ * @returns {boolean} true if address is correct
+ */
+
+export function ipAddressDecimalValidation(ipDecimal: number): boolean {
+    if (
+        !validationWithRegex(String(ipDecimal), new RegExp('^[0-9]+$')) ||
+        !isInRange(ipDecimal, 0, 4294967295)
+    )
+        return false;
+
+    const ipDefault: IpAddressType = ipDecimalToDefault(ipDecimal);
+
+    return ipAddressValidation(ipDefault);
+}
+
+/**
+ *
+ * @param {number} ipDecimal
+ * @returns {IpAddressType}
+ */
+export function ipDecimalToDefault(ipDecimal: number): IpAddressType {
+    if (!isInRange(ipDecimal, 0, 4294967295)) return [];
+    return [
+        (ipDecimal >> 24) & 0xff,
+        (ipDecimal >> 16) & 0xff,
+        (ipDecimal >> 8) & 0xff,
+        ipDecimal & 0xff
+    ];
 }
 
 /**
@@ -100,4 +154,14 @@ export function powerOf(numberValue: number, base: number): number {
     }
 
     return -1;
+}
+
+/**
+ *
+ * @param {string} type
+ * @returns {boolean} if type is included in supported types
+ */
+
+export function ipAddressTypeValidation(type: string): boolean {
+    return ['decimal', 'default', 'binary'].includes(type);
 }

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IpClassType } from '../types/models.types.js';
+import { IpClassType } from '../types/model.types.js';
 
 const IpMaskSchema = new Schema<IpClassType>({
     ipMin: {

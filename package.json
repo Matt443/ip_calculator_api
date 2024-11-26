@@ -33,12 +33,11 @@
         "typescript": "^5.6.3"
     },
     "scripts": {
-        "test": "jest --watchAll --coverage",
+        "test": "jest --watchAll --coverage  --detectOpenHandles",
         "start": "node src/index.js",
-        "watch": "nodemon --exec node --loader ts-node/esm src/index.ts",
-        "nodemon": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
         "dev": "nodemon",
-        "build": "tsc && tsc-alias"
+        "build": "tsc && tsc-alias",
+        "prettier": "prettier . --write"
     },
     "dependencies": {
         "babel-jest": "^29.7.0",

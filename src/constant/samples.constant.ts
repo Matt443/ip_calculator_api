@@ -1,5 +1,11 @@
-import { IpAddressInfoType, NetworkInfoType, type IpAddressType } from '@/types/ip.types.js';
+import {
+    IpAddressInfoType,
+    IpFormatType,
+    NetworkInfoType,
+    type IpAddressType
+} from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from './errors.constants';
+import { IpConversionResultType, ResponseIpConversion } from '@/types/api.types.js';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -606,5 +612,60 @@ export const ipsToGetSubnetsVLSM: {
         { ip: [192, 168, 0, 1], masks: [[255, 255, 300, 0]] },
         { ip: [192, 168, 0, 1], masks: [[255, 255, -1, 0]] },
         { ip: [192, 168, -1, 1], masks: [[255, 255, 0, 0]] }
+    ]
+};
+
+export type IpsToBinaryType = {
+    ip: string;
+    type: string;
+    result?: ResponseIpConversion;
+};
+
+export const ipsToBinary: { success: IpsToBinaryType[]; fail: IpsToBinaryType[] } = {
+    success: [
+        {
+            ip: '0',
+            type: 'decimal',
+            result: {
+                given: '0',
+                result: {
+                    joined: '00000000.00000000.00000000.00000000',
+                    separated: ['00000000', '00000000', '00000000', '00000000']
+                }
+            }
+        },
+        {
+            ip: '192.168.0.1',
+            type: 'default',
+            result: {
+                given: '192.168.0.1',
+                result: {
+                    joined: '11000000.10101000.00000000.00000001',
+                    separated: ['11000000', '10101000', '00000000', '00000001']
+                }
+            }
+        },
+        {
+            ip: '11000000101000000000000000000001',
+            type: 'binary',
+            result: {
+                given: '11000000101000000000000000000001',
+                result: {
+                    joined: '11000000.10100000.00000000.00000001',
+                    separated: ['11000000', '10100000', '00000000', '00000001']
+                }
+            }
+        }
+    ],
+    fail: [
+        { ip: '0', type: '' },
+        { ip: '0', type: 'defaults' },
+        { ip: '0', type: '1' },
+        { ip: 'Hello', type: 'decimal' },
+        { ip: '-1', type: 'decimal' },
+        { ip: '11111111', type: 'binary' },
+        { ip: 'Hello', type: 'decimals' },
+        { ip: '192.168.0.300', type: 'default' },
+        { ip: '192.168.0', type: 'default' }
     ]
 };
