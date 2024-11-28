@@ -7,11 +7,18 @@ import request from 'supertest';
 export class StandardTest {}
 
 export class EndpointTest extends StandardTest {
+    /**
+     *
+     * @param {string} url
+     * @param {number | ResponseIpConversion}result expected result
+     * @param checkStatus @default true if true numeric values will be check as a status
+     * @returns {void}
+     */
     static async resultCodeTest(
         url: string,
         result: number | ResponseIpConversion,
         checkStatus: boolean = true
-    ) {
+    ): Promise<void | boolean> {
         const response = await request(app).get(url);
         if (typeof result !== 'number' && checkStatus) {
             expect(JSON.parse(response.text)).toEqual(result);
@@ -19,7 +26,15 @@ export class EndpointTest extends StandardTest {
         }
         expect(response.status).toBe(result);
     }
-    static async dataParamValidationTests(url: string, resultDefault: ResponseIpConversion) {
+    /**
+     * @param {string} url
+     * @param {ResponseIpConversion} resultDefault result when endpoint called with default ip type
+     * @returns {void}
+     */
+    static async dataParamValidationTests(
+        url: string,
+        resultDefault: ResponseIpConversion
+    ): Promise<void> {
         it('Should convert only ip with default type even without defined type', async () => {
             await this.resultCodeTest(`${url}?ip=192.168.0.1`, resultDefault);
         });
@@ -34,7 +49,13 @@ export class EndpointTest extends StandardTest {
             await this.resultCodeTest(`${url}?type=decimal`, 400);
         });
     }
-    static async successFailTests(url: string, testData: ConversionTestsDataType) {
+    /**
+     *
+     * @param {string} url
+     * @param {ConversionTestsDataType} testData
+     * @returns {void}
+     */
+    static async successFailTests(url: string, testData: ConversionTestsDataType): Promise<void> {
         it('Should convert ip to decimal', async () => {
             await Promise.all(
                 testData.success.map(async (ipToConvert: IpsToConvertType) => {
