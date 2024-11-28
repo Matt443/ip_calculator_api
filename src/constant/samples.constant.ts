@@ -615,13 +615,13 @@ export const ipsToGetSubnetsVLSM: {
     ]
 };
 
-export type IpsToBinaryType = {
+export type IpsToConvertType = {
     ip: string;
     type: string;
-    result?: ResponseIpConversion;
+    result: ResponseIpConversion | number;
 };
 
-export const ipsToBinary: { success: IpsToBinaryType[]; fail: IpsToBinaryType[] } = {
+export const ipsToBinary: ConversionTestsDataType = {
     success: [
         {
             ip: '0',
@@ -646,26 +646,122 @@ export const ipsToBinary: { success: IpsToBinaryType[]; fail: IpsToBinaryType[] 
             }
         },
         {
-            ip: '11000000101000000000000000000001',
+            ip: '11000000101010000000000000000001',
             type: 'binary',
             result: {
-                given: '11000000101000000000000000000001',
+                given: '11000000101010000000000000000001',
                 result: {
-                    joined: '11000000.10100000.00000000.00000001',
-                    separated: ['11000000', '10100000', '00000000', '00000001']
+                    joined: '11000000.10101000.00000000.00000001',
+                    separated: ['11000000', '10101000', '00000000', '00000001']
                 }
             }
         }
     ],
     fail: [
-        { ip: '0', type: '' },
-        { ip: '0', type: 'defaults' },
-        { ip: '0', type: '1' },
-        { ip: 'Hello', type: 'decimal' },
-        { ip: '-1', type: 'decimal' },
-        { ip: '11111111', type: 'binary' },
-        { ip: 'Hello', type: 'decimals' },
-        { ip: '192.168.0.300', type: 'default' },
-        { ip: '192.168.0', type: 'default' }
+        { ip: '0', type: '', result: 400 },
+        { ip: '0', type: 'defaults', result: 400 },
+        { ip: '0', type: '1', result: 400 },
+        { ip: 'Hello', type: 'decimal', result: 400 },
+        { ip: '-1', type: 'decimal', result: 400 },
+        { ip: '11111111', type: 'binary', result: 400 },
+        { ip: 'Hello', type: 'decimals', result: 400 },
+        { ip: '192.168.0.300', type: 'default', result: 400 },
+        { ip: '192.168.0', type: 'default', result: 400 }
     ]
+};
+
+export type ConversionTestsDataType = { success: IpsToConvertType[]; fail: IpsToConvertType[] };
+
+export const ipsToDecimal: ConversionTestsDataType = {
+    success: [
+        {
+            ip: '192.168.0.1',
+            type: 'default',
+            result: {
+                given: '192.168.0.1',
+                result: {
+                    decimal: 3232235521
+                }
+            }
+        },
+        {
+            ip: '11000000101010000000000000000001',
+            type: 'binary',
+            result: {
+                given: '11000000101010000000000000000001',
+                result: {
+                    decimal: 3232235521
+                }
+            }
+        },
+        {
+            ip: '11111111111111111111111111111111',
+            type: 'binary',
+            result: {
+                given: '11111111111111111111111111111111',
+                result: {
+                    decimal: 4294967295
+                }
+            }
+        },
+        {
+            ip: '255',
+            type: 'decimal',
+            result: {
+                given: '255',
+                result: { decimal: 255 }
+            }
+        }
+    ],
+    fail: [...ipsToBinary.fail]
+};
+
+export const ipsToDefault: ConversionTestsDataType = {
+    success: [
+        {
+            ip: '192.168.0.1',
+            type: 'default',
+            result: {
+                given: '192.168.0.1',
+                result: {
+                    joined: '192.168.0.1',
+                    separated: [192, 168, 0, 1]
+                }
+            }
+        },
+        {
+            ip: '11000000101010000000000000000001',
+            type: 'binary',
+            result: {
+                given: '11000000101010000000000000000001',
+                result: {
+                    joined: '192.168.0.1',
+                    separated: [192, 168, 0, 1]
+                }
+            }
+        },
+        {
+            ip: '11111111111111111111111111111111',
+            type: 'binary',
+            result: {
+                given: '11111111111111111111111111111111',
+                result: {
+                    joined: '255.255.255.255',
+                    separated: [255, 255, 255, 255]
+                }
+            }
+        },
+        {
+            ip: '255',
+            type: 'decimal',
+            result: {
+                given: '255',
+                result: {
+                    joined: '0.0.0.255',
+                    separated: [0, 0, 0, 255]
+                }
+            }
+        }
+    ],
+    fail: [...ipsToBinary.fail]
 };

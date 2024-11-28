@@ -1,6 +1,13 @@
+import { ResponseIpConversion } from '@/types/api.types';
 import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types.js';
 import { anyIpAddressStrategy } from '@/types/strategy.types.js';
-import { binaryMergedToUnmerged, ipDottedToDefault, ipToBinary } from '@/utils/calculating.util.js';
+import {
+    binaryMergedToUnmerged,
+    ipBinaryToDefault,
+    ipDottedToDefault,
+    ipToBinary,
+    ipToDecimal
+} from '@/utils/calculating.util.js';
 import {
     ipAddressBinaryValidation,
     ipAddressDecimalValidation,
@@ -10,12 +17,26 @@ import {
 
 export const anyIp: Record<IpFormatType, anyIpAddressStrategy> = {
     decimal: {
-        validate(ip: number): boolean {
-            return ipAddressDecimalValidation(ip);
+        validate(ip: string): boolean {
+            return ipAddressDecimalValidation(Number(ip));
         },
-        toBinary(ip: number): IpAddresBinaryType {
-            const ipDefault: IpAddressType = ipDecimalToDefault(ip);
+        toBinary(ip: string): IpAddresBinaryType {
+            const ipDefault: IpAddressType = ipDecimalToDefault(Number(ip));
             return ipToBinary(ipDefault);
+        },
+        toDecimal(ip: string): number {
+            return Number(ip);
+        },
+        toDefault(ip: string): IpAddressType {
+            return ipDecimalToDefault(Number(ip));
+        },
+        responseForApi(given: string, ipDecimal: number): ResponseIpConversion {
+            return {
+                given,
+                result: {
+                    decimal: ipDecimal
+                }
+            };
         }
     },
     default: {
@@ -26,6 +47,21 @@ export const anyIp: Record<IpFormatType, anyIpAddressStrategy> = {
         toBinary(ip: string): IpAddresBinaryType {
             const ipDefault: IpAddressType = ipDottedToDefault(ip);
             return ipToBinary(ipDefault);
+        },
+        toDecimal(ip: string): number {
+            return ipToDecimal(ipDottedToDefault(ip));
+        },
+        toDefault(ip: string): IpAddressType {
+            return ipDottedToDefault(ip);
+        },
+        responseForApi(given: string, ip: IpAddressType): ResponseIpConversion {
+            return {
+                given,
+                result: {
+                    joined: ip.join('.'),
+                    separated: ip
+                }
+            };
         }
     },
     binary: {
@@ -34,6 +70,22 @@ export const anyIp: Record<IpFormatType, anyIpAddressStrategy> = {
         },
         toBinary(ip: string): IpAddresBinaryType {
             return binaryMergedToUnmerged(ip);
+        },
+        toDecimal(ip: string): number {
+            const ipDefault: IpAddressType = ipBinaryToDefault(binaryMergedToUnmerged(ip));
+            return ipToDecimal(ipDefault);
+        },
+        toDefault(ip: string): IpAddressType {
+            return ipBinaryToDefault(binaryMergedToUnmerged(ip));
+        },
+        responseForApi(given: string, ip: IpAddressType): ResponseIpConversion {
+            return {
+                given,
+                result: {
+                    joined: ip.join('.'),
+                    separated: ip
+                }
+            };
         }
     }
 };

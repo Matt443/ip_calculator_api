@@ -1,57 +1,37 @@
-import { ipsToBinary, IpsToBinaryType } from '@/constant/samples.constant.js';
-import app, { server } from '@/index.js';
-import request from 'supertest';
-
+import { ipsToBinary, ipsToDecimal, ipsToDefault } from '@/constant/samples.constant.js';
+import { server } from '@/index.js';
+import { EndpointTest, StandardTest } from '@/tests/utils/endpoints.util.js';
 describe('GET /api/ip/conversions/binary', () => {
     afterEach(async () => {
         await server.close();
     });
-    it('Should validate if args in conversion request are correct and convert given ip to binary', async () => {
-        await Promise.all(
-            ipsToBinary.success.map(async (ipToConvert: IpsToBinaryType) => {
-                const response = await request(app).get(
-                    `/api/ip/conversions/binary?ip=${ipToConvert.ip}&type=${ipToConvert.type}`
-                );
-                expect(response.status).toBe(200);
-                expect(JSON.parse(response.text)).toEqual(ipToConvert.result);
-            })
-        );
+    EndpointTest.successFailTests('/api/ip/conversions/binary', ipsToBinary);
+    EndpointTest.dataParamValidationTests('/api/ip/conversions/binary', {
+        given: '192.168.0.1',
+        result: {
+            joined: '11000000.10101000.00000000.00000001',
+            separated: ['11000000', '10101000', '00000000', '00000001']
+        }
     });
-    it('Should convert only ip with default type even without defined type', async () => {
-        const response = await request(app).get(`/api/ip/conversions/binary?ip=192.168.0.1`);
-        expect(JSON.parse(response.text)).toEqual({
-            given: '192.168.0.1',
-            result: {
-                joined: '11000000.10101000.00000000.00000001',
-                separated: ['11000000', '10101000', '00000000', '00000001']
-            }
-        });
-    });
-    it('Should return 400 because only type defualt is allowed without defined type param', async () => {
-        const response = await request(app).get(`/api/ip/conversions/binary?ip=3232235521`);
-        expect(response.status).toBe(400);
+});
 
-        const response2 = await request(app).get(
-            `/api/ip/conversions/binary?ip=11111111111111111111111111111111`
-        );
-        expect(response2.status).toBe(400);
+describe('GET /api/ip/conversions/decimal', () => {
+    EndpointTest.successFailTests('/api/ip/conversions/decimal', ipsToDecimal);
+    EndpointTest.dataParamValidationTests('/api/ip/conversions/decimal', {
+        given: '192.168.0.1',
+        result: {
+            decimal: 3232235521
+        }
     });
-    it('Should return 400 because parameters are not correct', async () => {
-        await Promise.all(
-            ipsToBinary.fail.map(async (ipToConvert: IpsToBinaryType) => {
-                const response = await request(app).get(
-                    `/api/ip/conversions/binary?ip=${ipToConvert.ip}&type=${ipToConvert.type}`
-                );
-                expect(response.status).toBe(400);
-            })
-        );
-    });
-    it('Should return 400 because ip params are undefined', async () => {
-        const response = await request(app).get(`/api/ip/conversions/binary?`);
-        expect(response.status).toBe(400);
-    });
-    it('Should return 400 because ip param is missing', async () => {
-        const response = await request(app).get(`/api/ip/conversions/binary?type=decimal`);
-        expect(response.status).toBe(400);
+});
+
+describe('GET /api/ip/conversions/default', () => {
+    EndpointTest.successFailTests('/api/ip/conversions/default', ipsToDefault);
+    EndpointTest.dataParamValidationTests('/api/ip/conversions/default', {
+        given: '192.168.0.1',
+        result: {
+            joined: '192.168.0.1',
+            separated: [192, 168, 0, 1]
+        }
     });
 });

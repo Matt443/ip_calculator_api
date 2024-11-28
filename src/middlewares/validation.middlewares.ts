@@ -5,7 +5,7 @@ import { sendError } from '@/utils/error.util.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 
 export async function ipToConvertValidation(req: Request, res: Response, next: NextFunction) {
-    const ip = req.query.ip as IpAnyFormatType;
+    const ip = req.query.ip as string;
     let type: IpFormatType = 'default';
     //Checking if value has been given
     if (ip === undefined) return sendError(res, 400, 'Bad Request');

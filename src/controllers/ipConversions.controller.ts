@@ -1,31 +1,32 @@
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { ResponseIpConversion } from '@/types/api.types.js';
-import { IpAddresBinaryType, IpFormatType } from '@/types/ip.types.js';
+import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types.js';
+import { ipQueryExtractor } from '@/utils/api.util.js';
 import { Request, Response, NextFunction } from 'express';
 
 export default {
     async getBinary(req: Request, res: Response, next: NextFunction) {
-        let type: IpFormatType = 'default';
-        if (req.query.type !== undefined) type = req.query.type as IpFormatType;
-        const ip = req.query.ip as string;
+        const { ip, type } = ipQueryExtractor(req.query as { ip: string; type: IpFormatType });
         const ipBinary: IpAddresBinaryType = anyIp[type].toBinary(ip);
 
-        const response: ResponseIpConversion = {
-            given: String(ip),
-            result: {
-                joined: ipBinary.join('.'),
-                separated: ipBinary
-            }
-        };
+        const response: ResponseIpConversion = anyIp['binary'].responseForApi(ip, ipBinary);
 
         res.send(response).status(200);
     },
     async getDecimal(req: Request, res: Response, next: NextFunction) {
-        if (req.query.ip === undefined) return next();
-        res.send('Hello decimal world').status(200);
+        const { ip, type } = ipQueryExtractor(req.query as { ip: string; type: IpFormatType });
+        const ipDecimal: number = anyIp[type].toDecimal(ip);
+
+        const response: ResponseIpConversion = anyIp['decimal'].responseForApi(ip, ipDecimal);
+
+        res.send(response).status(200);
     },
     async getDefault(req: Request, res: Response, next: NextFunction) {
-        if (req.query.ip === undefined) return next();
-        res.send('Hello default world').status(200);
+        const { ip, type } = ipQueryExtractor(req.query as { ip: string; type: IpFormatType });
+        const ipDefault: IpAddressType = anyIp[type].toDefault(ip);
+
+        const response: ResponseIpConversion = anyIp['default'].responseForApi(ip, ipDefault);
+
+        res.send(response).status(200);
     }
 };

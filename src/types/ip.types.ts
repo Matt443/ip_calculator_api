@@ -39,7 +39,7 @@ export type subnetSettingVLSM_Type = {
     power: number;
 };
 
-export type IpAnyFormatType = number | string | IpAddressType;
+export type IpAnyFormatType = number | IpAddresBinaryType | IpAddressType;
 
 export type IpFormatType = keyof IpValidatorsType;
 
