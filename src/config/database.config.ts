@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 /**
  * Function to connect to a database.
- * @requires DB_URL in .env file;
  */
 export const connectDB = async (): Promise<void> => {
     if (!process.env.DB_URL || process.env.DB_URL === undefined || process.env.DB_URL === '')

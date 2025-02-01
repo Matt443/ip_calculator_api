@@ -1,10 +1,33 @@
-import { ConversionTestsDataType, IpsToConvertType } from '@/constant/samples.constant';
+import {
+    ConversionTestsDataType,
+    IpToCalculateType,
+    IpToConvertType,
+    TestDataSetFieldType,
+    TestDataSetType
+} from '@/constant/samples.constant';
 import app from '@/index.js';
-import { IpConversionResultType, ResponseIpConversion } from '@/types/api.types.js';
-import { IpAddresBinaryType } from '@/types/ip.types';
+import { ResponseIpConversion } from '@/types/api.types.js';
 import request from 'supertest';
 
-export class StandardTest {}
+export class StandardTest {
+    /**
+     *
+     * @param {string} url
+     * @param {string} paramName
+     * @param {string} paramValue
+     * @param {Object|string} result
+     * @returns {Promise<void>}
+     */
+    static async dataParamValidationTest(
+        url: string,
+        paramName: string,
+        paramValue: string,
+        result: Object | string
+    ) {
+        const response = await request(app).get(`${url}?${paramName}=${paramValue}`);
+        expect(JSON.parse(response.text)).toEqual(result);
+    }
+}
 
 export class EndpointTest extends StandardTest {
     /**
@@ -12,7 +35,7 @@ export class EndpointTest extends StandardTest {
      * @param {string} url
      * @param {number | ResponseIpConversion}result expected result
      * @param checkStatus @default true if true numeric values will be check as a status
-     * @returns {void}
+     * @returns {Promise<void|boolean>}
      */
     static async resultCodeTest(
         url: string,
@@ -24,6 +47,7 @@ export class EndpointTest extends StandardTest {
             expect(JSON.parse(response.text)).toEqual(result);
             return false;
         }
+
         expect(response.status).toBe(result);
     }
     /**
@@ -31,50 +55,58 @@ export class EndpointTest extends StandardTest {
      * @param {ResponseIpConversion} resultDefault result when endpoint called with default ip type
      * @returns {void}
      */
+}
+
+export class EndpointConversionsTest extends EndpointTest {
+    /**
+     *
+     * @param {string} testMessage
+     * @param {string} url
+     * @param {TestDataSetType[]} testData
+     * @returns {Promise<void>}
+     */
     static async dataParamValidationTests(
+        testMessage: string,
         url: string,
-        resultDefault: ResponseIpConversion
+        testData: TestDataSetFieldType[],
+        urlBilder: Function
     ): Promise<void> {
-        it('Should convert only ip with default type even without defined type', async () => {
-            await this.resultCodeTest(`${url}?ip=192.168.0.1`, resultDefault);
-        });
-        it('Should return 400 because only type defualt is allowed without defined type param', async () => {
-            await this.resultCodeTest(`${url}?ip=3232235521`, 400);
-            await this.resultCodeTest(`${url}?ip=11111111111111111111111111111111`, 400);
-        });
-        it('Should return 400 because ip params are undefined', async () => {
-            await this.resultCodeTest(`${url}?`, 400);
-        });
-        it('Should return 400 because ip param is missing', async () => {
-            await this.resultCodeTest(`${url}?type=decimal`, 400);
+        it(testMessage, async () => {
+            await Promise.all(
+                testData.map(async (ipToTest: TestDataSetFieldType) => {
+                    const response = await request(app).get(urlBilder(url, ipToTest));
+                    expect(JSON.parse(response.text)).toEqual(ipToTest.result);
+                })
+            );
         });
     }
     /**
      *
      * @param {string} url
-     * @param {ConversionTestsDataType} testData
-     * @returns {void}
+     * @param {TestDataSetType[]} testData
+     * @returns {Promise<void>}
      */
-    static async successFailTests(url: string, testData: ConversionTestsDataType): Promise<void> {
-        it('Should convert ip to decimal', async () => {
+    static async successFailTests(
+        messages: string[],
+        url: string,
+        testData: TestDataSetType,
+        urlBilder: Function
+    ): Promise<void> {
+        this.dataParamValidationTests(messages[0], url, testData.success, urlBilder);
+        it(messages[1], async () => {
             await Promise.all(
-                testData.success.map(async (ipToConvert: IpsToConvertType) => {
-                    await this.resultCodeTest(
-                        `${url}?ip=${ipToConvert.ip}&type=${ipToConvert.type}`,
-                        ipToConvert.result
-                    );
-                })
-            );
-        });
-        it('Should return 400 because args are not correct', async () => {
-            await Promise.all(
-                testData.fail.map(async (ipToConvert: IpsToConvertType) => {
-                    await this.resultCodeTest(
-                        `${url}?ip=${ipToConvert.ip}&type=${ipToConvert.type}`,
-                        ipToConvert.result
-                    );
+                testData.fail.map(async (ipToTest: TestDataSetFieldType) => {
+                    this.resultCodeTest(urlBilder(url, ipToTest), 400);
                 })
             );
         });
     }
+}
+
+export function conversionUrlBilder(url: string, ipToTest: IpToConvertType): string {
+    return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type}`;
+}
+
+export function calculatingUrlBilder(url: string, ipToTest: IpToCalculateType): string {
+    return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type || 'default'}&mask=${ipToTest.mask}&maskType=${ipToTest.maskType || 'shorthand'}`;
 }

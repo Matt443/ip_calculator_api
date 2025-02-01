@@ -10,7 +10,8 @@ import {
     stringValidation,
     validationWithRegex,
     ipAddressDecimalValidation,
-    ipDecimalToDefault
+    ipShorthandValidation,
+    possibleShorthandValidation
 } from '@/utils/validation.util.js';
 import {
     emails,
@@ -158,14 +159,29 @@ describe('Testing ipAddressDecimalValidation', () => {
     });
 });
 
-describe('Testing ipDecimalToDefault function', () => {
-    it('Should convert decimal ip to default format', () => {
-        expect(ipDecimalToDefault(0)).toEqual([0, 0, 0, 0]);
-        expect(ipDecimalToDefault(4294967295)).toEqual([255, 255, 255, 255]);
-        expect(ipDecimalToDefault(3232235521)).toEqual([192, 168, 0, 1]);
+describe('Testing ipShorthandValidation function', () => {
+    it('Should check if shorthand is valid and return true', () => {
+        expect(ipShorthandValidation(0)).toBe(true);
+        expect(ipShorthandValidation(32)).toBe(true);
+        expect(ipShorthandValidation(11)).toBe(true);
+        expect(ipShorthandValidation(25)).toBe(true);
+        expect(ipShorthandValidation(31)).toBe(true);
     });
-    it('Should return empty array because given ip is not correct', () => {
-        expect(ipDecimalToDefault(-1)).toEqual([]);
-        expect(ipDecimalToDefault(4294967295 + 1)).toEqual([]);
+    it('Should check if shorthand is valid und return false', () => {
+        expect(ipShorthandValidation(-1)).toBe(false);
+        expect(ipShorthandValidation(-33)).toBe(false);
+    });
+});
+
+describe('Testing possibleShorthandValidation function', () => {
+    it('Should check if given ip can be converted to shorthand and return true', () => {
+        expect(possibleShorthandValidation('11111111111111111111111111111111')).toBe(true);
+        expect(possibleShorthandValidation('11111111111111111111111100000000')).toBe(true);
+        expect(possibleShorthandValidation('11111111111111110000000000000000')).toBe(true);
+    });
+    it('Should check if given ip can be converted to shorthand and return false', () => {
+        expect(possibleShorthandValidation('1111111111111111000000000000001')).toBe(false);
+        expect(possibleShorthandValidation('111111111111111100000000000000')).toBe(false);
+        expect(possibleShorthandValidation('1111111111111111010000000000000')).toBe(false);
     });
 });

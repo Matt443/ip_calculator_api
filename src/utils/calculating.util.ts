@@ -12,8 +12,13 @@ import {
     getNetworkAddress,
     getNumberOfHosts
 } from '@/services/ipCalculations.service.js';
-import { ipAddressValidation, isInRange, powerOf, validationWithRegex } from './validation.util';
-import { replaceInString } from './common';
+import {
+    ipAddressValidation,
+    ipShorthandValidation,
+    isInRange,
+    powerOf
+} from '@/utils/validation.util.js';
+import { replaceInString } from '@/utils/common.js';
 /**
  *
  * @param {number} decimal - number to be convert
@@ -518,4 +523,31 @@ export function calculateNumberOfHostsVLSM(hostQuantities: number[]): subnetSett
 
         return findNextHostQuantity(2, hostQuantity);
     });
+}
+
+/**
+ *
+ * @param {number} ipDecimal
+ * @returns {IpAddressType}
+ */
+export function ipDecimalToDefault(ipDecimal: number): IpAddressType {
+    if (!isInRange(ipDecimal, 0, 4294967295)) return [];
+    return [
+        (ipDecimal >> 24) & 0xff,
+        (ipDecimal >> 16) & 0xff,
+        (ipDecimal >> 8) & 0xff,
+        ipDecimal & 0xff
+    ];
+}
+
+/**
+ *
+ * @param {number} shorthand
+ * @returns {IpAddressType}
+ */
+export function shorthandToDefault(shorthand: number): IpAddressType {
+    if (!ipShorthandValidation(shorthand)) return [];
+    const ipBinary = ''.padEnd(shorthand, '1').padEnd(32, '0');
+    const ipDefault = binaryMergedToDefault(ipBinary);
+    return ipDefault;
 }

@@ -1,12 +1,27 @@
-import { ipsToBinary, ipsToDecimal, ipsToDefault } from '@/constant/samples.constant.js';
+import {
+    ipsToBinary,
+    ipsToDecimal,
+    ipsToDefault,
+    ipsToShorthand
+} from '@/constant/samples.constant.js';
 import { server } from '@/index.js';
-import { EndpointTest, StandardTest } from '@/tests/utils/endpoints.util.js';
+import {
+    conversionUrlBilder,
+    EndpointConversionsTest,
+    StandardTest
+} from '@/tests/utils/endpoints.util.js';
+
 describe('GET /api/ip/conversions/binary', () => {
     afterEach(async () => {
         await server.close();
     });
-    EndpointTest.successFailTests('/api/ip/conversions/binary', ipsToBinary);
-    EndpointTest.dataParamValidationTests('/api/ip/conversions/binary', {
+    EndpointConversionsTest.successFailTests(
+        ['Should convert ips to binary', 'Should return 400 because data is not correct'],
+        '/api/ip/conversions/binary',
+        ipsToBinary,
+        conversionUrlBilder
+    );
+    StandardTest.dataParamValidationTest('/api/ip/conversions/binary', 'ip', '192.168.0.1', {
         given: '192.168.0.1',
         result: {
             joined: '11000000.10101000.00000000.00000001',
@@ -16,8 +31,16 @@ describe('GET /api/ip/conversions/binary', () => {
 });
 
 describe('GET /api/ip/conversions/decimal', () => {
-    EndpointTest.successFailTests('/api/ip/conversions/decimal', ipsToDecimal);
-    EndpointTest.dataParamValidationTests('/api/ip/conversions/decimal', {
+    afterEach(async () => {
+        await server.close();
+    });
+    EndpointConversionsTest.successFailTests(
+        ['Should convert ips to decimal', 'Should return 400 because data is not correct'],
+        '/api/ip/conversions/decimal',
+        ipsToDecimal,
+        conversionUrlBilder
+    );
+    StandardTest.dataParamValidationTest('/api/ip/conversions/decimal', 'ip', '192.168.0.1', {
         given: '192.168.0.1',
         result: {
             decimal: 3232235521
@@ -26,12 +49,44 @@ describe('GET /api/ip/conversions/decimal', () => {
 });
 
 describe('GET /api/ip/conversions/default', () => {
-    EndpointTest.successFailTests('/api/ip/conversions/default', ipsToDefault);
-    EndpointTest.dataParamValidationTests('/api/ip/conversions/default', {
+    afterEach(async () => {
+        await server.close();
+    });
+    EndpointConversionsTest.successFailTests(
+        ['Should convert ips to default', 'Should return 400 because data is not correct'],
+        '/api/ip/conversions/default',
+        ipsToDefault,
+        conversionUrlBilder
+    );
+    StandardTest.dataParamValidationTest('/api/ip/conversions/default', 'ip', '192.168.0.1', {
         given: '192.168.0.1',
         result: {
             joined: '192.168.0.1',
             separated: [192, 168, 0, 1]
+        }
+    });
+});
+
+describe('GET /api/ip/conversions/shorthand', () => {
+    afterEach(async () => {
+        await server.close();
+    });
+    EndpointConversionsTest.successFailTests(
+        ['Should convert ips to shorthand', 'Should return 400 because data is not correct'],
+        '/api/ip/conversions/shorthand',
+        ipsToShorthand,
+        conversionUrlBilder
+    );
+    StandardTest.dataParamValidationTest('/api/ip/conversions/shorthand', 'ip', '255.255.255.0', {
+        given: '255.255.255.0',
+        result: {
+            shorthand: 24
+        }
+    });
+    StandardTest.dataParamValidationTest('/api/ip/conversions/shorthand', 'ip', '192.168.0.1', {
+        given: '192.168.0.1',
+        result: {
+            shorthand: -1
         }
     });
 });

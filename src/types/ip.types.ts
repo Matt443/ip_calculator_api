@@ -41,10 +41,11 @@ export type subnetSettingVLSM_Type = {
 
 export type IpAnyFormatType = number | IpAddresBinaryType | IpAddressType;
 
-export type IpFormatType = keyof IpValidatorsType;
+export type IpFormatType = keyof IpFormatsType;
 
-export type IpValidatorsType = {
+export type IpFormatsType = {
     decimal: (ip: number | string | IpAddressType) => boolean;
     default: (ip: number | string | IpAddressType) => boolean;
     binary: (ip: number | string | IpAddressType) => boolean;
+    shorthand: (ip: number | string | IpAddressType) => boolean;
 };

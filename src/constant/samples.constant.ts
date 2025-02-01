@@ -5,7 +5,11 @@ import {
     type IpAddressType
 } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from './errors.constants';
-import { IpConversionResultType, ResponseIpConversion } from '@/types/api.types.js';
+import {
+    IpConversionResultType,
+    ResponseIpConversion,
+    ResponseNetworkAddress
+} from '@/types/api.types.js';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -615,7 +619,7 @@ export const ipsToGetSubnetsVLSM: {
     ]
 };
 
-export type IpsToConvertType = {
+export type IpToConvertType = {
     ip: string;
     type: string;
     result: ResponseIpConversion | number;
@@ -655,6 +659,17 @@ export const ipsToBinary: ConversionTestsDataType = {
                     separated: ['11000000', '10101000', '00000000', '00000001']
                 }
             }
+        },
+        {
+            ip: '24',
+            type: 'shorthand',
+            result: {
+                given: '24',
+                result: {
+                    joined: '11111111.11111111.11111111.00000000',
+                    separated: ['11111111', '11111111', '11111111', '00000000']
+                }
+            }
         }
     ],
     fail: [
@@ -670,7 +685,7 @@ export const ipsToBinary: ConversionTestsDataType = {
     ]
 };
 
-export type ConversionTestsDataType = { success: IpsToConvertType[]; fail: IpsToConvertType[] };
+export type ConversionTestsDataType = { success: IpToConvertType[]; fail: IpToConvertType[] };
 
 export const ipsToDecimal: ConversionTestsDataType = {
     success: [
@@ -710,6 +725,14 @@ export const ipsToDecimal: ConversionTestsDataType = {
             result: {
                 given: '255',
                 result: { decimal: 255 }
+            }
+        },
+        {
+            ip: '25',
+            type: 'shorthand',
+            result: {
+                given: '25',
+                result: { decimal: 4294967168 }
             }
         }
     ],
@@ -764,4 +787,195 @@ export const ipsToDefault: ConversionTestsDataType = {
         }
     ],
     fail: [...ipsToBinary.fail]
+};
+
+export const ipsToShorthand: ConversionTestsDataType = {
+    success: [
+        {
+            ip: '255.255.255.255',
+            type: 'default',
+            result: {
+                given: '255.255.255.255',
+                result: {
+                    shorthand: 32
+                }
+            }
+        },
+        {
+            ip: '0.0.0.0',
+            type: 'default',
+            result: {
+                given: '0.0.0.0',
+                result: {
+                    shorthand: 0
+                }
+            }
+        },
+        {
+            ip: '255.192.0.0',
+            type: 'default',
+            result: {
+                given: '255.192.0.0',
+                result: {
+                    shorthand: 10
+                }
+            }
+        },
+        {
+            ip: '255.255.255.254',
+            type: 'default',
+            result: {
+                given: '255.255.255.254',
+                result: {
+                    shorthand: 31
+                }
+            }
+        },
+        {
+            ip: '4294967040',
+            type: 'decimal',
+            result: {
+                given: '4294967040',
+                result: {
+                    shorthand: 24
+                }
+            }
+        },
+        {
+            ip: '11111111111111110000000000000000',
+            type: 'binary',
+            result: {
+                given: '11111111111111110000000000000000',
+                result: {
+                    shorthand: 16
+                }
+            }
+        },
+        {
+            ip: '25',
+            type: 'shorthand',
+            result: {
+                given: '25',
+                result: {
+                    shorthand: 25
+                }
+            }
+        },
+        {
+            ip: '4278255488',
+            type: 'decimal',
+            result: {
+                given: '4278255488',
+                result: {
+                    shorthand: -1
+                }
+            }
+        },
+        {
+            ip: '11000000101010000000000000000001',
+            type: 'binary',
+            result: {
+                given: '11000000101010000000000000000001',
+                result: {
+                    shorthand: -1
+                }
+            }
+        },
+        {
+            ip: '25',
+            type: 'shorthand',
+            result: {
+                given: '25',
+                result: {
+                    shorthand: 25
+                }
+            }
+        }
+    ],
+    fail: [...ipsToBinary.fail]
+};
+
+export type IpToCalculateType = {
+    ip: string;
+    type?: string;
+    mask: string;
+    maskType?: string;
+    result: ResponseNetworkAddress | number;
+};
+
+export type CalculationTestsDataType = { success: IpToCalculateType[]; fail: IpToCalculateType[] };
+
+export type TestDataSetType = ConversionTestsDataType | CalculationTestsDataType;
+
+export type TestDataSetFieldType = IpToCalculateType | IpToConvertType;
+
+export const ipsToGetNetworkAddress: CalculationTestsDataType = {
+    success: [
+        {
+            ip: '192.168.0.1',
+            mask: '255.255.255.0',
+            maskType: 'default',
+            result: {
+                given: {
+                    ip: '192.168.0.1',
+                    mask: '255.255.255.0'
+                },
+                result: {
+                    ip: [192, 168, 0, 0],
+                    decimal: 3232235520,
+                    binary: ['11000000', '10101000', '00000000', '00000000'],
+                    dotted: '192.168.0.0'
+                }
+            }
+        },
+        {
+            ip: '255.255.255.255',
+            mask: '32',
+            result: {
+                given: {
+                    ip: '255.255.255.255',
+                    mask: '32'
+                },
+                result: {
+                    ip: [255, 255, 255, 255],
+                    decimal: 4294967295,
+                    binary: ['11111111', '11111111', '11111111', '11111111'],
+                    dotted: '255.255.255.255'
+                }
+            }
+        },
+        {
+            ip: '0.0.0.0',
+            mask: '0',
+            result: {
+                given: {
+                    ip: '0.0.0.0',
+                    mask: '0'
+                },
+                result: {
+                    ip: [0, 0, 0, 0],
+                    decimal: 0,
+                    binary: ['00000000', '00000000', '00000000', '00000000'],
+                    dotted: '0.0.0.0'
+                }
+            }
+        }
+    ],
+    fail: [
+        { ip: '300.168.0.1', mask: '24', result: 400 },
+        { ip: '-1.168.0.1', mask: '1', result: 400 },
+        { ip: '192.168.0.1', mask: '-1', result: 400 },
+        { ip: '192.168.0.1', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'decimal', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'shorthand', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'binary', mask: '32', result: 400 },
+        { ip: '192.168.0.1', type: 'binaryy', mask: '32', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '32', maskType: 'numbers', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'default', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'shorthand', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'binary', result: 400 },
+        { ip: '110000001010100Hi00000000000000001', type: 'binary', mask: '32', result: 400 },
+        { ip: '-1', type: 'decimal', mask: '32', result: 400 },
+        { ip: '-1', type: 'shorthand', mask: '32', result: 400 }
+    ]
 };

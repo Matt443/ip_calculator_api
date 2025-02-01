@@ -25,7 +25,9 @@ import {
     findNextHostQuantity,
     getAllSubnetsVLSM,
     getMasksVLSM,
-    calculateNumberOfHostsVLSM
+    calculateNumberOfHostsVLSM,
+    ipDecimalToDefault,
+    shorthandToDefault
 } from '@/utils/calculating.util.js';
 import {
     ipsToFix,
@@ -490,5 +492,34 @@ describe('Testing calculateNumberOfHostsVLSM function', () => {
         expect(() => {
             calculateNumberOfHostsVLSM([1025]);
         }).toThrow();
+    });
+});
+
+describe('Testing ipDecimalToDefault function', () => {
+    it('Should convert decimal ip to default format', () => {
+        expect(ipDecimalToDefault(0)).toEqual([0, 0, 0, 0]);
+        expect(ipDecimalToDefault(4294967295)).toEqual([255, 255, 255, 255]);
+        expect(ipDecimalToDefault(3232235521)).toEqual([192, 168, 0, 1]);
+    });
+    it('Should return empty array because given ip is not correct', () => {
+        expect(ipDecimalToDefault(-1)).toEqual([]);
+        expect(ipDecimalToDefault(4294967295 + 1)).toEqual([]);
+    });
+});
+
+describe('Testing shorthandToDefault function', () => {
+    it('Should convert shorthand to default format', () => {
+        expect(shorthandToDefault(0)).toEqual([0, 0, 0, 0]);
+        expect(shorthandToDefault(8)).toEqual([255, 0, 0, 0]);
+        expect(shorthandToDefault(16)).toEqual([255, 255, 0, 0]);
+        expect(shorthandToDefault(24)).toEqual([255, 255, 255, 0]);
+        expect(shorthandToDefault(32)).toEqual([255, 255, 255, 255]);
+        expect(shorthandToDefault(25)).toEqual([255, 255, 255, 128]);
+        expect(shorthandToDefault(2)).toEqual([192, 0, 0, 0]);
+    });
+    it('Should return empty array because shorthand is not correct', () => {
+        expect(shorthandToDefault(-1)).toEqual([]);
+        expect(shorthandToDefault(35)).toEqual([]);
+        expect(shorthandToDefault(200)).toEqual([]);
     });
 });

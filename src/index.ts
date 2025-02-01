@@ -1,12 +1,14 @@
 import express, { Response, Request } from 'express';
 import 'dotenv/config';
 import { connectDB } from '@/config/database.config.js';
-import ipConversions from './routes/ipConversions.routes';
+import ipConversions from '@/routes/ipConversions.routes.js';
+import networkAddress from '@/routes/ipCalculations.routes.js';
 
 const router = express.Router();
 const app = express();
 
 app.use('/api', ipConversions());
+app.use('/api', networkAddress());
 
 let port = process.env.PORT;
 if (process.env.NODE_ENV === 'test') {

@@ -1,7 +1,9 @@
-import { IpAddressType, IpFormatType } from '@/types/ip.types';
+import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types';
 import {
+    binaryMergedToDefault,
     binaryMergedToUnmerged,
     ipBinaryToDefault,
+    ipDecimalToDefault,
     ipDottedToDefault,
     ipToBinary
 } from './calculating.util';
@@ -96,25 +98,10 @@ export function ipAddressDecimalValidation(ipDecimal: number): boolean {
 
 /**
  *
- * @param {number} ipDecimal
- * @returns {IpAddressType}
- */
-export function ipDecimalToDefault(ipDecimal: number): IpAddressType {
-    if (!isInRange(ipDecimal, 0, 4294967295)) return [];
-    return [
-        (ipDecimal >> 24) & 0xff,
-        (ipDecimal >> 16) & 0xff,
-        (ipDecimal >> 8) & 0xff,
-        ipDecimal & 0xff
-    ];
-}
-
-/**
- *
  * @param {number} octet
  * @returns {boolean} - true if param octet is number and is between 0 and 255
  */
-export function octetValidation(octet: number) {
+export function octetValidation(octet: number): boolean {
     if (!isNaN(octet) && typeof octet === 'number' && octet > -1 && octet < 256) return true;
     return false;
 }
@@ -163,5 +150,33 @@ export function powerOf(numberValue: number, base: number): number {
  */
 
 export function ipAddressTypeValidation(type: string): boolean {
-    return ['decimal', 'default', 'binary'].includes(type);
+    return ['decimal', 'default', 'binary', 'shorthand'].includes(type);
+}
+
+/**
+ *
+ * @param {IpAddressType} ip
+ * @returns {boolean}
+ */
+export function ipShorthandValidation(shortHand: number): boolean {
+    if (!isInRange(shortHand, 0, 32)) return false;
+    return true;
+}
+
+/**
+ *
+ * @param {string} ipBinaryMerged
+ * @returns {boolean}
+ */
+export function possibleShorthandValidation(ipBinaryMerged: string): boolean {
+    if (ipBinaryMerged.length !== 32) return false;
+    const firstZero: number = ipBinaryMerged.indexOf('0');
+
+    if (firstZero === -1) return true;
+
+    const rightPart: string = ipBinaryMerged.slice(firstZero);
+
+    if (rightPart.indexOf('1') === -1) return true;
+
+    return false;
 }

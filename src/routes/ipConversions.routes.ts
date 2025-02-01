@@ -8,5 +8,10 @@ export default () => {
     api.get('/ip/conversions/binary', ipToConvertValidation, IpConversionController.getBinary);
     api.get('/ip/conversions/decimal', ipToConvertValidation, IpConversionController.getDecimal);
     api.get('/ip/conversions/default', ipToConvertValidation, IpConversionController.getDefault);
+    api.get(
+        '/ip/conversions/shorthand',
+        ipToConvertValidation,
+        IpConversionController.getShorthand
+    );
     return api;
 };
