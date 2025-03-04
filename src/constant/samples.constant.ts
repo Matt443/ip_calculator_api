@@ -7,6 +7,7 @@ import {
 import { ERROR_MESSAGES } from './errors.constants';
 import {
     IpConversionResultType,
+    ResponseHostQuantity,
     ResponseIpConversion,
     ResponseNetworkAddress
 } from '@/types/api.types.js';
@@ -905,9 +906,12 @@ export type IpToCalculateType = {
 
 export type CalculationTestsDataType = { success: IpToCalculateType[]; fail: IpToCalculateType[] };
 
-export type TestDataSetType = ConversionTestsDataType | CalculationTestsDataType;
+export type TestDataSetType =
+    | ConversionTestsDataType
+    | CalculationTestsDataType
+    | HostQuantityTestsDataType;
 
-export type TestDataSetFieldType = IpToCalculateType | IpToConvertType;
+export type TestDataSetFieldType = IpToCalculateType | IpToConvertType | IpToGetHostQuantityType;
 
 export const ipsToGetNetworkAddress: CalculationTestsDataType = {
     success: [
@@ -977,5 +981,120 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
         { ip: '110000001010100Hi00000000000000001', type: 'binary', mask: '32', result: 400 },
         { ip: '-1', type: 'decimal', mask: '32', result: 400 },
         { ip: '-1', type: 'shorthand', mask: '32', result: 400 }
+    ]
+};
+
+export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
+    success: [
+        {
+            ip: '192.168.0.1',
+            mask: '255.255.255.0',
+            maskType: 'default',
+            result: {
+                given: {
+                    ip: '192.168.0.1',
+                    mask: '255.255.255.0'
+                },
+                result: {
+                    ip: [192, 168, 0, 255],
+                    decimal: 3232235775,
+                    binary: ['11000000', '10101000', '00000000', '11111111'],
+                    dotted: '192.168.0.255'
+                }
+            }
+        },
+        {
+            ip: '255.255.255.255',
+            mask: '32',
+            result: {
+                given: {
+                    ip: '255.255.255.255',
+                    mask: '32'
+                },
+                result: {
+                    ip: [255, 255, 255, 255],
+                    decimal: 4294967295,
+                    binary: ['11111111', '11111111', '11111111', '11111111'],
+                    dotted: '255.255.255.255'
+                }
+            }
+        },
+        {
+            ip: '0.0.0.0',
+            mask: '0',
+            result: {
+                given: {
+                    ip: '0.0.0.0',
+                    mask: '0'
+                },
+                result: {
+                    ip: [255, 255, 255, 255],
+                    decimal: 4294967295,
+                    binary: ['11111111', '11111111', '11111111', '11111111'],
+                    dotted: '255.255.255.255'
+                }
+            }
+        }
+    ],
+    fail: [...ipsToGetNetworkAddress.fail]
+};
+
+export type IpToGetHostQuantityType = {
+    type?: string;
+    mask: string;
+    result: ResponseHostQuantity | number;
+};
+
+export type HostQuantityTestsDataType = {
+    success: IpToGetHostQuantityType[];
+    fail: IpToGetHostQuantityType[];
+};
+
+export const ipsToGetHostQuantity: HostQuantityTestsDataType = {
+    success: [
+        {
+            mask: '24',
+            result: { given: { mask: '24', type: 'shorthand' }, result: { hostQuantity: 254 } }
+        },
+        {
+            mask: '0',
+            result: {
+                given: { mask: '0', type: 'shorthand' },
+                result: { hostQuantity: 4294967294 }
+            }
+        },
+        {
+            mask: '32',
+            result: { given: { mask: '32', type: 'shorthand' }, result: { hostQuantity: 0 } }
+        },
+        {
+            mask: '255.255.0.0',
+            type: 'default',
+            result: {
+                given: { mask: '255.255.0.0', type: 'default' },
+                result: { hostQuantity: 65534 }
+            }
+        },
+        {
+            mask: '4294836224',
+            type: 'decimal',
+            result: {
+                given: { mask: '4294836224', type: 'decimal' },
+                result: { hostQuantity: 131070 }
+            }
+        }
+    ],
+    fail: [
+        { mask: '33', result: 400 },
+        { mask: '255.255.0.0', type: 'deffault', result: 400 },
+        { mask: '-1', type: 'shorthand', result: 400 },
+        { mask: '32', type: 'default', result: 400 },
+        { mask: '300.168.0.1', type: 'default', result: 400 },
+        { mask: '-1.168.0.1', type: 'default', result: 400 },
+        { mask: '4294967296', type: 'decimal', result: 400 },
+        { mask: '192.168.0.1', type: 'default', result: 400 },
+        { mask: '-1', type: 'decimal', result: 400 },
+        { mask: '-100', type: 'decimal', result: 400 },
+        { mask: '1111111', type: 'binary', result: 400 }
     ]
 };

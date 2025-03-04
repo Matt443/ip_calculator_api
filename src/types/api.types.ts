@@ -22,6 +22,11 @@ export interface ResponseNetworkAddress {
     result: IpAddressInfoType;
 }
 
+export interface ResponseHostQuantity {
+    given: { mask: string; type?: string };
+    result: { hostQuantity: number };
+}
+
 export type ResponseTypes = ResponseIpConversion | ResponseNetworkAddress;
 
 export interface givenDataConversionType {

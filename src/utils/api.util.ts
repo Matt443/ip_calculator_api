@@ -1,5 +1,5 @@
 import { givenDataAll } from '@/types/api.types.js';
-import { IpAddressInfoType } from '@/types/ip.types.js';
+import { IpAddressInfoType, IpFormatType } from '@/types/ip.types.js';
 /**
  * Checks if certain param was given
  * @param {givenDataAll} query
@@ -20,9 +20,23 @@ export function getQueryParam(
     return param;
 }
 
-export function createApiResponse(given: { ip: string; mask: string }, result: IpAddressInfoType) {
-    return {
-        given,
-        result
-    };
+/**
+ *
+ * @param {givenDataAll} query
+ */
+export function getIpAndMask(query: givenDataAll): {
+    ip: string;
+    type: IpFormatType;
+    ipMask: string;
+    maskType: IpFormatType;
+} {
+    const type = getQueryParam(query as unknown as givenDataAll, 'type', 'default') as IpFormatType;
+    const ip = getQueryParam(query as unknown as givenDataAll, 'ip') as string;
+    const ipMask = getQueryParam(query as unknown as givenDataAll, 'mask') as string;
+    const maskType = getQueryParam(
+        query as unknown as givenDataAll,
+        'maskType',
+        'shorthand'
+    ) as IpFormatType;
+    return { type, ip, ipMask, maskType };
 }

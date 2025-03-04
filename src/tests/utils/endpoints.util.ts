@@ -2,6 +2,7 @@ import {
     ConversionTestsDataType,
     IpToCalculateType,
     IpToConvertType,
+    IpToGetHostQuantityType,
     TestDataSetFieldType,
     TestDataSetType
 } from '@/constant/samples.constant';
@@ -109,4 +110,8 @@ export function conversionUrlBilder(url: string, ipToTest: IpToConvertType): str
 
 export function calculatingUrlBilder(url: string, ipToTest: IpToCalculateType): string {
     return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type || 'default'}&mask=${ipToTest.mask}&maskType=${ipToTest.maskType || 'shorthand'}`;
+}
+
+export function onlyMaskUrlBilder(url: string, mask: IpToGetHostQuantityType): string {
+    return `${url}?mask=${mask.mask}&type=${mask.type || 'shorthand'}`;
 }
