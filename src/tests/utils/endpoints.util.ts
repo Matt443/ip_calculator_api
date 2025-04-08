@@ -1,13 +1,12 @@
+import app from '@/index.js';
+import { ResponseIpConversion } from '@/types/api.types.js';
 import {
-    ConversionTestsDataType,
     IpToCalculateType,
     IpToConvertType,
     IpToGetHostQuantityType,
     TestDataSetFieldType,
     TestDataSetType
-} from '@/constant/samples.constant';
-import app from '@/index.js';
-import { ResponseIpConversion } from '@/types/api.types.js';
+} from '@/types/samples.types';
 import request from 'supertest';
 
 export class StandardTest {
@@ -104,14 +103,32 @@ export class EndpointConversionsTest extends EndpointTest {
     }
 }
 
+/**
+ *
+ * @param {string} url
+ * @param {IpToConvertType} ipToTest
+ * @returns {string}
+ */
 export function conversionUrlBilder(url: string, ipToTest: IpToConvertType): string {
     return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type}`;
 }
 
+/**
+ *
+ * @param {string} url
+ * @param {IpToCalculateType} ipToTest
+ * @returns {string}
+ */
 export function calculatingUrlBilder(url: string, ipToTest: IpToCalculateType): string {
     return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type || 'default'}&mask=${ipToTest.mask}&maskType=${ipToTest.maskType || 'shorthand'}`;
 }
 
+/**
+ *
+ * @param {string} url
+ * @param {IpToGetHostQunatityType} ipToTest
+ * @returns {string}
+ */
 export function onlyMaskUrlBilder(url: string, mask: IpToGetHostQuantityType): string {
     return `${url}?mask=${mask.mask}&type=${mask.type || 'shorthand'}`;
 }

@@ -8,7 +8,8 @@ import {
 import {
     ipsToGetBroadcastAddress,
     ipsToGetHostQuantity,
-    ipsToGetNetworkAddress
+    ipsToGetNetworkAddress,
+    ipsToGetNetworkInfo
 } from '@/constant/samples.constant.js';
 
 describe('GET /api/ip/networkAddress', () => {
@@ -42,11 +43,27 @@ describe('GET /api/ip/hostQuantity', () => {
         await server.close();
     });
     EndpointConversionsTest.successFailTests(
-        ['Should get a broadcast address', 'Should return 400 because data is not correct'],
+        ['Should get a host quantity', 'Should return 400 because data is not correct'],
         '/api/ip/hostQuantity',
         ipsToGetHostQuantity,
         onlyMaskUrlBilder
     );
     EndpointTest.resultCodeTest('/api/ip/broadcastAddress?type=default&ip=255.255.0.0', 400);
     EndpointTest.resultCodeTest('/api/ip/broadcastAddress', 400);
+});
+
+describe('GET /api/ip/networkInfo', () => {
+    () => {
+        afterEach(async () => {
+            await server.close();
+        });
+    };
+    EndpointConversionsTest.successFailTests(
+        ['Should get a network info', 'Should return 400 because data is not correct'],
+        '/api/ip/networkInfo',
+        ipsToGetNetworkInfo,
+        calculatingUrlBilder
+    );
+    EndpointTest.resultCodeTest('/api/ip/networkInfo?type=default&ip=255.255.0.0', 400);
+    EndpointTest.resultCodeTest('/api/ip/networkInfo', 400);
 });

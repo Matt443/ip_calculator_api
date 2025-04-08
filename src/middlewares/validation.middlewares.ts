@@ -45,7 +45,6 @@ export async function maskValidation(req: Request, res: Response, next: NextFunc
     const ipMask = getQueryParam(req.query as unknown as givenDataAll, 'mask');
 
     if (!type || !ipMask) return sendError(res, 400, 'Bad Request');
-    console.log(!ipAddressTypeValidation(type) || !anyIp[type].validate(ipMask));
     if (!ipAddressTypeValidation(type) || !anyIp[type].validate(ipMask)) {
         return sendError(res, 400, 'Bad Request');
     }

@@ -13,6 +13,7 @@ import {
     calculateShorthand,
     calculateSubnetsQuantity,
     concatBinary,
+    createAddressConversions,
     findNextHostQuantity,
     getAllSubnets,
     getAllSubnetsVLSM,
@@ -20,6 +21,7 @@ import {
     getMaxSubnets,
     ipBinaryToDefault,
     ipToBinary,
+    moveInAddress,
     newMaskForSubnet,
     toBinary,
     whereZerosStart
@@ -132,7 +134,7 @@ export function getSubnets(
  * @returns {NetworkInfoType[]} an object with complete information of subnets
  */
 export function getSubnetsVLSM(
-    ipAddres: IpAddressType,
+    ipAddress: IpAddressType,
     ipMask: IpAddressType,
     hostQuantities: number[]
 ): NetworkInfoType[] {
@@ -150,5 +152,38 @@ export function getSubnetsVLSM(
     if (requestedHostQuantity - 2 > maxHosts) return [];
     const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM);
 
-    return getAllSubnetsVLSM(ipAddres, masks);
+    return getAllSubnetsVLSM(ipAddress, masks);
+}
+
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @param {IpAddressType} ipMask
+ * @returns {NetworkInfoType} complete info about a network
+ */
+export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType): NetworkInfoType {
+    const networkAddress: IpAddressType = getNetworkAddress(ipAddress, ipMask);
+    const broadcastAddress: IpAddressType = getBroadcastAddress(ipAddress, ipMask);
+    const hostQuantity: number = getNumberOfHosts(ipMask);
+    const hosts = {
+        first: moveInAddress(true, networkAddress),
+        last: moveInAddress(false, broadcastAddress)
+    };
+
+    const networkInfo: NetworkInfoType = {
+        networkAddress: createAddressConversions(networkAddress),
+        broadcastAddress: createAddressConversions(broadcastAddress),
+        ipMask: createAddressConversions(ipMask),
+        hosts: {
+            first: createAddressConversions(hosts.first),
+            last: createAddressConversions(hosts.last),
+            quantity: hostQuantity
+        }
+    };
+
+    if (hostQuantity < 2) {
+        delete networkInfo.hosts.first;
+        delete networkInfo.hosts.last;
+    }
+    return networkInfo;
 }

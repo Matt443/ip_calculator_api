@@ -1,7 +1,8 @@
 import {
     getBroadcastAddress,
     getNetworkAddress,
-    getNumberOfHosts
+    getNumberOfHosts,
+    getSingleNetwork
 } from '@/services/ipCalculations.service.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { givenDataAll } from '@/types/api.types.js';
@@ -56,5 +57,16 @@ export default {
         const hostQuantity = getNumberOfHosts(convertedMask);
 
         res.send({ given: { type, mask }, result: { hostQuantity } });
+    },
+    async getNetworkInfo(req: Request, res: Response, next: NextFunction) {
+        const { type, ip, ipMask, maskType } = getIpAndMask(req.query);
+
+        const maskDefault = anyIp[maskType].toDefault(ipMask);
+        const ipDefault = anyIp[type].toDefault(ip);
+        const response = {
+            given: { type, ip, ipMask, maskType },
+            result: getSingleNetwork(ipDefault, maskDefault)
+        };
+        res.send(response);
     }
 };

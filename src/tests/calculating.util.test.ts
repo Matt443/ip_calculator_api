@@ -13,7 +13,6 @@ import {
     whereZerosStart,
     getMaxSubnets,
     newMaskForSubnet,
-    getSingleNetwork,
     getAllSubnets,
     createAddressConversions,
     ipBinaryToDefault,
@@ -37,13 +36,6 @@ import {
     ipsToGetSubnetsVLSM,
     ipsToMove,
     ipToCompare,
-    IpToCompareType,
-    IpToFixType,
-    IpToGetConversionsType,
-    IpToGetInfoType,
-    IpToGetSubnetsType,
-    IpToGetSubnetsVLSMType,
-    IpToMoveType,
     sampleIpAdress,
     sampleIpAdress_wrong,
     sampleIpBinaryAdress,
@@ -51,6 +43,16 @@ import {
     sampleIpMask_complicated
 } from '@/constant/samples.constant.js';
 import { IpAddressType } from '@/types/ip.types';
+import { getSingleNetwork } from '@/services/ipCalculations.service.js';
+import {
+    IpToFixType,
+    IpToMoveType,
+    IpToCompareType,
+    IpToGetInfoType,
+    IpToGetSubnetsType,
+    IpToGetConversionsType,
+    IpToGetSubnetsVLSMType
+} from '@/types/samples.types.js';
 
 describe('Testing toBinary function', () => {
     it('Should convert to binary', () => {

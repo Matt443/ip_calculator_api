@@ -1,16 +1,27 @@
-import {
-    IpAddressInfoType,
-    IpFormatType,
-    NetworkInfoType,
-    type IpAddressType
-} from '@/types/ip.types.js';
+import { type IpAddressType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from './errors.constants';
 import {
-    IpConversionResultType,
     ResponseHostQuantity,
     ResponseIpConversion,
-    ResponseNetworkAddress
+    ResponseNetworkAddress,
+    ResponseNetworkInfo
 } from '@/types/api.types.js';
+import {
+    CalculationTestsDataType,
+    ConversionTestsDataType,
+    dataSetType,
+    HostQuantityTestsDataType,
+    IpsToEdit,
+    IpToCompareType,
+    IpToConvertType,
+    IpToFixType,
+    IpToGetConversionsType,
+    IpToGetInfoType,
+    IpToGetSubnetsType,
+    IpToGetSubnetsVLSMType,
+    IpToMoveType,
+    NetworkInfoTestsDataType
+} from '@/types/samples.types.js';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -42,13 +53,6 @@ export const validatorTester = (data: string, callback: Function, result: boolea
 export const texts = {
     pass: 'Should pass validation',
     fail: 'Should not pass validation'
-};
-
-export type dataSetType = {
-    ipBinary: string;
-    maskDecimal: number;
-    filler: string;
-    expected: number;
 };
 
 export const dataSets: Array<dataSetType> = [
@@ -110,32 +114,6 @@ export const sampleIpRange: { min: IpAddressType; max: IpAddressType } = {
 export const sampleIpRange_complicated: { min: IpAddressType; max: IpAddressType } = {
     min: [192, 168, 255, 1],
     max: [192, 168, 255, 126]
-};
-
-interface IpsToEdit {
-    ip: IpAddressType;
-}
-
-export type IpToFixType = IpsToEdit & { fixed: IpAddressType };
-
-export type IpToMoveType = IpsToEdit & { moved: IpAddressType; forwards: boolean };
-
-export type IpToCompareType = IpsToEdit & { secondIp: IpAddressType };
-
-export type IpToGetInfoType = IpsToEdit & { ipMask: IpAddressType; result?: NetworkInfoType };
-
-export type IpToGetConversionsType = IpsToEdit & { result?: IpAddressInfoType };
-
-export type IpToGetSubnetsVLSMType = IpsToEdit & {
-    masks: IpAddressType[];
-    results?: NetworkInfoType[];
-};
-
-export type IpToGetSubnetsType = IpsToEdit & {
-    ipMask: IpAddressType;
-    subnetsQuantity: number;
-    result?: NetworkInfoType[];
-    error?: string;
 };
 
 export const ipsToFix: { fixable: IpToFixType[]; notFixable: IpToFixType[] } = {
@@ -620,12 +598,6 @@ export const ipsToGetSubnetsVLSM: {
     ]
 };
 
-export type IpToConvertType = {
-    ip: string;
-    type: string;
-    result: ResponseIpConversion | number;
-};
-
 export const ipsToBinary: ConversionTestsDataType = {
     success: [
         {
@@ -685,8 +657,6 @@ export const ipsToBinary: ConversionTestsDataType = {
         { ip: '192.168.0', type: 'default', result: 400 }
     ]
 };
-
-export type ConversionTestsDataType = { success: IpToConvertType[]; fail: IpToConvertType[] };
 
 export const ipsToDecimal: ConversionTestsDataType = {
     success: [
@@ -896,23 +866,6 @@ export const ipsToShorthand: ConversionTestsDataType = {
     fail: [...ipsToBinary.fail]
 };
 
-export type IpToCalculateType = {
-    ip: string;
-    type?: string;
-    mask: string;
-    maskType?: string;
-    result: ResponseNetworkAddress | number;
-};
-
-export type CalculationTestsDataType = { success: IpToCalculateType[]; fail: IpToCalculateType[] };
-
-export type TestDataSetType =
-    | ConversionTestsDataType
-    | CalculationTestsDataType
-    | HostQuantityTestsDataType;
-
-export type TestDataSetFieldType = IpToCalculateType | IpToConvertType | IpToGetHostQuantityType;
-
 export const ipsToGetNetworkAddress: CalculationTestsDataType = {
     success: [
         {
@@ -1039,17 +992,6 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
     fail: [...ipsToGetNetworkAddress.fail]
 };
 
-export type IpToGetHostQuantityType = {
-    type?: string;
-    mask: string;
-    result: ResponseHostQuantity | number;
-};
-
-export type HostQuantityTestsDataType = {
-    success: IpToGetHostQuantityType[];
-    fail: IpToGetHostQuantityType[];
-};
-
 export const ipsToGetHostQuantity: HostQuantityTestsDataType = {
     success: [
         {
@@ -1096,5 +1038,157 @@ export const ipsToGetHostQuantity: HostQuantityTestsDataType = {
         { mask: '-1', type: 'decimal', result: 400 },
         { mask: '-100', type: 'decimal', result: 400 },
         { mask: '1111111', type: 'binary', result: 400 }
+    ]
+};
+
+export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
+    success: [
+        {
+            ip: '192.168.0.1',
+            mask: '24',
+            result: {
+                given: {
+                    ip: '192.168.0.1',
+                    ipMask: '24',
+                    type: 'default',
+                    maskType: 'shorthand'
+                },
+                result: {
+                    networkAddress: {
+                        ip: [192, 168, 0, 0],
+                        decimal: 3232235520,
+                        binary: ['11000000', '10101000', '00000000', '00000000'],
+                        dotted: '192.168.0.0'
+                    },
+                    broadcastAddress: {
+                        ip: [192, 168, 0, 255],
+                        decimal: 3232235775,
+                        binary: ['11000000', '10101000', '00000000', '11111111'],
+                        dotted: '192.168.0.255'
+                    },
+                    ipMask: {
+                        ip: [255, 255, 255, 0],
+                        decimal: 4294967040,
+                        binary: ['11111111', '11111111', '11111111', '00000000'],
+                        dotted: '255.255.255.0'
+                    },
+                    hosts: {
+                        first: {
+                            ip: [192, 168, 0, 1],
+                            decimal: 3232235521,
+                            binary: ['11000000', '10101000', '00000000', '00000001'],
+                            dotted: '192.168.0.1'
+                        },
+                        last: {
+                            ip: [192, 168, 0, 254],
+                            decimal: 3232235774,
+                            binary: ['11000000', '10101000', '00000000', '11111110'],
+                            dotted: '192.168.0.254'
+                        },
+                        quantity: 254
+                    }
+                }
+            }
+        },
+        {
+            ip: '24',
+            type: 'shorthand',
+            mask: '16',
+            result: {
+                given: {
+                    ip: '24',
+                    ipMask: '16',
+                    type: 'shorthand',
+                    maskType: 'shorthand'
+                },
+                result: {
+                    networkAddress: {
+                        ip: [255, 255, 0, 0],
+                        decimal: 4294901760,
+                        binary: ['11111111', '11111111', '00000000', '00000000'],
+                        dotted: '255.255.0.0'
+                    },
+                    broadcastAddress: {
+                        ip: [255, 255, 255, 255],
+                        decimal: 4294967295,
+                        binary: ['11111111', '11111111', '11111111', '11111111'],
+                        dotted: '255.255.255.255'
+                    },
+                    ipMask: {
+                        ip: [255, 255, 0, 0],
+                        decimal: 4294901760,
+                        binary: ['11111111', '11111111', '00000000', '00000000'],
+                        dotted: '255.255.0.0'
+                    },
+                    hosts: {
+                        first: {
+                            ip: [255, 255, 0, 1],
+                            decimal: 4294901761,
+                            binary: ['11111111', '11111111', '00000000', '00000001'],
+                            dotted: '255.255.0.1'
+                        },
+                        last: {
+                            ip: [255, 255, 255, 254],
+                            decimal: 4294967294,
+                            binary: ['11111111', '11111111', '11111111', '11111110'],
+                            dotted: '255.255.255.254'
+                        },
+                        quantity: 65534
+                    }
+                }
+            }
+        },
+        {
+            ip: '10.0.0.1',
+            mask: '31',
+            result: {
+                given: {
+                    type: 'default',
+                    ip: '10.0.0.1',
+                    ipMask: '31',
+                    maskType: 'shorthand'
+                },
+                result: {
+                    networkAddress: {
+                        ip: [10, 0, 0, 0],
+                        decimal: 167772160,
+                        binary: ['00001010', '00000000', '00000000', '00000000'],
+                        dotted: '10.0.0.0'
+                    },
+                    broadcastAddress: {
+                        ip: [10, 0, 0, 1],
+                        decimal: 167772161,
+                        binary: ['00001010', '00000000', '00000000', '00000001'],
+                        dotted: '10.0.0.1'
+                    },
+                    ipMask: {
+                        ip: [255, 255, 255, 254],
+                        decimal: 4294967294,
+                        binary: ['11111111', '11111111', '11111111', '11111110'],
+                        dotted: '255.255.255.254'
+                    },
+                    hosts: {
+                        quantity: 0
+                    }
+                }
+            }
+        }
+    ],
+    fail: [
+        { ip: '300.168.0.1', mask: '24', result: 400 },
+        { ip: '-1.168.0.1', mask: '1', result: 400 },
+        { ip: '192.168.0.1', mask: '-1', result: 400 },
+        { ip: '192.168.0.1', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'decimal', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'shorthand', mask: '33', result: 400 },
+        { ip: '192.168.0.1', type: 'binary', mask: '32', result: 400 },
+        { ip: '192.168.0.1', type: 'binaryy', mask: '32', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '32', maskType: 'numbers', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'default', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'shorthand', result: 400 },
+        { ip: '192.168.0.1', type: 'default', mask: '33', maskType: 'binary', result: 400 },
+        { ip: '110000001010100Hi00000000000000001', type: 'binary', mask: '32', result: 400 },
+        { ip: '-1', type: 'decimal', mask: '32', result: 400 },
+        { ip: '-1', type: 'shorthand', mask: '32', result: 400 }
     ]
 };

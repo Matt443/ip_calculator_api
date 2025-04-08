@@ -10,7 +10,8 @@ import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import {
     getBroadcastAddress,
     getNetworkAddress,
-    getNumberOfHosts
+    getNumberOfHosts,
+    getSingleNetwork
 } from '@/services/ipCalculations.service.js';
 import {
     ipAddressValidation,
@@ -294,34 +295,6 @@ export function newMaskForSubnet(
         '1'.padEnd(bitsToTake, '1')
     );
     return binaryMergedToUnmerged(newMaskBinary);
-}
-
-/**
- *
- * @param {IpAddressType} ipAddress
- * @param {IpAddressType} ipMask
- * @returns {NetworkInfoType} complete info about a network
- */
-export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType): NetworkInfoType {
-    const networkAddress: IpAddressType = getNetworkAddress(ipAddress, ipMask);
-    const broadcastAddress: IpAddressType = getBroadcastAddress(ipAddress, ipMask);
-
-    const hosts = {
-        first: moveInAddress(true, networkAddress),
-        last: moveInAddress(false, broadcastAddress)
-    };
-
-    const networkInfo = {
-        networkAddress: createAddressConversions(networkAddress),
-        broadcastAddress: createAddressConversions(broadcastAddress),
-        ipMask: createAddressConversions(ipMask),
-        hosts: {
-            first: createAddressConversions(hosts.first),
-            last: createAddressConversions(hosts.last),
-            quantity: getNumberOfHosts(ipMask)
-        }
-    };
-    return networkInfo;
 }
 
 /**

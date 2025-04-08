@@ -28,8 +28,8 @@ export type NetworkInfoType = {
     networkAddress: IpAddressInfoType;
     ipMask: IpAddressInfoType;
     hosts: {
-        first: IpAddressInfoType;
-        last: IpAddressInfoType;
+        first?: IpAddressInfoType;
+        last?: IpAddressInfoType;
         quantity: number;
     };
 };

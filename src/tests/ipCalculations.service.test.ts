@@ -8,10 +8,8 @@ import {
 } from '@/services/ipCalculations.service.js';
 import {
     dataSets,
-    dataSetType,
     ipsToGetSubnets,
     ipsToGetSubnetsVLSM,
-    IpToGetSubnetsType,
     sampleIpAdress,
     sampleIpAdress_complicated,
     sampleIpMask,
@@ -22,6 +20,7 @@ import {
 } from '@/constant/samples.constant.js';
 import { calculatePartial } from '@/utils/calculating.util.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
+import { dataSetType, IpToGetSubnetsType } from '@/types/samples.types';
 
 describe('Testing getNetworkAdress function', () => {
     it(texts.pass, () => {

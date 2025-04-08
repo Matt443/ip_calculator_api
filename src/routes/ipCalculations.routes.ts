@@ -1,16 +1,17 @@
 import { Router } from 'express';
 
-import networkAddressController from '@/controllers/ipCalculations.controller.js';
 import { ipAndMaskValidation, maskValidation } from '@/middlewares/validation.middlewares.js';
+import ipCalculationsController from '@/controllers/ipCalculations.controller.js';
 
 export default () => {
     const api = Router();
-    api.get('/ip/networkAddress', ipAndMaskValidation, networkAddressController.getNetworkAddress);
+    api.get('/ip/networkAddress', ipAndMaskValidation, ipCalculationsController.getNetworkAddress);
     api.get(
         '/ip/broadcastAddress',
         ipAndMaskValidation,
-        networkAddressController.getBroadcastAddress
+        ipCalculationsController.getBroadcastAddress
     );
-    api.get('/ip/hostQuantity', maskValidation, networkAddressController.getNumberOfHosts);
+    api.get('/ip/hostQuantity', maskValidation, ipCalculationsController.getNumberOfHosts);
+    api.get('/ip/networkInfo', ipAndMaskValidation, ipCalculationsController.getNetworkInfo);
     return api;
 };

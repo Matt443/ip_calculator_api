@@ -1,4 +1,10 @@
-import { IpAddresBinaryType, IpAddressInfoType, IpAddressType, IpFormatType } from './ip.types.js';
+import {
+    IpAddresBinaryType,
+    IpAddressInfoType,
+    IpAddressType,
+    IpFormatType,
+    NetworkInfoType
+} from './ip.types.js';
 
 export interface ApiResponse {
     given: string;
@@ -27,6 +33,10 @@ export interface ResponseHostQuantity {
     result: { hostQuantity: number };
 }
 
+export interface ResponseNetworkInfo {
+    given: { ipMask: string; type?: string; maskType?: string; ip: string };
+    result: NetworkInfoType;
+}
 export type ResponseTypes = ResponseIpConversion | ResponseNetworkAddress;
 
 export interface givenDataConversionType {
