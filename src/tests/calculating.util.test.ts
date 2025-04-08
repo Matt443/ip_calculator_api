@@ -270,7 +270,7 @@ describe('Testing getSingleNetworkFunction', () => {
         ipsToGetCompleteInfo.fail.forEach((testSet: IpToGetInfoType) => {
             expect(() => {
                 getSingleNetwork(testSet.ip, testSet.ipMask);
-            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+            }).toThrow(ERROR_MESSAGES.validation.ipAddrress);
         });
     });
 });
@@ -287,7 +287,7 @@ describe('Testing getAllSubnets function', () => {
         ipsToGetSubnets.fail.forEach((testSet: IpToGetSubnetsType) => {
             expect(() => {
                 getAllSubnets(testSet.ip, testSet.ipMask, testSet.subnetsQuantity);
-            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+            }).toThrow(ERROR_MESSAGES.validation.ipAddrress);
         });
     });
     it('Should return empty array because expected amount of array is >1024', () => {
@@ -305,7 +305,7 @@ describe('Testing createAddressConversions function', () => {
         ipsToGetConversions.fail.forEach((testSet: IpToGetConversionsType) => {
             expect(() => {
                 createAddressConversions(testSet.ip);
-            }).toThrow(ERROR_MESSAGES.validation.ipAdrress);
+            }).toThrow(ERROR_MESSAGES.validation.ipAddrress);
         });
     });
 });

@@ -1,29 +1,18 @@
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
+import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
 import {
-    IpAddresBinaryType,
-    IpAddressType,
-    NetworkInfoType,
-    subnetSettingType,
-    subnetSettingVLSM_Type
-} from '@/types/ip.types';
-import {
-    binaryMergedToUnmerged,
-    calculateAdress,
+    calculateAddress,
     calculateNumberOfHostsVLSM,
     calculateShorthand,
     calculateSubnetsQuantity,
-    concatBinary,
     createAddressConversions,
-    findNextHostQuantity,
     getAllSubnets,
     getAllSubnetsVLSM,
     getMasksVLSM,
     getMaxSubnets,
     ipBinaryToDefault,
-    ipToBinary,
     moveInAddress,
     newMaskForSubnet,
-    toBinary,
     whereZerosStart
 } from '@/utils/calculating.util.js';
 import { replaceInString } from '@/utils/common';
@@ -31,20 +20,20 @@ import { ipAddressValidation, isInRange, powerOf } from '@/utils/validation.util
 
 /**
  *
- * @param {IpAddressType} ipAdress
+ * @param {IpAddressType} ipAddress
  * @param {IpAddressType} ipMask
  * @returns {IpAddressType} - network address for given ip and mask
  */
 export function getNetworkAddress(ipAddress: IpAddressType, ipMask: IpAddressType): IpAddressType {
     if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error(ERROR_MESSAGES.validation.ipAdrress);
+        throw Error(ERROR_MESSAGES.validation.ipAddrress);
 
-    return calculateAdress(ipAddress, ipMask, '0', 0);
+    return calculateAddress(ipAddress, ipMask, '0', 0);
 }
 
 /**
  *
- * @param {IpAddressType} ipAdress
+ * @param {IpAddressType} ipAddress
  * @param {IpAddressType} ipMask
  * @returns {IpAddressType} - broadcast address for given ip and mask
  */
@@ -53,9 +42,9 @@ export function getBroadcastAddress(
     ipMask: IpAddressType
 ): IpAddressType {
     if (!ipAddressValidation(ipAddress) || !ipAddressValidation(ipMask))
-        throw Error(ERROR_MESSAGES.validation.ipAdrress);
+        throw Error(ERROR_MESSAGES.validation.ipAddrress);
 
-    return calculateAdress(ipAddress, ipMask, '1', 255);
+    return calculateAddress(ipAddress, ipMask, '1', 255);
 }
 
 /**
@@ -64,7 +53,7 @@ export function getBroadcastAddress(
  * @returns number of hosts
  */
 export function getNumberOfHosts(ipMask: IpAddressType): number {
-    if (!ipAddressValidation(ipMask)) throw Error(ERROR_MESSAGES.validation.ipAdrress);
+    if (!ipAddressValidation(ipMask)) throw Error(ERROR_MESSAGES.validation.ipAddrress);
 
     const quantityOfZeros: number = 32 - calculateShorthand(ipMask);
 
@@ -128,7 +117,7 @@ export function getSubnets(
 
 /**
  *
- * @param {IpAddressType} ipAddres
+ * @param {IpAddressType} ipAddress
  * @param {IpAddressType} ipMask
  * @param {number[]} hostQuantities
  * @returns {NetworkInfoType[]} an object with complete information of subnets

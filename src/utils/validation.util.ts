@@ -155,11 +155,11 @@ export function ipAddressTypeValidation(type: string): boolean {
 
 /**
  *
- * @param {IpAddressType} ip
+ * @param {number} shorthand
  * @returns {boolean}
  */
-export function ipShorthandValidation(shortHand: number): boolean {
-    if (!isInRange(shortHand, 0, 32)) return false;
+export function ipShorthandValidation(shorthand: number): boolean {
+    if (!isInRange(shorthand, 0, 32)) return false;
     return true;
 }
 

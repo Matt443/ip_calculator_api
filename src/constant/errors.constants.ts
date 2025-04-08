@@ -3,7 +3,7 @@ export const ERROR_MESSAGES = {
         binary: 'Binary numbers cannot be less than 0'
     },
     validation: {
-        ipAdrress: 'Ip adress contain four numbers between 0 and 255',
+        ipAddrress: 'Ip adress contain four numbers between 0 and 255',
         rangeIndex: 'Start index must be lower or equal than end index'
     }
 };

@@ -295,19 +295,19 @@ export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubn
             ip: [300, 168, 0, 1],
             ipMask: [255, 255, 255, 0],
             subnetsQuantity: 2,
-            error: ERROR_MESSAGES.validation.ipAdrress
+            error: ERROR_MESSAGES.validation.ipAddrress
         },
         {
             ip: [192, 168, 0, 1],
             ipMask: [300, 255, 255, 0],
             subnetsQuantity: 2,
-            error: ERROR_MESSAGES.validation.ipAdrress
+            error: ERROR_MESSAGES.validation.ipAddrress
         },
         {
             ip: [-1, 168, 0, 1],
             ipMask: [255, 255, 255, 0],
             subnetsQuantity: 2,
-            error: ERROR_MESSAGES.validation.ipAdrress
+            error: ERROR_MESSAGES.validation.ipAddrress
         },
         {
             ip: [192, 168, 0, 1],
