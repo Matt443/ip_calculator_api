@@ -11,7 +11,8 @@ import {
     validationWithRegex,
     ipAddressDecimalValidation,
     ipShorthandValidation,
-    possibleShorthandValidation
+    possibleShorthandValidation,
+    subnetsPossibleValidation
 } from '@/utils/validation.util.js';
 import {
     emails,
@@ -183,5 +184,12 @@ describe('Testing possibleShorthandValidation function', () => {
         expect(possibleShorthandValidation('1111111111111111000000000000001')).toBe(false);
         expect(possibleShorthandValidation('111111111111111100000000000000')).toBe(false);
         expect(possibleShorthandValidation('1111111111111111010000000000000')).toBe(false);
+    });
+});
+
+describe('Testing subnetsPOssibleValidation', () => {
+    it('Should return ture, because subnets can be created', () => {
+        expect(subnetsPossibleValidation([255, 255, 255, 0], 2)).toBe(true);
+        expect(subnetsPossibleValidation([255, 255, 255, 0], 64)).toBe(true);
     });
 });

@@ -1,6 +1,10 @@
 import { Router } from 'express';
 
-import { ipAndMaskValidation, maskValidation } from '@/middlewares/validation.middlewares.js';
+import {
+    ipAndMaskValidation,
+    maskValidation,
+    subnetParamsValidation
+} from '@/middlewares/validation.middlewares.js';
 import ipCalculationsController from '@/controllers/ipCalculations.controller.js';
 
 export default () => {
@@ -13,5 +17,11 @@ export default () => {
     );
     api.get('/ip/hostQuantity', maskValidation, ipCalculationsController.getNumberOfHosts);
     api.get('/ip/networkInfo', ipAndMaskValidation, ipCalculationsController.getNetworkInfo);
+    api.post(
+        '/ip/subnets',
+        ipAndMaskValidation,
+        subnetParamsValidation,
+        ipCalculationsController.getSubnets
+    );
     return api;
 };

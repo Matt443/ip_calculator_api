@@ -1,11 +1,14 @@
-import express, { Response, Request } from 'express';
+import express, { Response, Request, Router, NextFunction } from 'express';
 import 'dotenv/config';
 import { connectDB } from '@/config/database.config.js';
 import ipConversions from '@/routes/ipConversions.routes.js';
 import networkAddress from '@/routes/ipCalculations.routes.js';
+import bodyParser from 'body-parser';
 
 const router = express.Router();
 const app = express();
+
+app.use(bodyParser.json());
 
 app.use('/api', ipConversions());
 app.use('/api', networkAddress());

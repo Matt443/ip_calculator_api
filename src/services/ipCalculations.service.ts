@@ -10,13 +10,19 @@ import {
     getAllSubnetsVLSM,
     getMasksVLSM,
     getMaxSubnets,
+    getSubnetsQuantity,
     ipBinaryToDefault,
     moveInAddress,
     newMaskForSubnet,
     whereZerosStart
 } from '@/utils/calculating.util.js';
 import { replaceInString } from '@/utils/common';
-import { ipAddressValidation, isInRange, powerOf } from '@/utils/validation.util.js';
+import {
+    ipAddressValidation,
+    isInRange,
+    powerOf,
+    subnetsPossibleValidation
+} from '@/utils/validation.util.js';
 
 /**
  *
@@ -97,15 +103,10 @@ export function getSubnets(
     ipMask: IpAddressType,
     { subnetsHostQuantity, subnetsQuantity }: subnetSettingType
 ): NetworkInfoType[] {
-    const maxPossibleSubnets = getMaxSubnets(ipMask);
     const maskShorthand = calculateShorthand(ipMask);
+    subnetsQuantity = getSubnetsQuantity({ subnetsHostQuantity, subnetsQuantity }, ipMask);
 
-    if (typeof subnetsQuantity === 'undefined') {
-        subnetsQuantity = calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
-    }
-
-    if (subnetsQuantity > maxPossibleSubnets) return [];
-
+    if (subnetsQuantity === -1 || !subnetsPossibleValidation(ipMask, subnetsQuantity)) return [];
     const newMaskBinary = newMaskForSubnet(ipMask, subnetsQuantity, maskShorthand);
 
     const newMask: IpAddressType = ipBinaryToDefault(newMaskBinary);

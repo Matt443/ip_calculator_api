@@ -1,15 +1,17 @@
 import app from '@/index.js';
-import { ResponseIpConversion } from '@/types/api.types.js';
 import {
-    IpToCalculateType,
+    IpParamType,
     IpToConvertType,
-    IpToGetHostQuantityType,
+    MaskParamType,
     TestDataSetFieldType,
     TestDataSetType
-} from '@/types/samples.types';
+} from '@/types/samples.types.js';
 import request from 'supertest';
+import axios from 'axios';
+import fs from 'fs';
 
-export class StandardTest {
+export class StandardTest {}
+export class EndpointGetTest extends StandardTest {
     /**
      *
      * @param {string} url
@@ -27,37 +29,6 @@ export class StandardTest {
         const response = await request(app).get(`${url}?${paramName}=${paramValue}`);
         expect(JSON.parse(response.text)).toEqual(result);
     }
-}
-
-export class EndpointTest extends StandardTest {
-    /**
-     *
-     * @param {string} url
-     * @param {number | ResponseIpConversion}result expected result
-     * @param checkStatus @default true if true numeric values will be check as a status
-     * @returns {Promise<void|boolean>}
-     */
-    static async resultCodeTest(
-        url: string,
-        result: number | ResponseIpConversion,
-        checkStatus: boolean = true
-    ): Promise<void | boolean> {
-        const response = await request(app).get(url);
-        if (typeof result !== 'number' && checkStatus) {
-            expect(JSON.parse(response.text)).toEqual(result);
-            return false;
-        }
-
-        expect(response.status).toBe(result);
-    }
-    /**
-     * @param {string} url
-     * @param {ResponseIpConversion} resultDefault result when endpoint called with default ip type
-     * @returns {void}
-     */
-}
-
-export class EndpointConversionsTest extends EndpointTest {
     /**
      *
      * @param {string} testMessage
@@ -101,6 +72,78 @@ export class EndpointConversionsTest extends EndpointTest {
             );
         });
     }
+    /**
+     *
+     * @param {string} url
+     * @param {number | ResponseIpConversion}result expected result
+     * @param checkStatus @default true if true numeric values will be check as a status
+     * @returns {Promise<void|boolean>}
+     */
+    static async resultCodeTest(
+        url: string,
+        result: number,
+        checkStatus: boolean = true
+    ): Promise<void | boolean> {
+        const response = await request(app).get(url);
+        expect(response.status).toBe(result);
+    }
+}
+
+export class EndpointPostTest extends StandardTest {
+    /**
+     *
+     * @param {string} url
+     * @param {Object} dataToSend
+     * @param result
+     */
+    static async responseTest(url: string, dataToSend: Object, result: any): Promise<void> {
+        const response = await axios.post('http://localhost:3002' + url, dataToSend);
+        expect(response.data).toEqual(result);
+    }
+    /**
+     *
+     * @param {string} url
+     * @param {Object} dataToSend
+     * @param {number} code
+     */
+    static async codeTest(url: string, dataToSend: Object, code: number): Promise<void> {
+        const response = await axios.post('http://localhost:3002' + url, dataToSend, {
+            validateStatus: (status) => {
+                return status >= 200 && status < 500;
+            }
+        });
+        expect(response.status).toBe(code);
+    }
+    /**
+     *
+     * @param {string[]} messages
+     * @param {string} url
+     * @param {TestDataSetType} testData
+     */
+    static async successFailTests(
+        messages: string[],
+        url: string,
+        testData: TestDataSetType
+    ): Promise<void> {
+        it(messages[0], async () => {
+            await Promise.all(
+                testData.success.map(async (element: TestDataSetFieldType) => {
+                    const response = element.result;
+                    const { result, ...toSend } = element;
+                    this.responseTest(url, toSend, response);
+                })
+            );
+        });
+        it(messages[1], async () => {
+            await Promise.all(
+                testData.fail.map(async (element: TestDataSetFieldType) => {
+                    const response = element.result;
+                    const { result, ...toSend } = element;
+                    this.codeTest(url, toSend, Number(response));
+                })
+            );
+        });
+    }
 }
 
 /**
@@ -119,7 +162,7 @@ export function conversionUrlBilder(url: string, ipToTest: IpToConvertType): str
  * @param {IpToCalculateType} ipToTest
  * @returns {string}
  */
-export function calculatingUrlBilder(url: string, ipToTest: IpToCalculateType): string {
+export function calculatingUrlBilder(url: string, ipToTest: MaskParamType & IpParamType): string {
     return `${url}?ip=${ipToTest.ip}&type=${ipToTest.type || 'default'}&mask=${ipToTest.mask}&maskType=${ipToTest.maskType || 'shorthand'}`;
 }
 
@@ -129,6 +172,6 @@ export function calculatingUrlBilder(url: string, ipToTest: IpToCalculateType): 
  * @param {IpToGetHostQunatityType} ipToTest
  * @returns {string}
  */
-export function onlyMaskUrlBilder(url: string, mask: IpToGetHostQuantityType): string {
-    return `${url}?mask=${mask.mask}&type=${mask.type || 'shorthand'}`;
+export function onlyMaskUrlBilder(url: string, mask: MaskParamType): string {
+    return `${url}?mask=${mask.mask}&type=${mask.maskType || 'shorthand'}`;
 }

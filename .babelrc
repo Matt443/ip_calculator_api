@@ -3,5 +3,9 @@
     "plugins": [
         "@babel/plugin-transform-runtime",
         ["@babel/plugin-transform-modules-commonjs", { "loose": true }]
-    ]
+    ],
+    "sourceMaps": true,
+    "retainLines": true,
+    "collectCoverageFrom": ["src/**/*.ts"],
+    "coveragePathIgnorePatterns": ["/node_modules/"]
 }

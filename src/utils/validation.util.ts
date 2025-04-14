@@ -2,12 +2,15 @@ import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.type
 import {
     binaryMergedToDefault,
     binaryMergedToUnmerged,
+    getMaxSubnets,
     ipBinaryToDefault,
     ipDecimalToDefault,
     ipDottedToDefault,
     ipToBinary
 } from './calculating.util';
 import { anyIpAddressStrategy } from '@/types/strategy.types';
+import { anyIp } from '@/strategies/anyIp.strategies';
+import { getNumberOfHosts } from '@/services/ipCalculations.service';
 
 /**
  *
@@ -179,4 +182,18 @@ export function possibleShorthandValidation(ipBinaryMerged: string): boolean {
     if (rightPart.indexOf('1') === -1) return true;
 
     return false;
+}
+
+/**
+ *
+ * @param {IpAddressType} ipMask
+ * @param {number} subnetsQuantity
+ * @returns {boolean}
+ */
+export function subnetsPossibleValidation(ipMask: IpAddressType, subnetsQuantity: number): boolean {
+    const maxPossibleSubnets = getMaxSubnets(ipMask);
+
+    if (subnetsQuantity > maxPossibleSubnets || subnetsQuantity > 1024) return false;
+
+    return true;
 }

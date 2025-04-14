@@ -3,6 +3,7 @@ import {
     IpAddressInfoType,
     IpAddressType,
     NetworkInfoType,
+    subnetSettingType,
     subnetSettingVLSM_Type
 } from '@/types/ip.types';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
@@ -152,12 +153,12 @@ export function whereZerosStart(ipaddress: IpAddressType): number {
 
 export function calculateSubnetsQuantity(numberOfHosts: number, ipMask: IpAddressType): number {
     let hostWith = numberOfHosts + 2;
-    if (
-        !isInRange(numberOfHosts, 0, 4294967296) ||
-        !ipAddressValidation(ipMask) ||
-        powerOf(hostWith, 2) === -1
-    )
-        return -1;
+
+    if (powerOf(hostWith, 2) === -1) {
+        hostWith = findNextHostQuantity(2, numberOfHosts + 2).hostQuantity + 2;
+    }
+    if (!isInRange(numberOfHosts, 0, 4294967296) || !ipAddressValidation(ipMask))
+        throw Error(ERROR_MESSAGES.validation.ipAddrress);
 
     const possibleHosts = getNumberOfHosts(ipMask) + 2;
     if (possibleHosts === 0 || numberOfHosts >= possibleHosts) return -1;
@@ -328,7 +329,6 @@ export function getAllSubnets(
     subnetsArray: NetworkInfoType[] = []
 ): NetworkInfoType[] {
     if (subnetsQuantity > 1024) return subnetsArray;
-
     //Maybe back to recursion
     for (let i = 0; i < subnetsQuantity; i++) {
         const subnet: NetworkInfoType = getSingleNetwork(ipAddress, ipMask);
@@ -432,8 +432,7 @@ export function findNextHostQuantity(
     currentPower: number = 1,
     maxValue: number = 1024
 ): subnetSettingVLSM_Type {
-    if (!isInRange(value, power, maxValue))
-        throw new Error('Number of host must be a number between given power and maxValue');
+    if (!isInRange(value, power, maxValue)) throw new Error(ERROR_MESSAGES.utils.outofrange);
     const currentValue: number = Math.pow(power, currentPower);
     if (currentValue >= value) return { hostQuantity: currentValue, power: currentPower };
     currentPower++;
@@ -522,4 +521,16 @@ export function shorthandToDefault(shorthand: number): IpAddressType {
     const ipBinary = ''.padEnd(shorthand, '1').padEnd(32, '0');
     const ipDefault = binaryMergedToDefault(ipBinary);
     return ipDefault;
+}
+
+export function getSubnetsQuantity(
+    { subnetsHostQuantity, subnetsQuantity }: subnetSettingType,
+    ipMask: IpAddressType
+): number {
+    if (typeof subnetsQuantity === 'undefined') {
+        if (typeof subnetsHostQuantity === 'undefined') return -1;
+        return calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
+    } else if (powerOf(subnetsQuantity, 2) === -1)
+        subnetsQuantity = findNextHostQuantity(2, subnetsQuantity).hostQuantity;
+    return subnetsQuantity;
 }

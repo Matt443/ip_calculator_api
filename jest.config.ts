@@ -2,7 +2,7 @@ import type { Config } from 'jest';
 import { createDefaultPreset } from 'ts-jest';
 const config: Config = {
     transform: {
-        ...createDefaultPreset().transform
+        '^.+\\.js$': 'babel-jest'
     },
     moduleNameMapper: {
         '^@/(.*)\\.js$': '<rootDir>/src/$1.ts'
@@ -10,7 +10,8 @@ const config: Config = {
     testEnvironment: 'node',
     preset: 'ts-jest/presets/default-esm',
     extensionsToTreatAsEsm: ['.ts'],
-    moduleFileExtensions: ['ts', 'js']
+    moduleFileExtensions: ['ts', 'js'],
+    coverageProvider: 'v8'
 };
 
 export default config;

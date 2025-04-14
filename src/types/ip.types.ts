@@ -4,9 +4,9 @@ export type IpAddresBinaryType = Array<string>;
 
 export type IpAddressDottedType = string;
 
-interface subnetSetting {
-    subnetsQuantity: number;
-    subnetsHostQuantity: number;
+export interface subnetSetting {
+    subnetsQuantity: number | undefined;
+    subnetsHostQuantity: number | undefined;
 }
 
 export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;

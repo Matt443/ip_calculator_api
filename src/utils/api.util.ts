@@ -1,5 +1,5 @@
 import { givenDataAll } from '@/types/api.types.js';
-import { IpAddressInfoType, IpFormatType } from '@/types/ip.types.js';
+import { IpAddressInfoType, IpFormatType, subnetSettingType } from '@/types/ip.types.js';
 /**
  * Checks if certain param was given
  * @param {givenDataAll} query
@@ -27,16 +27,26 @@ export function getQueryParam(
 export function getIpAndMask(query: givenDataAll): {
     ip: string;
     type: IpFormatType;
-    ipMask: string;
+    mask: string;
     maskType: IpFormatType;
 } {
     const type = getQueryParam(query as unknown as givenDataAll, 'type', 'default') as IpFormatType;
     const ip = getQueryParam(query as unknown as givenDataAll, 'ip') as string;
-    const ipMask = getQueryParam(query as unknown as givenDataAll, 'mask') as string;
+    const mask = getQueryParam(query as unknown as givenDataAll, 'mask') as string;
     const maskType = getQueryParam(
         query as unknown as givenDataAll,
         'maskType',
         'shorthand'
     ) as IpFormatType;
-    return { type, ip, ipMask, maskType };
+    return { type, ip, mask, maskType };
+}
+
+export function getSubnetSetup(query: givenDataAll): subnetSettingType {
+    const subnetsQuantity = getQueryParam(query, 'subnetsQuantity') as string;
+    const subnetsHostQuantity = getQueryParam(query, 'subnetsHostQuantity') as string;
+
+    return {
+        subnetsQuantity: subnetsQuantity ? Number(subnetsQuantity) : undefined,
+        subnetsHostQuantity: subnetsHostQuantity ? Number(subnetsHostQuantity) : undefined
+    };
 }

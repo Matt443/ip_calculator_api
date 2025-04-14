@@ -1,55 +1,56 @@
 import { server } from '@/index.js';
 import {
     calculatingUrlBilder,
-    EndpointConversionsTest,
-    EndpointTest,
+    EndpointGetTest,
+    EndpointPostTest,
     onlyMaskUrlBilder
 } from '@/tests/utils/endpoints.util.js';
 import {
     ipsToGetBroadcastAddress,
     ipsToGetHostQuantity,
     ipsToGetNetworkAddress,
-    ipsToGetNetworkInfo
+    ipsToGetNetworkInfo,
+    ipsToGetSubnetsResponse
 } from '@/constant/samples.constant.js';
 
 describe('GET /api/ip/networkAddress', () => {
     afterEach(async () => {
         await server.close();
     });
-    EndpointConversionsTest.successFailTests(
+    EndpointGetTest.successFailTests(
         ['Should get a network address', 'Should return 400 because data is not correct'],
         '/api/ip/networkAddress',
         ipsToGetNetworkAddress,
         calculatingUrlBilder
     );
-    EndpointTest.resultCodeTest('/api/ip/networkAddress?type=default', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/networkAddress?type=default', 400);
 });
 
 describe('GET /api/ip/broadcastAddress', () => {
     afterEach(async () => {
         await server.close();
     });
-    EndpointConversionsTest.successFailTests(
+    EndpointGetTest.successFailTests(
         ['Should get a broadcast address', 'Should return 400 because data is not correct'],
         '/api/ip/broadcastAddress',
         ipsToGetBroadcastAddress,
         calculatingUrlBilder
     );
-    EndpointTest.resultCodeTest('/api/ip/broadcastAddress?type=default', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/broadcastAddress?type=default', 400);
 });
 
 describe('GET /api/ip/hostQuantity', () => {
     afterEach(async () => {
         await server.close();
     });
-    EndpointConversionsTest.successFailTests(
+    EndpointGetTest.successFailTests(
         ['Should get a host quantity', 'Should return 400 because data is not correct'],
         '/api/ip/hostQuantity',
         ipsToGetHostQuantity,
         onlyMaskUrlBilder
     );
-    EndpointTest.resultCodeTest('/api/ip/broadcastAddress?type=default&ip=255.255.0.0', 400);
-    EndpointTest.resultCodeTest('/api/ip/broadcastAddress', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/broadcastAddress?type=default&ip=255.255.0.0', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/broadcastAddress', 400);
 });
 
 describe('GET /api/ip/networkInfo', () => {
@@ -58,12 +59,25 @@ describe('GET /api/ip/networkInfo', () => {
             await server.close();
         });
     };
-    EndpointConversionsTest.successFailTests(
+    EndpointGetTest.successFailTests(
         ['Should get a network info', 'Should return 400 because data is not correct'],
         '/api/ip/networkInfo',
         ipsToGetNetworkInfo,
         calculatingUrlBilder
     );
-    EndpointTest.resultCodeTest('/api/ip/networkInfo?type=default&ip=255.255.0.0', 400);
-    EndpointTest.resultCodeTest('/api/ip/networkInfo', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/networkInfo?type=default&ip=255.255.0.0', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/networkInfo', 400);
+});
+
+describe('POST /api/ip/subnets', () => {
+    afterEach(async () => {
+        server.close();
+    });
+    EndpointPostTest.successFailTests(
+        ['Should get a network info', 'Should return 400 because data is not correct'],
+        '/api/ip/subnets',
+        ipsToGetSubnetsResponse
+    );
+    // EndpointTest.resultCodeTest('/api/ip/subnets?type=default&ip=255.255.0.0', 400);
+    // EndpointTest.resultCodeTest('/api/ip/subnets', 400);
 });

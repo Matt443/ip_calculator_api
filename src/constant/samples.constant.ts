@@ -1,12 +1,6 @@
 import { type IpAddressType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from './errors.constants';
 import {
-    ResponseHostQuantity,
-    ResponseIpConversion,
-    ResponseNetworkAddress,
-    ResponseNetworkInfo
-} from '@/types/api.types.js';
-import {
     CalculationTestsDataType,
     ConversionTestsDataType,
     dataSetType,
@@ -20,7 +14,8 @@ import {
     IpToGetSubnetsType,
     IpToGetSubnetsVLSMType,
     IpToMoveType,
-    NetworkInfoTestsDataType
+    NetworkInfoTestsDataType,
+    SubnetTestsDataType
 } from '@/types/samples.types.js';
 
 //TODO Fix this unconsitency of naming
@@ -996,48 +991,48 @@ export const ipsToGetHostQuantity: HostQuantityTestsDataType = {
     success: [
         {
             mask: '24',
-            result: { given: { mask: '24', type: 'shorthand' }, result: { hostQuantity: 254 } }
+            result: { given: { mask: '24', maskType: 'shorthand' }, result: { hostQuantity: 254 } }
         },
         {
             mask: '0',
             result: {
-                given: { mask: '0', type: 'shorthand' },
+                given: { mask: '0', maskType: 'shorthand' },
                 result: { hostQuantity: 4294967294 }
             }
         },
         {
             mask: '32',
-            result: { given: { mask: '32', type: 'shorthand' }, result: { hostQuantity: 0 } }
+            result: { given: { mask: '32', maskType: 'shorthand' }, result: { hostQuantity: 0 } }
         },
         {
             mask: '255.255.0.0',
-            type: 'default',
+            maskType: 'default',
             result: {
-                given: { mask: '255.255.0.0', type: 'default' },
+                given: { mask: '255.255.0.0', maskType: 'default' },
                 result: { hostQuantity: 65534 }
             }
         },
         {
             mask: '4294836224',
-            type: 'decimal',
+            maskType: 'decimal',
             result: {
-                given: { mask: '4294836224', type: 'decimal' },
+                given: { mask: '4294836224', maskType: 'decimal' },
                 result: { hostQuantity: 131070 }
             }
         }
     ],
     fail: [
         { mask: '33', result: 400 },
-        { mask: '255.255.0.0', type: 'deffault', result: 400 },
-        { mask: '-1', type: 'shorthand', result: 400 },
-        { mask: '32', type: 'default', result: 400 },
-        { mask: '300.168.0.1', type: 'default', result: 400 },
-        { mask: '-1.168.0.1', type: 'default', result: 400 },
-        { mask: '4294967296', type: 'decimal', result: 400 },
-        { mask: '192.168.0.1', type: 'default', result: 400 },
-        { mask: '-1', type: 'decimal', result: 400 },
-        { mask: '-100', type: 'decimal', result: 400 },
-        { mask: '1111111', type: 'binary', result: 400 }
+        { mask: '255.255.0.0', maskType: 'deffault', result: 400 },
+        { mask: '-1', maskType: 'shorthand', result: 400 },
+        { mask: '32', maskType: 'default', result: 400 },
+        { mask: '300.168.0.1', maskType: 'default', result: 400 },
+        { mask: '-1.168.0.1', maskType: 'default', result: 400 },
+        { mask: '4294967296', maskType: 'decimal', result: 400 },
+        { mask: '192.168.0.1', maskType: 'default', result: 400 },
+        { mask: '-1', maskType: 'decimal', result: 400 },
+        { mask: '-100', maskType: 'decimal', result: 400 },
+        { mask: '1111111', maskType: 'binary', result: 400 }
     ]
 };
 
@@ -1049,7 +1044,7 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
             result: {
                 given: {
                     ip: '192.168.0.1',
-                    ipMask: '24',
+                    mask: '24',
                     type: 'default',
                     maskType: 'shorthand'
                 },
@@ -1097,7 +1092,7 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
             result: {
                 given: {
                     ip: '24',
-                    ipMask: '16',
+                    mask: '16',
                     type: 'shorthand',
                     maskType: 'shorthand'
                 },
@@ -1145,7 +1140,7 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                 given: {
                     type: 'default',
                     ip: '10.0.0.1',
-                    ipMask: '31',
+                    mask: '31',
                     maskType: 'shorthand'
                 },
                 result: {
@@ -1190,5 +1185,423 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
         { ip: '110000001010100Hi00000000000000001', type: 'binary', mask: '32', result: 400 },
         { ip: '-1', type: 'decimal', mask: '32', result: 400 },
         { ip: '-1', type: 'shorthand', mask: '32', result: 400 }
+    ]
+};
+
+export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
+    success: [
+        {
+            ip: '10.0.0.1',
+            mask: '24',
+            subnetsQuantity: 2,
+            result: {
+                given: {
+                    type: 'default',
+                    ip: '10.0.0.1',
+                    mask: '24',
+                    maskType: 'shorthand',
+                    subnetsQuantity: 2
+                },
+                result: [
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 0],
+                            decimal: 167772160,
+                            binary: ['00001010', '00000000', '00000000', '00000000'],
+                            dotted: '10.0.0.0'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 127],
+                            decimal: 167772287,
+                            binary: ['00001010', '00000000', '00000000', '01111111'],
+                            dotted: '10.0.0.127'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 1],
+                                decimal: 167772161,
+                                binary: ['00001010', '00000000', '00000000', '00000001'],
+                                dotted: '10.0.0.1'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 126],
+                                decimal: 167772286,
+                                binary: ['00001010', '00000000', '00000000', '01111110'],
+                                dotted: '10.0.0.126'
+                            },
+                            quantity: 126
+                        }
+                    },
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 128],
+                            decimal: 167772288,
+                            binary: ['00001010', '00000000', '00000000', '10000000'],
+                            dotted: '10.0.0.128'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 255],
+                            decimal: 167772415,
+                            binary: ['00001010', '00000000', '00000000', '11111111'],
+                            dotted: '10.0.0.255'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 129],
+                                decimal: 167772289,
+                                binary: ['00001010', '00000000', '00000000', '10000001'],
+                                dotted: '10.0.0.129'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 254],
+                                decimal: 167772414,
+                                binary: ['00001010', '00000000', '00000000', '11111110'],
+                                dotted: '10.0.0.254'
+                            },
+                            quantity: 126
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            ip: '00001010000000000000000000000001',
+            type: 'binary',
+            maskType: 'binary',
+            mask: '11111111111111111111111100000000',
+            subnetsHostQuantity: 126,
+            result: {
+                given: {
+                    ip: '00001010000000000000000000000001',
+                    type: 'binary',
+                    maskType: 'binary',
+                    mask: '11111111111111111111111100000000',
+                    subnetsHostQuantity: 126
+                },
+                result: [
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 0],
+                            decimal: 167772160,
+                            binary: ['00001010', '00000000', '00000000', '00000000'],
+                            dotted: '10.0.0.0'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 127],
+                            decimal: 167772287,
+                            binary: ['00001010', '00000000', '00000000', '01111111'],
+                            dotted: '10.0.0.127'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 1],
+                                decimal: 167772161,
+                                binary: ['00001010', '00000000', '00000000', '00000001'],
+                                dotted: '10.0.0.1'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 126],
+                                decimal: 167772286,
+                                binary: ['00001010', '00000000', '00000000', '01111110'],
+                                dotted: '10.0.0.126'
+                            },
+                            quantity: 126
+                        }
+                    },
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 128],
+                            decimal: 167772288,
+                            binary: ['00001010', '00000000', '00000000', '10000000'],
+                            dotted: '10.0.0.128'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 255],
+                            decimal: 167772415,
+                            binary: ['00001010', '00000000', '00000000', '11111111'],
+                            dotted: '10.0.0.255'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 129],
+                                decimal: 167772289,
+                                binary: ['00001010', '00000000', '00000000', '10000001'],
+                                dotted: '10.0.0.129'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 254],
+                                decimal: 167772414,
+                                binary: ['00001010', '00000000', '00000000', '11111110'],
+                                dotted: '10.0.0.254'
+                            },
+                            quantity: 126
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            ip: '167772161',
+            type: 'decimal',
+            mask: '4294967040',
+            maskType: 'decimal',
+            subnetsQuantity: 2,
+            result: {
+                given: {
+                    ip: '167772161',
+                    maskType: 'decimal',
+                    type: 'decimal',
+                    mask: '4294967040',
+                    subnetsQuantity: 2
+                },
+                result: [
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 0],
+                            decimal: 167772160,
+                            binary: ['00001010', '00000000', '00000000', '00000000'],
+                            dotted: '10.0.0.0'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 127],
+                            decimal: 167772287,
+                            binary: ['00001010', '00000000', '00000000', '01111111'],
+                            dotted: '10.0.0.127'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 1],
+                                decimal: 167772161,
+                                binary: ['00001010', '00000000', '00000000', '00000001'],
+                                dotted: '10.0.0.1'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 126],
+                                decimal: 167772286,
+                                binary: ['00001010', '00000000', '00000000', '01111110'],
+                                dotted: '10.0.0.126'
+                            },
+                            quantity: 126
+                        }
+                    },
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 128],
+                            decimal: 167772288,
+                            binary: ['00001010', '00000000', '00000000', '10000000'],
+                            dotted: '10.0.0.128'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 255],
+                            decimal: 167772415,
+                            binary: ['00001010', '00000000', '00000000', '11111111'],
+                            dotted: '10.0.0.255'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 129],
+                                decimal: 167772289,
+                                binary: ['00001010', '00000000', '00000000', '10000001'],
+                                dotted: '10.0.0.129'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 254],
+                                decimal: 167772414,
+                                binary: ['00001010', '00000000', '00000000', '11111110'],
+                                dotted: '10.0.0.254'
+                            },
+                            quantity: 126
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            ip: '10.0.0.1',
+            mask: '255.255.255.0',
+            maskType: 'default',
+            subnetsQuantity: 2,
+            result: {
+                given: {
+                    type: 'default',
+                    ip: '10.0.0.1',
+                    mask: '255.255.255.0',
+                    maskType: 'default',
+                    subnetsQuantity: 2
+                },
+                result: [
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 0],
+                            decimal: 167772160,
+                            binary: ['00001010', '00000000', '00000000', '00000000'],
+                            dotted: '10.0.0.0'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 127],
+                            decimal: 167772287,
+                            binary: ['00001010', '00000000', '00000000', '01111111'],
+                            dotted: '10.0.0.127'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 1],
+                                decimal: 167772161,
+                                binary: ['00001010', '00000000', '00000000', '00000001'],
+                                dotted: '10.0.0.1'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 126],
+                                decimal: 167772286,
+                                binary: ['00001010', '00000000', '00000000', '01111110'],
+                                dotted: '10.0.0.126'
+                            },
+                            quantity: 126
+                        }
+                    },
+                    {
+                        networkAddress: {
+                            ip: [10, 0, 0, 128],
+                            decimal: 167772288,
+                            binary: ['00001010', '00000000', '00000000', '10000000'],
+                            dotted: '10.0.0.128'
+                        },
+                        broadcastAddress: {
+                            ip: [10, 0, 0, 255],
+                            decimal: 167772415,
+                            binary: ['00001010', '00000000', '00000000', '11111111'],
+                            dotted: '10.0.0.255'
+                        },
+                        ipMask: {
+                            ip: [255, 255, 255, 128],
+                            decimal: 4294967168,
+                            binary: ['11111111', '11111111', '11111111', '10000000'],
+                            dotted: '255.255.255.128'
+                        },
+                        hosts: {
+                            first: {
+                                ip: [10, 0, 0, 129],
+                                decimal: 167772289,
+                                binary: ['00001010', '00000000', '00000000', '10000001'],
+                                dotted: '10.0.0.129'
+                            },
+                            last: {
+                                ip: [10, 0, 0, 254],
+                                decimal: 167772414,
+                                binary: ['00001010', '00000000', '00000000', '11111110'],
+                                dotted: '10.0.0.254'
+                            },
+                            quantity: 126
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    fail: [
+        {
+            ip: '10.0.0.1',
+            mask: '24',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            subnetsHostQuantity: 'adadasfdfa',
+            mask: '33',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            subnetsQuantity: 'adadasfdfa',
+            mask: '24',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            subnetsQuantity: '129',
+            mask: '24',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            mask: '24',
+            subnetsHostQuantity: 126,
+            type: 'shorthand',
+            result: 400
+        },
+        {
+            ip: '-1',
+            mask: '24',
+            type: 'decimal',
+            subnetsHostQuantity: 126,
+            result: 400
+        },
+        {
+            ip: '-1',
+            mask: '24',
+            type: 'binary',
+            subnetsHostQuantity: 126,
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            mask: '33',
+            maskType: 'decimal',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
+            mask: '24',
+            subnetsQuantity: 1,
+            maskType: 'decimal',
+            result: 400
+        },
+        {
+            mask: '32',
+            maskType: 'decimal',
+            result: 400
+        }
     ]
 };

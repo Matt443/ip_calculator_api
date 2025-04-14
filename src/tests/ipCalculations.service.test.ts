@@ -121,10 +121,10 @@ describe('Testing getSubnets function', () => {
         });
     });
     it('Should return empty array because number of subnets is too large', () => {
-        expect(
+        expect(() => {
             //@ts-ignore
-            getSubnets([192, 168, 0, 1], [255, 255, 255, 0], { subnetsHostQuantity: 16384 })
-        ).toEqual([]);
+            getSubnets([192, 168, 0, 1], [255, 255, 255, 0], { subnetsHostQuantity: 16384 });
+        }).toThrow(ERROR_MESSAGES.utils.outofrange);
         //@ts-ignore
         expect(getSubnets([192, 168, 0, 1], [255, 255, 255, 0], { subnetsQuantity: 128 })).toEqual(
             []

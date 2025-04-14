@@ -115,14 +115,14 @@ describe('Testing calculatineSubnetsQuantity function', () => {
         expect(calculateSubnetsQuantity(126, sampleIpMask_complicated)).toBe(256);
         expect(calculateSubnetsQuantity(4294967294, [0, 0, 0, 0])).toBe(1);
         expect(calculateSubnetsQuantity(2, [255, 255, 255, 252])).toBe(1);
-    });
-    it('Should return "-1" because number is not power of 2', () => {
-        expect(calculateSubnetsQuantity(128, sampleIpMask_complicated)).toBe(-1);
+        expect(calculateSubnetsQuantity(63, [255, 255, 255, 0])).toBe(2);
     });
     it('Should return -1 because with this submask we can not create subnets', () => {
         expect(calculateSubnetsQuantity(2, [255, 255, 255, 254])).toBe(-1);
         expect(calculateSubnetsQuantity(2, [255, 255, 255, 255])).toBe(-1);
-        expect(calculateSubnetsQuantity(2, [255, 255, 255, 256])).toBe(-1);
+        expect(() => {
+            calculateSubnetsQuantity(2, [255, 255, 255, 256]);
+        }).toThrow(ERROR_MESSAGES.validation.ipAddrress);
     });
 });
 

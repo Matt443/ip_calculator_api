@@ -2,7 +2,8 @@ import {
     ResponseHostQuantity,
     ResponseIpConversion,
     ResponseNetworkAddress,
-    ResponseNetworkInfo
+    ResponseNetworkInfo,
+    ResponseSubnets
 } from './api.types.js';
 import { IpAddressInfoType, IpAddressType, NetworkInfoType } from './ip.types.js';
 
@@ -47,48 +48,84 @@ export type IpToConvertType = {
     result: ResponseIpConversion | number;
 };
 
-export type IpToCalculateType = {
-    ip: string;
-    type?: string;
-    mask: string;
-    maskType?: string;
-    result: ResponseNetworkAddress | number;
-};
+export type CalculationTestsFieldType =
+    | (IpAndMaskParamType & {
+          result: { given: IpAndMaskParamType } & { result: IpAddressInfoType };
+      })
+    | (IpAndMaskParamType & {
+          result: number;
+      });
 
-export type CalculationTestsDataType = { success: IpToCalculateType[]; fail: IpToCalculateType[] };
+export type CalculationTestsDataType = {
+    success: CalculationTestsFieldType[];
+    fail: CalculationTestsFieldType[];
+};
 
 export type TestDataSetType =
     | ConversionTestsDataType
     | CalculationTestsDataType
     | HostQuantityTestsDataType
-    | NetworkInfoTestsDataType;
+    | NetworkInfoTestsDataType
+    | SubnetTestsDataType;
 
 export type TestDataSetFieldType =
-    | IpToCalculateType
     | IpToConvertType
-    | IpToGetHostQuantityType
-    | IpToGetNetworkInfoType;
+    | CalculationTestsFieldType
+    | HostQuantityTestFieldType
+    | NetworkInfoTestsFieldType
+    | SubnetTestsFieldType;
 
-export type IpToGetHostQuantityType = {
-    type?: string;
-    mask: string;
-    result: ResponseHostQuantity | number;
-};
+export type HostQuantityTestFieldType =
+    | (MaskParamType & {
+          result: { given: MaskParamType } & { result: { hostQuantity: number } };
+      })
+    | (MaskParamType & {
+          result: number;
+      });
 
 export type HostQuantityTestsDataType = {
-    success: IpToGetHostQuantityType[];
-    fail: IpToGetHostQuantityType[];
+    success: HostQuantityTestFieldType[];
+    fail: HostQuantityTestFieldType[];
 };
 
-export type IpToGetNetworkInfoType = {
-    type?: string;
-    mask: string;
-    ip: string;
-    maskType?: string;
-    result: ResponseNetworkInfo | number;
-};
+export type NetworkInfoTestsFieldType =
+    | (IpAndMaskParamType & {
+          result: { given: IpAndMaskParamType } & { result: NetworkInfoType };
+      })
+    | (IpAndMaskParamType & {
+          result: number;
+      });
 
 export type NetworkInfoTestsDataType = {
-    success: IpToGetNetworkInfoType[];
-    fail: IpToGetNetworkInfoType[];
+    success: NetworkInfoTestsFieldType[];
+    fail: NetworkInfoTestsFieldType[];
 };
+
+export type SubnetTestsFieldType =
+    | (SubnetParamType & { result: { given: SubnetParamType } & { result: NetworkInfoType[] } })
+    | (any & { result: number });
+
+export type SubnetTestsDataType = {
+    success: SubnetTestsFieldType[];
+    fail: SubnetTestsFieldType[];
+};
+
+export interface IpParamType {
+    type?: string;
+    ip: string;
+}
+
+export type MaskParamType = {
+    mask: string;
+    maskType?: string;
+};
+
+export type IpAndMaskParamType = IpParamType & MaskParamType;
+
+export type SubnetSettingParamType =
+    | {
+          subnetsQuantity: number;
+      }
+    | { subnetsHostQuantity: number };
+
+export type SubnetParamType = IpAndMaskParamType & SubnetSettingParamType;

@@ -37,6 +37,11 @@ export interface ResponseNetworkInfo {
     given: { ipMask: string; type?: string; maskType?: string; ip: string };
     result: NetworkInfoType;
 }
+
+export interface ResponseSubnets {
+    given: { ipMask: string; type?: string; maskType?: string; ip: string };
+    result: NetworkInfoType[];
+}
 export type ResponseTypes = ResponseIpConversion | ResponseNetworkAddress;
 
 export interface givenDataConversionType {
@@ -47,7 +52,14 @@ export interface givenDataConversionType {
 export interface givenDataNetworkAddressType extends givenDataConversionType {
     mask?: string;
     maskType?: string;
-    responseType?: string;
 }
 
-export interface givenDataAll extends givenDataNetworkAddressType, givenDataConversionType {}
+export interface givenDataSubnets extends givenDataConversionType {
+    subnetsQuantity?: number;
+    subnetsHostQuantity?: number;
+}
+
+export interface givenDataAll
+    extends givenDataNetworkAddressType,
+        givenDataConversionType,
+        givenDataSubnets {}
