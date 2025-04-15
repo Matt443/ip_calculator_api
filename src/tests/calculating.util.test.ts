@@ -555,6 +555,12 @@ describe('Testing getSubnetsQuantity function', () => {
                 [255, 255, 255, 0]
             )
         ).toBe(4);
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 1, subnetsQuantity: undefined },
+                [255, 255, 255, 0]
+            )
+        ).toBe(64);
     });
     it('Should return -1 because setting object is incorrect', () => {
         expect(
@@ -585,12 +591,11 @@ describe('Testing getSubnetsQuantity function', () => {
         }).toThrow();
         expect(() => {
             getSubnetsQuantity(
-                { subnetsHostQuantity: undefined, subnetsQuantity: 2 },
+                { subnetsHostQuantity: 2, subnetsQuantity: undefined },
                 [255, 255, 256, 0]
             );
         }).toThrow();
     });
-    it('Should throw because subnetQuantity is incorrect', () => {});
 });
 
 describe('Testing calculateProperHostQuantity function', () => {

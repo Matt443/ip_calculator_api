@@ -547,6 +547,7 @@ export function getSubnetsQuantity(
 ): number {
     if (typeof subnetsQuantity === 'undefined') {
         if (typeof subnetsHostQuantity === 'undefined' || subnetsHostQuantity < 1) return -1;
+        else if (subnetsHostQuantity === 1) subnetsHostQuantity = 2;
         return calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
     } else if (subnetsQuantity < 2) return -1;
     else if (powerOf(subnetsQuantity, 2) === -1)

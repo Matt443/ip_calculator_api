@@ -64,28 +64,27 @@ export async function maskValidation(req: Request, res: Response, next: NextFunc
 }
 
 export async function subnetParamsValidation(req: Request, res: Response, next: NextFunction) {
-    const subnetSetup = getSubnetSetup(req.body);
+    let { subnetsHostQuantity, subnetsQuantity } = getSubnetSetup(req.body);
     const { mask, maskType } = getIpAndMask(req.body);
 
     //Checking if minimal one of both is defined
-    if (!subnetSetup.subnetsQuantity && !subnetSetup.subnetsHostQuantity)
-        return sendError(res, 400, 'Bad Request');
+    if (!subnetsQuantity && !subnetsHostQuantity) return sendError(res, 400, 'Bad Request');
     if (
-        subnetSetup.subnetsQuantity &&
-        !validationWithRegex(String(subnetSetup.subnetsQuantity), new RegExp('^[0-9]+$'))
+        subnetsQuantity &&
+        !validationWithRegex(String(subnetsQuantity), new RegExp('^[0-9]+$') || subnetsQuantity < 2)
     )
         return sendError(res, 400, 'Bad Request');
     if (
-        subnetSetup.subnetsHostQuantity &&
-        (!validationWithRegex(String(subnetSetup.subnetsHostQuantity), new RegExp('^[0-9]+$')) ||
-            subnetSetup.subnetsHostQuantity < 2)
+        subnetsHostQuantity &&
+        (!validationWithRegex(String(subnetsHostQuantity), new RegExp('^[0-9]+$')) ||
+            subnetsHostQuantity < 1)
     )
         return sendError(res, 400, 'Bad Request');
     const ipMaskConverted = anyIp[maskType].toDefault(mask);
-    subnetSetup.subnetsQuantity = getSubnetsQuantity(subnetSetup, ipMaskConverted);
+    subnetsQuantity = getSubnetsQuantity({ subnetsHostQuantity, subnetsQuantity }, ipMaskConverted);
     if (
-        !subnetsPossibleValidation(ipMaskConverted, Number(subnetSetup.subnetsQuantity)) ||
-        subnetSetup.subnetsQuantity <= 1
+        !subnetsPossibleValidation(ipMaskConverted, Number(subnetsQuantity)) ||
+        subnetsQuantity <= 1
     )
         return sendError(res, 400, 'Bad Request');
 

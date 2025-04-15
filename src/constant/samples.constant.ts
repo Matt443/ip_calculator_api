@@ -1554,6 +1554,12 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
         },
         {
             ip: '10.0.0.1',
+            subnetsQuantity: 1,
+            mask: '24',
+            result: 400
+        },
+        {
+            ip: '10.0.0.1',
             subnetsQuantity: 'adadasfdfa',
             mask: '24',
             result: 400

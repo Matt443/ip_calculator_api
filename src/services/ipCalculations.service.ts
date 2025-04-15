@@ -108,6 +108,7 @@ export function getSubnets(
     const maskShorthand = calculateShorthand(ipMask);
     subnetsQuantity = getSubnetsQuantity({ subnetsHostQuantity, subnetsQuantity }, ipMask);
 
+    // console.log(subnetsQuantity, subnetsHostQuantity, subnetsQuantity)
     if (subnetsQuantity === -1 || !subnetsPossibleValidation(ipMask, subnetsQuantity)) return [];
     const newMaskBinary = newMaskForSubnet(ipMask, subnetsQuantity, maskShorthand);
 
