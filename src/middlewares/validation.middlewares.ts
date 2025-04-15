@@ -64,7 +64,6 @@ export async function maskValidation(req: Request, res: Response, next: NextFunc
 }
 
 export async function subnetParamsValidation(req: Request, res: Response, next: NextFunction) {
-    console.log('test');
     const subnetSetup = getSubnetSetup(req.body);
     const { mask, maskType } = getIpAndMask(req.body);
 

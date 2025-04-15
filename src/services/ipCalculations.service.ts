@@ -3,6 +3,7 @@ import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.ty
 import {
     calculateAddress,
     calculateNumberOfHostsVLSM,
+    calculateProperHostQuantity,
     calculateShorthand,
     calculateSubnetsQuantity,
     createAddressConversions,
@@ -21,7 +22,8 @@ import {
     ipAddressValidation,
     isInRange,
     powerOf,
-    subnetsPossibleValidation
+    subnetsPossibleValidation,
+    VLSMSubnetsPossibleValidation
 } from '@/utils/validation.util.js';
 
 /**
@@ -128,18 +130,12 @@ export function getSubnetsVLSM(
     ipMask: IpAddressType,
     hostQuantities: number[]
 ): NetworkInfoType[] {
-    const maxHosts = getNumberOfHosts(ipMask);
-    const subnetsSettingsVLSM = calculateNumberOfHostsVLSM(hostQuantities);
-
-    subnetsSettingsVLSM.sort((a, b) => a.power - b.power).reverse();
-
-    let initialValue = 0;
-    const requestedHostQuantity = subnetsSettingsVLSM.reduce(
-        (accumulator, currentValue) => accumulator + currentValue.hostQuantity,
-        initialValue
+    const { requestedHostQuantity, maxHosts, subnetsSettingsVLSM } = calculateProperHostQuantity(
+        hostQuantities,
+        ipMask
     );
 
-    if (requestedHostQuantity - 2 > maxHosts) return [];
+    if (!VLSMSubnetsPossibleValidation(requestedHostQuantity, maxHosts)) return [];
     const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM);
 
     return getAllSubnetsVLSM(ipAddress, masks);

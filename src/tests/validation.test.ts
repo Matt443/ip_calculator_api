@@ -12,7 +12,8 @@ import {
     ipAddressDecimalValidation,
     ipShorthandValidation,
     possibleShorthandValidation,
-    subnetsPossibleValidation
+    subnetsPossibleValidation,
+    VLSMSubnetsPossibleValidation
 } from '@/utils/validation.util.js';
 import {
     emails,
@@ -195,5 +196,18 @@ describe('Testing subnetsPossibleValidation', () => {
     it("Should return false, because subnets can't be created", () => {
         expect(subnetsPossibleValidation([255, 255, 255, 0], 128)).toBe(false);
         expect(subnetsPossibleValidation([255, 255, 255, 0], 65)).toBe(false);
+    });
+});
+
+describe('Testing VLSMSubnetsPossibleValidation function', () => {
+    it('Should return true because we have enough hosts', () => {
+        expect(VLSMSubnetsPossibleValidation(256, 254)).toBe(true);
+        expect(VLSMSubnetsPossibleValidation(1024, 1022)).toBe(true);
+        expect(VLSMSubnetsPossibleValidation(16, 254)).toBe(true);
+    });
+    it('Should return true because we have enough hosts', () => {
+        expect(VLSMSubnetsPossibleValidation(257, 254)).toBe(false);
+        expect(VLSMSubnetsPossibleValidation(-1, 1022)).toBe(false);
+        expect(VLSMSubnetsPossibleValidation(1024, 254)).toBe(false);
     });
 });

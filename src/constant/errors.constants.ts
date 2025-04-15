@@ -5,6 +5,7 @@ export const ERROR_MESSAGES = {
     },
     validation: {
         ipAddrress: 'Ip adress contain four numbers between 0 and 255',
-        rangeIndex: 'Start index must be lower or equal than end index'
+        rangeIndex: 'Start index must be lower or equal than end index',
+        subnetsHostQuantity: 'Number of hosts must be greater than zero'
     }
 };

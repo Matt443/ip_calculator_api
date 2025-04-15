@@ -2,6 +2,7 @@ import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.type
 import {
     binaryMergedToDefault,
     binaryMergedToUnmerged,
+    calculateNumberOfHostsVLSM,
     getMaxSubnets,
     ipBinaryToDefault,
     ipDecimalToDefault,
@@ -195,5 +196,20 @@ export function subnetsPossibleValidation(ipMask: IpAddressType, subnetsQuantity
 
     if (subnetsQuantity > maxPossibleSubnets || subnetsQuantity > 1024) return false;
 
+    return true;
+}
+
+/**
+ *
+ * @param {number} requestedHostQuantity
+ * @param {number} maxHosts
+ * @returns {boolean}
+ */
+
+export function VLSMSubnetsPossibleValidation(
+    requestedHostQuantity: number,
+    maxHosts: number
+): boolean {
+    if (requestedHostQuantity < 2 || requestedHostQuantity - 2 > maxHosts) return false;
     return true;
 }

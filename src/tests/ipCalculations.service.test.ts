@@ -159,6 +159,6 @@ describe('Testing getSubnetsVLSM function', () => {
             }).toThrow(); //Bad Mask
             expect(() => {
                 getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 0]);
-            }).toThrow(); //Bad Mask
+            }).toThrow(); //Bad Host quantity
         });
 });

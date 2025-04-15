@@ -26,7 +26,9 @@ import {
     getMasksVLSM,
     calculateNumberOfHostsVLSM,
     ipDecimalToDefault,
-    shorthandToDefault
+    shorthandToDefault,
+    calculateProperHostQuantity,
+    getSubnetsQuantity
 } from '@/utils/calculating.util.js';
 import {
     ipsToFix,
@@ -53,6 +55,7 @@ import {
     IpToGetConversionsType,
     IpToGetSubnetsVLSMType
 } from '@/types/samples.types.js';
+import { getSubnetSetup } from '@/utils/api.util';
 
 describe('Testing toBinary function', () => {
     it('Should convert to binary', () => {
@@ -473,17 +476,17 @@ describe('Testing getMasksVLSM function', () => {
 describe('Testing calculateNumberOfHostsVLSM function', () => {
     it('Should calculate nearest possible number of hosts from given number', () => {
         expect(calculateNumberOfHostsVLSM([1, 2, 3, 4, 5, 6])).toEqual([
-            { hostQuantity: 1, power: 0 },
-            { hostQuantity: 2, power: 1 },
             { hostQuantity: 4, power: 2 },
             { hostQuantity: 4, power: 2 },
+            { hostQuantity: 8, power: 3 },
+            { hostQuantity: 8, power: 3 },
             { hostQuantity: 8, power: 3 },
             { hostQuantity: 8, power: 3 }
         ]);
         expect(calculateNumberOfHostsVLSM([100, 50, 64, 1000])).toEqual([
             { hostQuantity: 128, power: 7 },
             { hostQuantity: 64, power: 6 },
-            { hostQuantity: 64, power: 6 },
+            { hostQuantity: 128, power: 7 },
             { hostQuantity: 1024, power: 10 }
         ]);
     });
@@ -523,5 +526,109 @@ describe('Testing shorthandToDefault function', () => {
         expect(shorthandToDefault(-1)).toEqual([]);
         expect(shorthandToDefault(35)).toEqual([]);
         expect(shorthandToDefault(200)).toEqual([]);
+    });
+});
+
+describe('Testing getSubnetsQuantity function', () => {
+    it('Should calculateSubnetsQuantity based on subnetSettingType object', () => {
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 126, subnetsQuantity: undefined },
+                [255, 255, 255, 0]
+            )
+        ).toBe(2);
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 62, subnetsQuantity: undefined },
+                [255, 255, 255, 0]
+            )
+        ).toBe(4);
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: undefined, subnetsQuantity: 4 },
+                [255, 255, 255, 0]
+            )
+        ).toBe(4);
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: undefined, subnetsQuantity: 3 },
+                [255, 255, 255, 0]
+            )
+        ).toBe(4);
+    });
+    it('Should return -1 because setting object is incorrect', () => {
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: undefined, subnetsQuantity: undefined },
+                [255, 255, 255, 0]
+            )
+        ).toBe(-1);
+        expect(
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 0, subnetsQuantity: undefined },
+                [255, 255, 255, 0]
+            )
+        ).toBe(-1);
+    });
+    it('Should throw because mask is not correct', () => {
+        expect(() => {
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 62, subnetsQuantity: undefined },
+                [255, 255, -1, 0]
+            );
+        }).toThrow();
+        expect(() => {
+            getSubnetsQuantity(
+                { subnetsHostQuantity: 126, subnetsQuantity: undefined },
+                [255, 255, 256, 0]
+            );
+        }).toThrow();
+        expect(() => {
+            getSubnetsQuantity(
+                { subnetsHostQuantity: undefined, subnetsQuantity: 2 },
+                [255, 255, 256, 0]
+            );
+        }).toThrow();
+    });
+    it('Should throw because subnetQuantity is incorrect', () => {});
+});
+
+describe('Testing calculateProperHostQuantity function', () => {
+    it('Should return proper host quantity', () => {
+        expect(calculateProperHostQuantity([100, 100], [255, 255, 255, 0])).toEqual({
+            requestedHostQuantity: 256,
+            maxHosts: 254,
+            subnetsSettingsVLSM: [
+                { hostQuantity: 128, power: 7 },
+                { hostQuantity: 128, power: 7 }
+            ]
+        });
+        expect(calculateProperHostQuantity([60, 62, 32, 31], [255, 255, 255, 0])).toEqual({
+            requestedHostQuantity: 256,
+            maxHosts: 254,
+            subnetsSettingsVLSM: [
+                { hostQuantity: 64, power: 6 },
+                { hostQuantity: 64, power: 6 },
+                { hostQuantity: 64, power: 6 },
+                { hostQuantity: 64, power: 6 }
+            ]
+        });
+    });
+    it('Should throw because host quantity cannot be calculate', () => {
+        expect(() => {
+            calculateProperHostQuantity([0], [255, 255, 255, 0]);
+        }).toThrow();
+        expect(() => {
+            calculateProperHostQuantity([0], [255, 255, -1, 0]);
+        }).toThrow();
+        expect(() => {
+            calculateProperHostQuantity([0], [255, 255, 255, 256]);
+        }).toThrow();
+        expect(() => {
+            calculateProperHostQuantity([100, 0], [255, 255, 255, 256]);
+        }).toThrow();
+        expect(() => {
+            calculateProperHostQuantity([100, -1], [255, 255, 255, 256]);
+        }).toThrow();
     });
 });

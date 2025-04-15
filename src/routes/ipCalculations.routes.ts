@@ -23,5 +23,11 @@ export default () => {
         subnetParamsValidation,
         ipCalculationsController.getSubnets
     );
+    api.post(
+        '/ip/subnetsVLSM',
+        // ipAndMaskValidation,
+        // subnetParamsValidation,
+        ipCalculationsController.getSubnetsVLSM
+    );
     return api;
 };

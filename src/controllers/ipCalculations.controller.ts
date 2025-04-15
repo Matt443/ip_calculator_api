@@ -3,13 +3,19 @@ import {
     getNetworkAddress,
     getNumberOfHosts,
     getSingleNetwork,
-    getSubnets
+    getSubnets,
+    getSubnetsVLSM
 } from '@/services/ipCalculations.service.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { givenDataAll } from '@/types/api.types.js';
 import { IpFormatType } from '@/types/ip.types.js';
 import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js';
-import { createAddressConversions } from '@/utils/calculating.util.js';
+import {
+    calculateNumberOfHostsVLSM,
+    calculateProperHostQuantity,
+    createAddressConversions,
+    getSubnetsQuantity
+} from '@/utils/calculating.util.js';
 import { sendError } from '@/utils/error.util.js';
 
 import { Request, Response, NextFunction } from 'express';
@@ -74,5 +80,8 @@ export default {
         const subnets = getSubnets(ipConverted, maskConverted, subnetsSetup);
 
         res.send({ given: { ip, mask, type, maskType, ...subnetsSetup }, result: subnets });
+    },
+    async getSubnetsVLSM(req: Request, res: Response, next: NextFunction) {
+        res.send('getSubnetsVLSM');
     }
 };

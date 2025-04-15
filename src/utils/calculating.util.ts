@@ -433,9 +433,12 @@ export function findNextHostQuantity(
     maxValue: number = 1024
 ): subnetSettingVLSM_Type {
     if (!isInRange(value, power, maxValue)) throw new Error(ERROR_MESSAGES.utils.outofrange);
+
     const currentValue: number = Math.pow(power, currentPower);
+
     if (currentValue >= value) return { hostQuantity: currentValue, power: currentPower };
     currentPower++;
+
     return findNextHostQuantity(power, value, currentPower);
 }
 
@@ -487,7 +490,16 @@ export function getMasksVLSM(subnetsSettingsVLSM: subnetSettingVLSM_Type[]): IpA
  * @returns {subnetSettingVLSM_Type[]} object with host quanity and power of to obtain this host quantity
  */
 export function calculateNumberOfHostsVLSM(hostQuantities: number[]): subnetSettingVLSM_Type[] {
+    const everyGreaterThanZero = hostQuantities.every((hostQuantity: number) => {
+        if (hostQuantity > 0) return true;
+        return false;
+    });
+
+    if (hostQuantities.length < 1 || !everyGreaterThanZero)
+        throw new Error(ERROR_MESSAGES.validation.subnetsHostQuantity);
+
     return hostQuantities.map((hostQuantity: number) => {
+        hostQuantity += 2;
         let powerOfTwo = powerOf(hostQuantity, 2);
 
         if (powerOfTwo !== -1) return { hostQuantity: hostQuantity, power: powerOfTwo };
@@ -534,9 +546,38 @@ export function getSubnetsQuantity(
     ipMask: IpAddressType
 ): number {
     if (typeof subnetsQuantity === 'undefined') {
-        if (typeof subnetsHostQuantity === 'undefined') return -1;
+        if (typeof subnetsHostQuantity === 'undefined' || subnetsHostQuantity < 1) return -1;
         return calculateSubnetsQuantity(subnetsHostQuantity, ipMask);
-    } else if (powerOf(subnetsQuantity, 2) === -1)
+    } else if (subnetsQuantity < 2) return -1;
+    else if (powerOf(subnetsQuantity, 2) === -1)
         subnetsQuantity = findNextHostQuantity(2, subnetsQuantity).hostQuantity;
     return subnetsQuantity;
+}
+
+/**
+ *
+ * @param {number[] }hostQuantities
+ * @param {IpAddressType} ipMask
+ * @returns {requestedHostQuantity: number, maxHosts: number, subnetsSettingsVLSM: subnetSettingVLSM_Type[]}
+ */
+
+export function calculateProperHostQuantity(
+    hostQuantities: number[],
+    ipMask: IpAddressType
+): {
+    requestedHostQuantity: number;
+    maxHosts: number;
+    subnetsSettingsVLSM: subnetSettingVLSM_Type[];
+} {
+    const maxHosts = getNumberOfHosts(ipMask);
+    const subnetsSettingsVLSM = calculateNumberOfHostsVLSM(hostQuantities);
+
+    subnetsSettingsVLSM.sort((a, b) => a.power - b.power).reverse();
+
+    let initialValue = 0;
+    const requestedHostQuantity = subnetsSettingsVLSM.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.hostQuantity,
+        initialValue
+    );
+    return { requestedHostQuantity, maxHosts, subnetsSettingsVLSM };
 }
