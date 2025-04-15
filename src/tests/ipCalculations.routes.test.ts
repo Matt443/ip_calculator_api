@@ -78,6 +78,6 @@ describe('POST /api/ip/subnets', () => {
         '/api/ip/subnets',
         ipsToGetSubnetsResponse
     );
-    // EndpointTest.resultCodeTest('/api/ip/subnets?type=default&ip=255.255.0.0', 400);
-    // EndpointTest.resultCodeTest('/api/ip/subnets', 400);
+    EndpointPostTest.codeTest('/api/ip/subnets', { ip: '255.255.0.0', type: 'default' }, 400);
+    EndpointPostTest.codeTest('/api/ip/subnets', {}, 400);
 });

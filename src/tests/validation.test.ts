@@ -187,9 +187,13 @@ describe('Testing possibleShorthandValidation function', () => {
     });
 });
 
-describe('Testing subnetsPOssibleValidation', () => {
-    it('Should return ture, because subnets can be created', () => {
+describe('Testing subnetsPossibleValidation', () => {
+    it('Should return true, because subnets can be created', () => {
         expect(subnetsPossibleValidation([255, 255, 255, 0], 2)).toBe(true);
         expect(subnetsPossibleValidation([255, 255, 255, 0], 64)).toBe(true);
+    });
+    it("Should return false, because subnets can't be created", () => {
+        expect(subnetsPossibleValidation([255, 255, 255, 0], 128)).toBe(false);
+        expect(subnetsPossibleValidation([255, 255, 255, 0], 65)).toBe(false);
     });
 });

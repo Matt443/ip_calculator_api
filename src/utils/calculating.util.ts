@@ -523,6 +523,12 @@ export function shorthandToDefault(shorthand: number): IpAddressType {
     return ipDefault;
 }
 
+/**
+ *
+ * @param {subnetSettingType} param0
+ * @param {IpAddressType} ipMask
+ * @returns {number}
+ */
 export function getSubnetsQuantity(
     { subnetsHostQuantity, subnetsQuantity }: subnetSettingType,
     ipMask: IpAddressType

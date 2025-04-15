@@ -41,6 +41,10 @@ export function getIpAndMask(query: givenDataAll): {
     return { type, ip, mask, maskType };
 }
 
+/**
+ *
+ * @param {givenDataAll} query
+ */
 export function getSubnetSetup(query: givenDataAll): subnetSettingType {
     const subnetsQuantity = getQueryParam(query, 'subnetsQuantity') as string;
     const subnetsHostQuantity = getQueryParam(query, 'subnetsHostQuantity') as string;
