@@ -10,7 +10,8 @@ import {
     ipsToGetHostQuantity,
     ipsToGetNetworkAddress,
     ipsToGetNetworkInfo,
-    ipsToGetSubnetsResponse
+    ipsToGetSubnetsResponse,
+    ipsToGetSubnetsVLSMResponse
 } from '@/constant/samples.constant.js';
 
 describe('GET /api/ip/networkAddress', () => {
@@ -74,10 +75,21 @@ describe('POST /api/ip/subnets', () => {
         server.close();
     });
     EndpointPostTest.successFailTests(
-        ['Should get a network info', 'Should return 400 because data is not correct'],
+        ['Should get a subnets', 'Should return 400 because data is not correct'],
         '/api/ip/subnets',
         ipsToGetSubnetsResponse
     );
     EndpointPostTest.codeTest('/api/ip/subnets', { ip: '255.255.0.0', type: 'default' }, 400);
     EndpointPostTest.codeTest('/api/ip/subnets', {}, 400);
+});
+
+describe('POST /api/ip/subnetsVLSM', () => {
+    afterEach(async () => {
+        server.close();
+    });
+    EndpointPostTest.successFailTests(
+        ['Should get subnets with VLSM method', 'Should return 400 because data is not correct'],
+        '/api/ip/subnetsVLSM',
+        ipsToGetSubnetsVLSMResponse
+    );
 });

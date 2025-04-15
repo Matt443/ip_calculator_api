@@ -1,17 +1,22 @@
-import { givenDataAll } from '@/types/api.types.js';
-import { IpAddressInfoType, IpFormatType, subnetSettingType } from '@/types/ip.types.js';
+import { AllParamsType } from '@/types/api.types';
+import {
+    IpAddressInfoType,
+    IpFormatType,
+    subnetSettingType,
+    subnetSettingVLSM_Type
+} from '@/types/ip.types.js';
 /**
  * Checks if certain param was given
- * @param {givenDataAll} query
+ * @param {AllParamsType} query
  * @param {string} paramName
  * @param {undefined|string} defaultValue - default value when param is nullable
  * @returns {string|false} - returns param value or false if param is not given, if default value is given and param is not given returns default value
  */
 export function getQueryParam(
-    query: givenDataAll,
-    paramName: keyof givenDataAll,
+    query: AllParamsType,
+    paramName: keyof AllParamsType,
     defaultValue: string | undefined = undefined
-): string | false {
+): string | false | Array<any> | Object {
     const param = query[paramName] as string;
 
     if (param == undefined && defaultValue !== undefined) return defaultValue;
@@ -22,19 +27,23 @@ export function getQueryParam(
 
 /**
  *
- * @param {givenDataAll} query
+ * @param {AllParamsType} query
  */
-export function getIpAndMask(query: givenDataAll): {
+export function getIpAndMask(query: AllParamsType): {
     ip: string;
     type: IpFormatType;
     mask: string;
     maskType: IpFormatType;
 } {
-    const type = getQueryParam(query as unknown as givenDataAll, 'type', 'default') as IpFormatType;
-    const ip = getQueryParam(query as unknown as givenDataAll, 'ip') as string;
-    const mask = getQueryParam(query as unknown as givenDataAll, 'mask') as string;
+    const type = getQueryParam(
+        query as unknown as AllParamsType,
+        'type',
+        'default'
+    ) as IpFormatType;
+    const ip = getQueryParam(query as unknown as AllParamsType, 'ip') as string;
+    const mask = getQueryParam(query as unknown as AllParamsType, 'mask') as string;
     const maskType = getQueryParam(
-        query as unknown as givenDataAll,
+        query as unknown as AllParamsType,
         'maskType',
         'shorthand'
     ) as IpFormatType;
@@ -43,11 +52,11 @@ export function getIpAndMask(query: givenDataAll): {
 
 /**
  *
- * @param {givenDataAll} query
+ * @param {AllParamsType} query
  */
-export function getSubnetSetup(query: givenDataAll): subnetSettingType {
-    const subnetsQuantity = getQueryParam(query, 'subnetsQuantity') as string;
-    const subnetsHostQuantity = getQueryParam(query, 'subnetsHostQuantity') as string;
+export function getSubnetSetup(query: AllParamsType): subnetSettingType {
+    const subnetsQuantity = getQueryParam(query, 'subnetsQuantity');
+    const subnetsHostQuantity = getQueryParam(query, 'subnetsHostQuantity');
 
     return {
         subnetsQuantity: subnetsQuantity ? Number(subnetsQuantity) : undefined,

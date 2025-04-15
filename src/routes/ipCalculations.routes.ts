@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+    hostQuantitiesValidation,
     ipAndMaskValidation,
     maskValidation,
     subnetParamsValidation
@@ -25,8 +26,8 @@ export default () => {
     );
     api.post(
         '/ip/subnetsVLSM',
-        // ipAndMaskValidation,
-        // subnetParamsValidation,
+        ipAndMaskValidation,
+        hostQuantitiesValidation,
         ipCalculationsController.getSubnetsVLSM
     );
     return api;

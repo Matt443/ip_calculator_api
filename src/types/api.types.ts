@@ -44,22 +44,35 @@ export interface ResponseSubnets {
 }
 export type ResponseTypes = ResponseIpConversion | ResponseNetworkAddress;
 
-export interface givenDataConversionType {
-    ip?: string;
-    type?: IpFormatType;
+export interface IpParamType {
+    type?: string;
+    ip: string;
 }
 
-export interface givenDataNetworkAddressType extends givenDataConversionType {
-    mask?: string;
+export type MaskParamType = {
+    mask: string;
     maskType?: string;
-}
+};
 
-export interface givenDataSubnets extends givenDataConversionType {
+export type IpAndMaskParamType = IpParamType & MaskParamType;
+
+export type SubnetSettingParamType =
+    | {
+          subnetsQuantity: number;
+      }
+    | { subnetsHostQuantity: number };
+
+export type SubnetVLSMSettingType = { hostQuantity: number[] };
+export type SubnetParamType = IpAndMaskParamType & SubnetSettingParamType;
+
+export type SubnetVLSMParamType = IpAndMaskParamType & SubnetVLSMSettingType;
+
+export interface AllParamsType {
+    ip: string;
+    type: string;
+    mask: string;
+    maskType?: string;
     subnetsQuantity?: number;
-    subnetsHostQuantity?: number;
+    subnetsHostQuantity: number;
+    hostQuantities: number[];
 }
-
-export interface givenDataAll
-    extends givenDataNetworkAddressType,
-        givenDataConversionType,
-        givenDataSubnets {}

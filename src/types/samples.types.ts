@@ -1,9 +1,13 @@
 import {
+    IpAndMaskParamType,
+    MaskParamType,
     ResponseHostQuantity,
     ResponseIpConversion,
     ResponseNetworkAddress,
     ResponseNetworkInfo,
-    ResponseSubnets
+    ResponseSubnets,
+    SubnetParamType,
+    SubnetVLSMParamType
 } from './api.types.js';
 import { IpAddressInfoType, IpAddressType, NetworkInfoType } from './ip.types.js';
 
@@ -110,22 +114,13 @@ export type SubnetTestsDataType = {
     fail: SubnetTestsFieldType[];
 };
 
-export interface IpParamType {
-    type?: string;
-    ip: string;
-}
+export type SubnetVLSMTestsFieldType =
+    | (SubnetVLSMParamType & {
+          result: { given: SubnetVLSMParamType } & { result: NetworkInfoType[] };
+      })
+    | (any & { result: number });
 
-export type MaskParamType = {
-    mask: string;
-    maskType?: string;
+export type SubnetVLSMTestsDataType = {
+    success: SubnetVLSMTestsFieldType[];
+    fail: SubnetVLSMTestsFieldType[];
 };
-
-export type IpAndMaskParamType = IpParamType & MaskParamType;
-
-export type SubnetSettingParamType =
-    | {
-          subnetsQuantity: number;
-      }
-    | { subnetsHostQuantity: number };
-
-export type SubnetParamType = IpAndMaskParamType & SubnetSettingParamType;

@@ -1,14 +1,9 @@
 import app from '@/index.js';
-import {
-    IpParamType,
-    IpToConvertType,
-    MaskParamType,
-    TestDataSetFieldType,
-    TestDataSetType
-} from '@/types/samples.types.js';
+import { IpToConvertType, TestDataSetFieldType, TestDataSetType } from '@/types/samples.types.js';
 import request from 'supertest';
 import axios from 'axios';
 import fs from 'fs';
+import { IpParamType, MaskParamType } from '@/types/api.types';
 
 export class StandardTest {}
 export class EndpointGetTest extends StandardTest {

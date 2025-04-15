@@ -2,26 +2,21 @@ import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
 import {
     calculateAddress,
-    calculateNumberOfHostsVLSM,
     calculateProperHostQuantity,
     calculateShorthand,
-    calculateSubnetsQuantity,
     createAddressConversions,
     getAllSubnets,
     getAllSubnetsVLSM,
     getMasksVLSM,
-    getMaxSubnets,
     getSubnetsQuantity,
     ipBinaryToDefault,
     moveInAddress,
     newMaskForSubnet,
     whereZerosStart
 } from '@/utils/calculating.util.js';
-import { replaceInString } from '@/utils/common';
 import {
     ipAddressValidation,
     isInRange,
-    powerOf,
     subnetsPossibleValidation,
     VLSMSubnetsPossibleValidation
 } from '@/utils/validation.util.js';
@@ -137,7 +132,7 @@ export function getSubnetsVLSM(
     );
 
     if (!VLSMSubnetsPossibleValidation(requestedHostQuantity, maxHosts)) return [];
-    const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM);
+    const masks: IpAddressType[] = getMasksVLSM(subnetsSettingsVLSM, true);
 
     return getAllSubnetsVLSM(ipAddress, masks);
 }

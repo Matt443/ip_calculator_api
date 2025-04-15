@@ -2,24 +2,25 @@ import type { NextFunction, Request, Response } from 'express';
 import { IpFormatType } from '@/types/ip.types.js';
 import {
     ipAddressTypeValidation,
+    isInRange,
     possibleShorthandValidation,
     subnetsPossibleValidation,
-    validationWithRegex
+    validationWithRegex,
+    VLSMSubnetsPossibleValidation
 } from '@/utils/validation.util.js';
 import { sendError } from '@/utils/error.util.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js';
-import { givenDataAll } from '@/types/api.types.js';
-import { getSubnetsQuantity } from '@/utils/calculating.util.js';
-import fs from 'fs';
+import { calculateProperHostQuantity, getSubnetsQuantity } from '@/utils/calculating.util.js';
+import { AllParamsType } from '@/types/api.types.js';
 
 export async function ipToConvertValidation(req: Request, res: Response, next: NextFunction) {
     const type = getQueryParam(
-        req.query as unknown as givenDataAll,
+        req.query as unknown as AllParamsType,
         'type',
         'default'
     ) as IpFormatType;
-    const ip = getQueryParam(req.query as unknown as givenDataAll, 'ip');
+    const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
 
     if (!type || !ip) return sendError(res, 400, 'Bad Request');
     // Checking if given type and ip is correct
@@ -46,11 +47,11 @@ export async function ipAndMaskValidation(req: Request, res: Response, next: Nex
 
 export async function maskValidation(req: Request, res: Response, next: NextFunction) {
     const type = getQueryParam(
-        req.query as unknown as givenDataAll,
+        req.query as unknown as AllParamsType,
         'type',
         'shorthand'
     ) as IpFormatType;
-    const ipMask = getQueryParam(req.query as unknown as givenDataAll, 'mask');
+    const ipMask = getQueryParam(req.query as unknown as AllParamsType, 'mask') as string;
 
     if (!type || !ipMask) return sendError(res, 400, 'Bad Request');
     if (!ipAddressTypeValidation(type) || !anyIp[type].validate(ipMask)) {
@@ -86,6 +87,39 @@ export async function subnetParamsValidation(req: Request, res: Response, next: 
         !subnetsPossibleValidation(ipMaskConverted, Number(subnetsQuantity)) ||
         subnetsQuantity <= 1
     )
+        return sendError(res, 400, 'Bad Request');
+
+    next();
+}
+
+export async function hostQuantitiesValidation(req: Request, res: Response, next: NextFunction) {
+    const hostQuantities = getQueryParam(
+        req.body as unknown as AllParamsType,
+        'hostQuantities'
+    ) as number[];
+    const { mask, maskType } = getIpAndMask(req.body);
+
+    if (!hostQuantities || !Array.isArray(hostQuantities) || hostQuantities.length < 2)
+        return sendError(res, 400, 'Bad Request');
+
+    const everyIsCorrect = hostQuantities.every((hostQuantity: number) => {
+        if (
+            validationWithRegex(String(hostQuantity), new RegExp('^[0-9]+$')) &&
+            isInRange(hostQuantity, 1, 2147483646)
+        )
+            return true;
+        return false;
+    });
+
+    if (!everyIsCorrect) return sendError(res, 400, 'Bad Request');
+
+    const convertedMask = anyIp[maskType].toDefault(mask);
+    const { maxHosts, requestedHostQuantity } = calculateProperHostQuantity(
+        hostQuantities,
+        convertedMask
+    );
+
+    if (!VLSMSubnetsPossibleValidation(requestedHostQuantity, maxHosts))
         return sendError(res, 400, 'Bad Request');
 
     next();

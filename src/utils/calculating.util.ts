@@ -475,9 +475,12 @@ export function getAllSubnetsVLSM(
  * @param {subnetSettingVLSM_Type[]} subnetsSettingsVLSM object with host quanity and power of to obtain this host quantity
  * @returns {IpAddressType} object with masks for given amount of host
  */
-export function getMasksVLSM(subnetsSettingsVLSM: subnetSettingVLSM_Type[]): IpAddressType[] {
+export function getMasksVLSM(
+    subnetsSettingsVLSM: subnetSettingVLSM_Type[],
+    broadcastNetworkIncluded: boolean = false
+): IpAddressType[] {
     return subnetsSettingsVLSM.map((subnetSetting: subnetSettingVLSM_Type) => {
-        if (subnetSetting.power < 3) subnetSetting.power++;
+        if (subnetSetting.power < 3 && !broadcastNetworkIncluded) subnetSetting.power++;
         const newMaskBinary = '1'.padEnd(32 - subnetSetting.power, '1').padEnd(32, '0');
 
         return ipBinaryToDefault(binaryMergedToUnmerged(newMaskBinary));
@@ -572,7 +575,6 @@ export function calculateProperHostQuantity(
 } {
     const maxHosts = getNumberOfHosts(ipMask);
     const subnetsSettingsVLSM = calculateNumberOfHostsVLSM(hostQuantities);
-
     subnetsSettingsVLSM.sort((a, b) => a.power - b.power).reverse();
 
     let initialValue = 0;
