@@ -4,7 +4,7 @@ import {
     getNumberOfHosts,
     getSubnets,
     getSubnetsVLSM,
-    isIpInRange
+    recogniseClass
 } from '@/services/ipCalculations.service.js';
 import {
     dataSets,
@@ -18,9 +18,9 @@ import {
     sampleIpRange_complicated,
     texts
 } from '@/constant/samples.constant.js';
-import { calculatePartial } from '@/utils/calculating.util.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
-import { dataSetType, IpToGetSubnetsType } from '@/types/samples.types';
+import { dataSetType, IpToGetSubnetsType } from '@/types/samples.types.js';
+import { ipClasses } from '@/constant/supported.constants.js';
 
 describe('Testing getNetworkAdress function', () => {
     it(texts.pass, () => {
@@ -49,16 +49,6 @@ describe('Testing getBroadcastAdress function', () => {
     });
 });
 
-describe('Testing calculatePartial function', () => {
-    it('Should return calculated octet', () => {
-        dataSets.forEach((dataSet: dataSetType) => {
-            expect(calculatePartial(dataSet.ipBinary, dataSet.maskDecimal, dataSet.filler)).toBe(
-                dataSet.expected
-            );
-        });
-    });
-});
-
 describe('Testing getNumberOfHosts function', () => {
     it('Should return number of host', () => {
         expect(getNumberOfHosts(sampleIpMask)).toBe(65534);
@@ -70,34 +60,6 @@ describe('Testing getNumberOfHosts function', () => {
     it('Should throw an errow because ip adress is not correct', () => {
         expect(() => getNumberOfHosts([255, -1, 255, 255])).toThrow();
         expect(() => getNumberOfHosts([255, 300, 255, 255])).toThrow();
-    });
-});
-
-describe('Testing isIpInRange function', () => {
-    it('Should check if ip is in range and return true', () => {
-        expect(
-            isIpInRange(sampleIpAdress, sampleIpMask, sampleIpRange.min, sampleIpRange.max)
-        ).toBe(true);
-    });
-    it('Should check if ip is in range and return true', () => {
-        expect(
-            isIpInRange(
-                sampleIpAdress_complicated,
-                sampleIpMask_complicated,
-                sampleIpRange_complicated.min,
-                sampleIpRange_complicated.max
-            )
-        ).toBe(true);
-    });
-    it('Should check if ip is in range and return false', () => {
-        expect(
-            isIpInRange(
-                [192, 168, 255, 127],
-                sampleIpMask_complicated,
-                sampleIpRange_complicated.min,
-                sampleIpRange_complicated.max
-            )
-        ).toBe(false);
     });
 });
 
@@ -130,6 +92,20 @@ describe('Testing getSubnets function', () => {
             []
         );
     });
+    it('Should throw an error beacuse ip is not correct', () => {
+        expect(() =>
+            //@ts-ignore
+            getSubnets([192, 168, 300, 1], [255, 255, 255, 0], { subnetsQuantity: 128 })
+        ).toThrow();
+        expect(() =>
+            //@ts-ignore
+            getSubnets([192, 168, 0, -1], [255, 255, 255, 0], { subnetsQuantity: 128 })
+        ).toThrow();
+        expect(() =>
+            //@ts-ignore
+            getSubnets([192, 168, 300, 1], [255, 255, 255, 0], { subnetsQuantity: 128 })
+        ).toThrow();
+    });
 });
 
 describe('Testing getSubnetsVLSM function', () => {
@@ -161,4 +137,20 @@ describe('Testing getSubnetsVLSM function', () => {
                 getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 0]);
             }).toThrow(); //Bad Host quantity
         });
+});
+
+describe('Testing recogniseClass function', () => {
+    it('Should return recognised class', () => {
+        expect(recogniseClass([10, 0, 0, 1])).toEqual(ipClasses[0]);
+        expect(recogniseClass([128, 24, 53, 1])).toEqual(ipClasses[1]);
+        expect(recogniseClass([192, 168, 0, 1])).toEqual(ipClasses[2]);
+        expect(recogniseClass([224, 168, 0, 1])).toEqual(ipClasses[3]);
+        expect(recogniseClass([254, 168, 0, 1])).toEqual(ipClasses[4]);
+    });
+    it('Should return false because class cannot be regognised', () => {
+        expect(recogniseClass([127, 0, 0, 1])).toBe(false);
+        expect(recogniseClass([127, 156, 0, 1])).toBe(false);
+        expect(recogniseClass([255, 0, 0, 1])).toBe(false);
+        expect(recogniseClass([255, 255, 255, 255])).toBe(false);
+    });
 });

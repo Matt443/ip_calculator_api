@@ -15,9 +15,11 @@ import {
     IpToGetSubnetsVLSMType,
     IpToMoveType,
     NetworkInfoTestsDataType,
+    RecogniseClassTestsDataType,
     SubnetTestsDataType,
     SubnetVLSMTestsDataType
 } from '@/types/samples.types.js';
+import { ipClasses } from './supported.constants';
 
 //TODO Fix this unconsitency of naming
 export const sampleIpAdress = [192, 168, 0, 1];
@@ -309,7 +311,7 @@ export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubn
             ip: [192, 168, 0, 1],
             ipMask: [-1, 255, 255, 0],
             subnetsQuantity: 2,
-            error: ERROR_MESSAGES.utils.binary
+            error: ERROR_MESSAGES.validation.ipAddrress
         }
     ]
 };
@@ -1968,4 +1970,67 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
             result: 400
         }
     ]
+};
+
+export const ipsToRecognizeClass: RecogniseClassTestsDataType = {
+    success: [
+        {
+            ip: '10.0.0.1',
+            type: 'default',
+            result: { given: { ip: '10.0.0.1', type: 'default' }, recognisedClass: ipClasses[0] }
+        },
+        {
+            ip: '128.1.3.1',
+            type: 'default',
+            result: { given: { ip: '128.1.3.1', type: 'default' }, recognisedClass: ipClasses[1] }
+        },
+        {
+            ip: '192.168.0.1',
+            type: 'default',
+            result: { given: { ip: '192.168.0.1', type: 'default' }, recognisedClass: ipClasses[2] }
+        },
+        {
+            ip: '224.1.1.1',
+            type: 'default',
+            result: { given: { ip: '224.1.1.1', type: 'default' }, recognisedClass: ipClasses[3] }
+        },
+        {
+            ip: '254.0.0.1',
+            type: 'default',
+            result: { given: { ip: '254.0.0.1', type: 'default' }, recognisedClass: ipClasses[4] }
+        },
+        {
+            ip: '255.0.0.0',
+            type: 'default',
+            result: { given: { ip: '255.0.0.0', type: 'default' }, recognisedClass: false }
+        },
+        {
+            ip: '127.0.0.1',
+            type: 'default',
+            result: { given: { ip: '127.0.0.1', type: 'default' }, recognisedClass: false }
+        },
+
+        {
+            ip: '24',
+            type: 'shorthand',
+            result: { given: { ip: '24', type: 'shorthand' }, recognisedClass: false }
+        },
+        {
+            ip: '167772161',
+            type: 'decimal',
+            result: {
+                given: { ip: '167772161', type: 'decimal' },
+                recognisedClass: ipClasses[0]
+            }
+        },
+        {
+            ip: '00001010000000000000000000000001',
+            type: 'binary',
+            result: {
+                given: { ip: '00001010000000000000000000000001', type: 'binary' },
+                recognisedClass: ipClasses[0]
+            }
+        }
+    ],
+    fail: [...ipsToBinary.fail]
 };

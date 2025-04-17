@@ -44,10 +44,10 @@ export interface ResponseSubnets {
 }
 export type ResponseTypes = ResponseIpConversion | ResponseNetworkAddress;
 
-export interface IpParamType {
+export type IpParamType = {
     type?: string;
     ip: string;
-}
+};
 
 export type MaskParamType = {
     mask: string;

@@ -1,15 +1,12 @@
 import {
     IpAndMaskParamType,
     MaskParamType,
-    ResponseHostQuantity,
+    IpParamType,
     ResponseIpConversion,
-    ResponseNetworkAddress,
-    ResponseNetworkInfo,
-    ResponseSubnets,
     SubnetParamType,
     SubnetVLSMParamType
 } from './api.types.js';
-import { IpAddressInfoType, IpAddressType, NetworkInfoType } from './ip.types.js';
+import { IpAddressInfoType, IpAddressType, IpClassType, NetworkInfoType } from './ip.types.js';
 
 export interface IpsToEdit {
     ip: IpAddressType;
@@ -123,4 +120,15 @@ export type SubnetVLSMTestsFieldType =
 export type SubnetVLSMTestsDataType = {
     success: SubnetVLSMTestsFieldType[];
     fail: SubnetVLSMTestsFieldType[];
+};
+
+export type RecogniseClassTestsFieldType =
+    | (IpParamType & {
+          result: { given: IpParamType } & { recognisedClass: IpClassType | false };
+      })
+    | (any & { result: number });
+
+export type RecogniseClassTestsDataType = {
+    success: RecogniseClassTestsFieldType[];
+    fail: RecogniseClassTestsFieldType[];
 };

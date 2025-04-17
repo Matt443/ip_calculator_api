@@ -49,3 +49,11 @@ export type IpFormatsType = {
     binary: (ip: number | string | IpAddressType) => boolean;
     shorthand: (ip: number | string | IpAddressType) => boolean;
 };
+
+export type IpClassType = {
+    name: string;
+    min: IpAddressType;
+    max: IpAddressType;
+    hostQuantity: number;
+    defaultMask: IpAddressType;
+};

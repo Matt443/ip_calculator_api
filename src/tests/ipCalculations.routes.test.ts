@@ -3,6 +3,7 @@ import {
     calculatingUrlBilder,
     EndpointGetTest,
     EndpointPostTest,
+    onlyIpUrlBilder,
     onlyMaskUrlBilder
 } from '@/tests/utils/endpoints.util.js';
 import {
@@ -11,7 +12,8 @@ import {
     ipsToGetNetworkAddress,
     ipsToGetNetworkInfo,
     ipsToGetSubnetsResponse,
-    ipsToGetSubnetsVLSMResponse
+    ipsToGetSubnetsVLSMResponse,
+    ipsToRecognizeClass
 } from '@/constant/samples.constant.js';
 
 describe('GET /api/ip/networkAddress', () => {
@@ -91,5 +93,17 @@ describe('POST /api/ip/subnetsVLSM', () => {
         ['Should get subnets with VLSM method', 'Should return 400 because data is not correct'],
         '/api/ip/subnetsVLSM',
         ipsToGetSubnetsVLSMResponse
+    );
+});
+
+describe('POST /api/ip/class', () => {
+    afterEach(async () => {
+        server.close();
+    });
+    EndpointGetTest.successFailTests(
+        ['Should get subnets with VLSM method', 'Should return 400 because data is not correct'],
+        '/api/ip/class',
+        ipsToRecognizeClass,
+        onlyIpUrlBilder
     );
 });

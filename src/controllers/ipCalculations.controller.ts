@@ -1,14 +1,16 @@
+import { ipClasses } from '@/constant/supported.constants';
 import {
     getBroadcastAddress,
     getNetworkAddress,
     getNumberOfHosts,
     getSingleNetwork,
     getSubnets,
-    getSubnetsVLSM
+    getSubnetsVLSM,
+    recogniseClass
 } from '@/services/ipCalculations.service.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { AllParamsType } from '@/types/api.types';
-import { IpFormatType, NetworkInfoType } from '@/types/ip.types.js';
+import { IpAddressType, IpClassType, IpFormatType, NetworkInfoType } from '@/types/ip.types.js';
 import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js';
 import {
     calculateNumberOfHostsVLSM,
@@ -93,5 +95,21 @@ export default {
             hostQuantities
         );
         res.send({ given: { ip, mask, type, maskType, hostQuantities }, result: subnets });
+    },
+    async getIpClass(req: Request, res: Response, next: NextFunction) {
+        const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
+        const type = getQueryParam(
+            req.query as unknown as AllParamsType,
+            'type',
+            'default'
+        ) as IpFormatType;
+        const ipConverted: IpAddressType = anyIp[type].toDefault(ip);
+
+        const recognisedClass = recogniseClass(ipConverted);
+
+        const response = { recognisedClass, given: { ip, type } };
+        if (!recognisedClass) response.recognisedClass = false;
+
+        res.send(response);
     }
 };

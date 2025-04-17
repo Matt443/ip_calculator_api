@@ -170,3 +170,13 @@ export function calculatingUrlBilder(url: string, ipToTest: MaskParamType & IpPa
 export function onlyMaskUrlBilder(url: string, mask: MaskParamType): string {
     return `${url}?mask=${mask.mask}&type=${mask.maskType || 'shorthand'}`;
 }
+
+/**
+ *
+ * @param {string} url
+ * @param {IpToGetHostQunatityType} ipToTest
+ * @returns {string}
+ */
+export function onlyIpUrlBilder(url: string, ip: IpParamType): string {
+    return `${url}?ip=${ip.ip}&type=${ip.type || 'default'}`;
+}

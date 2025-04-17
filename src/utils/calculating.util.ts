@@ -584,3 +584,27 @@ export function calculateProperHostQuantity(
     );
     return { requestedHostQuantity, maxHosts, subnetsSettingsVLSM };
 }
+
+/**
+ *
+ * @param {IpAddressType} ipAddress
+ * @param {IpAddressType} ipMask
+ * @param {IpAddressType} rangeMin
+ * @param {IpAddressType} rangeMax
+ * @returns {boolean} true if is in range
+ */
+export function isIpInRange(
+    ipAddress: IpAddressType,
+    rangeMin: IpAddressType,
+    rangeMax: IpAddressType
+): boolean {
+    if (
+        !ipAddressValidation(ipAddress) ||
+        !ipAddressValidation(rangeMin) ||
+        !ipAddressValidation(rangeMax)
+    )
+        throw Error(ERROR_MESSAGES.validation.ipAddrress);
+    return ipAddress.every((octet: number, index: number) => {
+        return isInRange(octet, rangeMin[index], rangeMax[index]);
+    });
+}

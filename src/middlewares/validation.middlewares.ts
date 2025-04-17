@@ -14,7 +14,7 @@ import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js
 import { calculateProperHostQuantity, getSubnetsQuantity } from '@/utils/calculating.util.js';
 import { AllParamsType } from '@/types/api.types.js';
 
-export async function ipToConvertValidation(req: Request, res: Response, next: NextFunction) {
+export async function ipValidation(req: Request, res: Response, next: NextFunction) {
     const type = getQueryParam(
         req.query as unknown as AllParamsType,
         'type',
@@ -33,6 +33,7 @@ export async function ipAndMaskValidation(req: Request, res: Response, next: Nex
     const { type, ip, mask, maskType } = getIpAndMask(
         Object.keys(req.query).length === 0 ? req.body : req.query
     );
+
     if (!type || !ip || !mask || !maskType) return sendError(res, 400, 'Bad Request');
     // Checking if given type and ip is correct
     if (

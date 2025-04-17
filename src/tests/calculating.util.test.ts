@@ -28,9 +28,11 @@ import {
     ipDecimalToDefault,
     shorthandToDefault,
     calculateProperHostQuantity,
-    getSubnetsQuantity
+    getSubnetsQuantity,
+    isIpInRange
 } from '@/utils/calculating.util.js';
 import {
+    dataSets,
     ipsToFix,
     ipsToGetCompleteInfo,
     ipsToGetConversions,
@@ -39,10 +41,13 @@ import {
     ipsToMove,
     ipToCompare,
     sampleIpAdress,
+    sampleIpAdress_complicated,
     sampleIpAdress_wrong,
     sampleIpBinaryAdress,
     sampleIpMask,
-    sampleIpMask_complicated
+    sampleIpMask_complicated,
+    sampleIpRange,
+    sampleIpRange_complicated
 } from '@/constant/samples.constant.js';
 import { IpAddressType } from '@/types/ip.types';
 import { getSingleNetwork } from '@/services/ipCalculations.service.js';
@@ -53,7 +58,8 @@ import {
     IpToGetInfoType,
     IpToGetSubnetsType,
     IpToGetConversionsType,
-    IpToGetSubnetsVLSMType
+    IpToGetSubnetsVLSMType,
+    dataSetType
 } from '@/types/samples.types.js';
 import { getSubnetSetup } from '@/utils/api.util';
 
@@ -410,6 +416,13 @@ describe('Testing calculate partial function', () => {
         expect(calculatePartial('11111111', -1, '1')).toBe(-1);
         expect(calculatePartial('11111111', 256, '1')).toBe(-1);
     });
+    it('Should return calculated octet', () => {
+        dataSets.forEach((dataSet: dataSetType) => {
+            expect(calculatePartial(dataSet.ipBinary, dataSet.maskDecimal, dataSet.filler)).toBe(
+                dataSet.expected
+            );
+        });
+    });
 });
 
 describe('Testing findNextHostQuantity function', () => {
@@ -635,5 +648,34 @@ describe('Testing calculateProperHostQuantity function', () => {
         expect(() => {
             calculateProperHostQuantity([100, -1], [255, 255, 255, 256]);
         }).toThrow();
+    });
+});
+
+describe('Testing isIpInRange function', () => {
+    it('Should check if ip is in range and return true', () => {
+        expect(isIpInRange(sampleIpAdress, sampleIpRange.min, sampleIpRange.max)).toBe(true);
+    });
+    it('Should check if ip is in range and return true', () => {
+        expect(
+            isIpInRange(
+                sampleIpAdress_complicated,
+                sampleIpRange_complicated.min,
+                sampleIpRange_complicated.max
+            )
+        ).toBe(true);
+    });
+    it('Should check if ip is in range and return false', () => {
+        expect(
+            isIpInRange(
+                [192, 168, 255, 127],
+                sampleIpRange_complicated.min,
+                sampleIpRange_complicated.max
+            )
+        ).toBe(false);
+    });
+    it('Should throw an error beacuse ip is not correct', () => {
+        expect(() => isIpInRange([192, 168, 300, 1], [0, 0, 0, 0], [255, 255, 300, 0])).toThrow();
+        expect(() => isIpInRange([192, 168, 0, -1], [0, 0, 0, 0], [255, 255, 300, 0])).toThrow();
+        expect(() => isIpInRange([192, 168, 300, 1], [0, 0, 0, 0], [255, 255, 255, 0])).toThrow();
     });
 });

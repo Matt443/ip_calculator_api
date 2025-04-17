@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
     hostQuantitiesValidation,
     ipAndMaskValidation,
+    ipValidation,
     maskValidation,
     subnetParamsValidation
 } from '@/middlewares/validation.middlewares.js';
@@ -18,6 +19,7 @@ export default () => {
     );
     api.get('/ip/hostQuantity', maskValidation, ipCalculationsController.getNumberOfHosts);
     api.get('/ip/networkInfo', ipAndMaskValidation, ipCalculationsController.getNetworkInfo);
+    api.get('/ip/class', ipValidation, ipCalculationsController.getIpClass);
     api.post(
         '/ip/subnets',
         ipAndMaskValidation,
