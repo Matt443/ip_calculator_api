@@ -7,19 +7,16 @@ import {
     recogniseClass
 } from '@/services/ipCalculations.service.js';
 import {
-    dataSets,
     ipsToGetSubnets,
     ipsToGetSubnetsVLSM,
     sampleIpAdress,
     sampleIpAdress_complicated,
     sampleIpMask,
     sampleIpMask_complicated,
-    sampleIpRange,
-    sampleIpRange_complicated,
     texts
 } from '@/constant/samples.constant.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
-import { dataSetType, IpToGetSubnetsType } from '@/types/samples.types.js';
+import { IpToGetSubnetsType } from '@/types/samples.types.js';
 import { ipClasses } from '@/constant/supported.constants.js';
 
 describe('Testing getNetworkAdress function', () => {

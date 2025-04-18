@@ -73,7 +73,8 @@ export async function subnetParamsValidation(req: Request, res: Response, next: 
     if (!subnetsQuantity && !subnetsHostQuantity) return sendError(res, 400, 'Bad Request');
     if (
         subnetsQuantity &&
-        !validationWithRegex(String(subnetsQuantity), new RegExp('^[0-9]+$') || subnetsQuantity < 2)
+        (!validationWithRegex(String(subnetsQuantity), new RegExp('^[0-9]+$')) ||
+            subnetsQuantity < 2)
     )
         return sendError(res, 400, 'Bad Request');
     if (

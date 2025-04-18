@@ -4,7 +4,7 @@ import {
     getMaxSubnets,
     ipBinaryToDefault,
     ipDecimalToDefault
-} from './calculating.util.js';
+} from '@/utils/calculating.util.js';
 
 /**
  *

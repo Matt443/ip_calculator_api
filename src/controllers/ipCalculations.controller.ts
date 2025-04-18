@@ -1,4 +1,3 @@
-import { ipClasses } from '@/constant/supported.constants';
 import {
     getBroadcastAddress,
     getNetworkAddress,
@@ -10,20 +9,14 @@ import {
 } from '@/services/ipCalculations.service.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { AllParamsType } from '@/types/api.types';
-import { IpAddressType, IpClassType, IpFormatType, NetworkInfoType } from '@/types/ip.types.js';
+import { IpAddressType, IpFormatType, NetworkInfoType } from '@/types/ip.types.js';
 import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js';
-import {
-    calculateNumberOfHostsVLSM,
-    calculateProperHostQuantity,
-    createAddressConversions,
-    getSubnetsQuantity
-} from '@/utils/calculating.util.js';
-import { sendError } from '@/utils/error.util.js';
+import { createAddressConversions } from '@/utils/calculating.util.js';
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 export default {
-    async getNetworkAddress(req: Request, res: Response, next: NextFunction) {
+    async getNetworkAddress(req: Request, res: Response) {
         const { type, ip, mask, maskType } = getIpAndMask(req.query as unknown as AllParamsType);
 
         const convertedMask = anyIp[maskType].toDefault(mask);
@@ -36,7 +29,7 @@ export default {
 
         res.send(response);
     },
-    async getBroadcastAddress(req: Request, res: Response, next: NextFunction) {
+    async getBroadcastAddress(req: Request, res: Response) {
         const { type, ip, mask, maskType } = getIpAndMask(req.query as unknown as AllParamsType);
 
         const convertedMask = anyIp[maskType].toDefault(mask);
@@ -49,7 +42,7 @@ export default {
 
         res.send(response);
     },
-    async getNumberOfHosts(req: Request, res: Response, next: NextFunction) {
+    async getNumberOfHosts(req: Request, res: Response) {
         const maskType = getQueryParam(
             req.query as unknown as AllParamsType,
             'type',
@@ -62,7 +55,7 @@ export default {
 
         res.send({ given: { maskType, mask }, result: { hostQuantity } });
     },
-    async getNetworkInfo(req: Request, res: Response, next: NextFunction) {
+    async getNetworkInfo(req: Request, res: Response) {
         const { type, ip, mask, maskType } = getIpAndMask(req.query as unknown as AllParamsType);
 
         const maskDefault = anyIp[maskType].toDefault(mask);
@@ -73,7 +66,7 @@ export default {
         };
         res.send(response);
     },
-    async getSubnets(req: Request, res: Response, next: NextFunction) {
+    async getSubnets(req: Request, res: Response) {
         const { type, ip, mask, maskType } = getIpAndMask(req.body);
         const subnetsSetup = getSubnetSetup(req.body);
 
@@ -83,7 +76,7 @@ export default {
 
         res.send({ given: { ip, mask, type, maskType, ...subnetsSetup }, result: subnets });
     },
-    async getSubnetsVLSM(req: Request, res: Response, next: NextFunction) {
+    async getSubnetsVLSM(req: Request, res: Response) {
         const { ip, mask, type, maskType } = getIpAndMask(req.body);
         const hostQuantities = getQueryParam(req.body, 'hostQuantities') as number[];
 
@@ -96,7 +89,7 @@ export default {
         );
         res.send({ given: { ip, mask, type, maskType, hostQuantities }, result: subnets });
     },
-    async getIpClass(req: Request, res: Response, next: NextFunction) {
+    async getIpClass(req: Request, res: Response) {
         const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
         const type = getQueryParam(
             req.query as unknown as AllParamsType,

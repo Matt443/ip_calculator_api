@@ -61,7 +61,6 @@ import {
     IpToGetSubnetsVLSMType,
     dataSetType
 } from '@/types/samples.types.js';
-import { getSubnetSetup } from '@/utils/api.util';
 
 describe('Testing toBinary function', () => {
     it('Should convert to binary', () => {

@@ -1,10 +1,5 @@
 import { AllParamsType } from '@/types/api.types';
-import {
-    IpAddressInfoType,
-    IpFormatType,
-    subnetSettingType,
-    subnetSettingVLSM_Type
-} from '@/types/ip.types.js';
+import { IpFormatType, subnetSettingType } from '@/types/ip.types.js';
 /**
  * Checks if certain param was given
  * @param {AllParamsType} query
@@ -16,7 +11,7 @@ export function getQueryParam(
     query: AllParamsType,
     paramName: keyof AllParamsType,
     defaultValue: string | undefined = undefined
-): string | false | Array<any> | Object {
+): string | false | Array<any> | object {
     const param = query[paramName] as string;
 
     if (param == undefined && defaultValue !== undefined) return defaultValue;

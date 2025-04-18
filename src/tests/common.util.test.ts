@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
-import { replaceInString } from '@/utils/common.js';
+import { replaceInString } from '@/utils/common.util.js';
 
 describe('Testing replaceInString function', () => {
     it('Should replace from start index to end index with given string', () => {

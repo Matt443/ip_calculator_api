@@ -2,10 +2,10 @@ import { anyIp } from '@/strategies/anyIp.strategies.js';
 import { AllParamsType, ResponseTypes } from '@/types/api.types.js';
 import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types.js';
 import { getQueryParam } from '@/utils/api.util.js';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 export default {
-    async getBinary(req: Request, res: Response, next: NextFunction) {
+    async getBinary(req: Request, res: Response) {
         const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
         const type = getQueryParam(
             req.query as unknown as AllParamsType,
@@ -19,7 +19,7 @@ export default {
 
         res.send(response).status(200);
     },
-    async getDecimal(req: Request, res: Response, next: NextFunction) {
+    async getDecimal(req: Request, res: Response) {
         const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
         const type = getQueryParam(
             req.query as unknown as AllParamsType,
@@ -33,7 +33,7 @@ export default {
 
         res.send(response).status(200);
     },
-    async getDefault(req: Request, res: Response, next: NextFunction) {
+    async getDefault(req: Request, res: Response) {
         const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
         const type = getQueryParam(
             req.query as unknown as AllParamsType,
@@ -47,7 +47,7 @@ export default {
 
         res.send(response).status(200);
     },
-    async getShorthand(req: Request, res: Response, next: NextFunction) {
+    async getShorthand(req: Request, res: Response) {
         const ip = getQueryParam(req.query as unknown as AllParamsType, 'ip') as string;
         const type = getQueryParam(
             req.query as unknown as AllParamsType,

@@ -1,4 +1,3 @@
-import { getNetworkAddress } from '@/services/ipCalculations.service.js';
 import { ResponseIpConversion } from '@/types/api.types';
 import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types.js';
 import { anyIpAddressStrategy } from '@/types/strategy.types.js';

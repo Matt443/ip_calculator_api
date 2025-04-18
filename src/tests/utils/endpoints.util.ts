@@ -2,7 +2,6 @@ import app from '@/index.js';
 import { IpToConvertType, TestDataSetFieldType, TestDataSetType } from '@/types/samples.types.js';
 import request from 'supertest';
 import axios from 'axios';
-import fs from 'fs';
 import { IpParamType, MaskParamType } from '@/types/api.types';
 
 export class StandardTest {}
@@ -19,7 +18,7 @@ export class EndpointGetTest extends StandardTest {
         url: string,
         paramName: string,
         paramValue: string,
-        result: Object | string
+        result: object | string
     ) {
         const response = await request(app).get(`${url}?${paramName}=${paramValue}`);
         expect(JSON.parse(response.text)).toEqual(result);
@@ -74,11 +73,7 @@ export class EndpointGetTest extends StandardTest {
      * @param checkStatus @default true if true numeric values will be check as a status
      * @returns {Promise<void|boolean>}
      */
-    static async resultCodeTest(
-        url: string,
-        result: number,
-        checkStatus: boolean = true
-    ): Promise<void | boolean> {
+    static async resultCodeTest(url: string, result: number): Promise<void | boolean> {
         const response = await request(app).get(url);
         expect(response.status).toBe(result);
     }
@@ -91,7 +86,7 @@ export class EndpointPostTest extends StandardTest {
      * @param {Object} dataToSend
      * @param result
      */
-    static async responseTest(url: string, dataToSend: Object, result: any): Promise<void> {
+    static async responseTest(url: string, dataToSend: object, result: any): Promise<void> {
         const response = await axios.post('http://localhost:3002' + url, dataToSend);
         expect(response.data).toEqual(result);
     }
@@ -101,7 +96,7 @@ export class EndpointPostTest extends StandardTest {
      * @param {Object} dataToSend
      * @param {number} code
      */
-    static async codeTest(url: string, dataToSend: Object, code: number): Promise<void> {
+    static async codeTest(url: string, dataToSend: object, code: number): Promise<void> {
         const response = await axios.post('http://localhost:3002' + url, dataToSend, {
             validateStatus: (status) => {
                 return status >= 200 && status < 500;
@@ -123,18 +118,16 @@ export class EndpointPostTest extends StandardTest {
         it(messages[0], async () => {
             await Promise.all(
                 testData.success.map(async (element: TestDataSetFieldType) => {
-                    const response = element.result;
                     const { result, ...toSend } = element;
-                    this.responseTest(url, toSend, response);
+                    this.responseTest(url, toSend, result);
                 })
             );
         });
         it(messages[1], async () => {
             await Promise.all(
                 testData.fail.map(async (element: TestDataSetFieldType) => {
-                    const response = element.result;
                     const { result, ...toSend } = element;
-                    this.codeTest(url, toSend, Number(response));
+                    this.codeTest(url, toSend, Number(result));
                 })
             );
         });

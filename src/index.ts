@@ -1,4 +1,4 @@
-import express, { Response, Request, Router, NextFunction } from 'express';
+import express from 'express';
 import 'dotenv/config';
 import { connectDB } from '@/config/database.config.js';
 import ipConversions from '@/routes/ipConversions.routes.js';
@@ -8,7 +8,6 @@ import compression from 'compression';
 import helmet from 'helmet';
 import RateLimit from 'express-rate-limit';
 
-const router = express.Router();
 const app = express();
 app.use(compression());
 const limiter = RateLimit({

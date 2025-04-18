@@ -8,19 +8,14 @@ import {
 } from '@/types/ip.types';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
-import {
-    getBroadcastAddress,
-    getNetworkAddress,
-    getNumberOfHosts,
-    getSingleNetwork
-} from '@/services/ipCalculations.service.js';
+import { getNumberOfHosts, getSingleNetwork } from '@/services/ipCalculations.service.js';
 import {
     ipAddressValidation,
     ipShorthandValidation,
     isInRange,
     powerOf
 } from '@/utils/validation.util.js';
-import { replaceInString } from '@/utils/common.js';
+import { replaceInString } from '@/utils/common.util.js';
 /**
  *
  * @param {number} decimal - number to be convert
