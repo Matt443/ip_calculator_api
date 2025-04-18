@@ -2,7 +2,15 @@
     "presets": ["@babel/preset-env"],
     "plugins": [
         "@babel/plugin-transform-runtime",
-        ["@babel/plugin-transform-modules-commonjs", { "loose": true }]
+        ["@babel/plugin-transform-modules-commonjs", { "loose": true }],
+        [
+            "module-resolver",
+            {
+                "alias": {
+                    "@": "./"
+                }
+            }
+        ]
     ],
     "sourceMaps": true,
     "retainLines": true,
