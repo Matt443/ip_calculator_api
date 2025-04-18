@@ -1,17 +1,10 @@
-import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types';
+import { IpAddressType } from '@/types/ip.types';
 import {
-    binaryMergedToDefault,
     binaryMergedToUnmerged,
-    calculateNumberOfHostsVLSM,
     getMaxSubnets,
     ipBinaryToDefault,
-    ipDecimalToDefault,
-    ipDottedToDefault,
-    ipToBinary
-} from './calculating.util';
-import { anyIpAddressStrategy } from '@/types/strategy.types';
-import { anyIp } from '@/strategies/anyIp.strategies';
-import { getNumberOfHosts } from '@/services/ipCalculations.service';
+    ipDecimalToDefault
+} from './calculating.util.js';
 
 /**
  *
