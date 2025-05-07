@@ -51,6 +51,7 @@
         "@babel/helpers": "^7.27.1",
         "@babel/runtime": "^7.27.1",
         "babel-jest": "^29.7.0",
+        "formidable": "^3.5.4",
         "tsconfig-paths": "^4.2.0",
         "typedoc": "^0.26.11"
     }
