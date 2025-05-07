@@ -178,7 +178,8 @@ export const ipsToGetCompleteInfo: { success: IpToGetInfoType[]; fail: IpToGetIn
                     ip: [255, 255, 255, 0],
                     decimal: 4294967040,
                     binary: ['11111111', '11111111', '11111111', '00000000'],
-                    dotted: '255.255.255.0'
+                    dotted: '255.255.255.0',
+                    shorthand: 24
                 },
                 hosts: {
                     first: {
@@ -230,7 +231,8 @@ export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubn
                         ip: [255, 255, 255, 128],
                         decimal: 4294967168,
                         binary: ['11111111', '11111111', '11111111', '10000000'],
-                        dotted: '255.255.255.128'
+                        dotted: '255.255.255.128',
+                        shorthand: 25
                     },
                     hosts: {
                         first: {
@@ -265,7 +267,8 @@ export const ipsToGetSubnets: { success: IpToGetSubnetsType[]; fail: IpToGetSubn
                         ip: [255, 255, 255, 128],
                         decimal: 4294967168,
                         binary: ['11111111', '11111111', '11111111', '10000000'],
-                        dotted: '255.255.255.128'
+                        dotted: '255.255.255.128',
+                        shorthand: 25
                     },
                     hosts: {
                         first: {
@@ -334,7 +337,8 @@ export const ipsToGetConversions: {
                 ip: [0, 0, 0, 0],
                 decimal: 0,
                 binary: ['00000000', '00000000', '00000000', '00000000'],
-                dotted: '0.0.0.0'
+                dotted: '0.0.0.0',
+                shorthand: 0
             }
         },
         {
@@ -343,7 +347,8 @@ export const ipsToGetConversions: {
                 ip: [255, 255, 255, 255],
                 decimal: 4294967295,
                 binary: ['11111111', '11111111', '11111111', '11111111'],
-                dotted: '255.255.255.255'
+                dotted: '255.255.255.255',
+                shorthand: 32
             }
         }
     ],
@@ -380,7 +385,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 255, 128],
                         decimal: 4294967168,
                         binary: ['11111111', '11111111', '11111111', '10000000'],
-                        dotted: '255.255.255.128'
+                        dotted: '255.255.255.128',
+                        shorthand: 25
                     },
                     hosts: {
                         first: {
@@ -415,7 +421,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 255, 192],
                         decimal: 4294967232,
                         binary: ['11111111', '11111111', '11111111', '11000000'],
-                        dotted: '255.255.255.192'
+                        dotted: '255.255.255.192',
+                        shorthand: 26
                     },
                     hosts: {
                         first: {
@@ -450,7 +457,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 255, 192],
                         decimal: 4294967232,
                         binary: ['11111111', '11111111', '11111111', '11000000'],
-                        dotted: '255.255.255.192'
+                        dotted: '255.255.255.192',
+                        shorthand: 26
                     },
                     hosts: {
                         first: {
@@ -495,7 +503,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 252, 0],
                         decimal: 4294966272,
                         binary: ['11111111', '11111111', '11111100', '00000000'],
-                        dotted: '255.255.252.0'
+                        dotted: '255.255.252.0',
+                        shorthand: 22
                     },
                     hosts: {
                         first: {
@@ -530,7 +539,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 252, 0],
                         decimal: 4294966272,
                         binary: ['11111111', '11111111', '11111100', '00000000'],
-                        dotted: '255.255.252.0'
+                        dotted: '255.255.252.0',
+                        shorthand: 22
                     },
                     hosts: {
                         first: {
@@ -565,7 +575,8 @@ export const ipsToGetSubnetsVLSM: {
                         ip: [255, 255, 252, 0],
                         decimal: 4294966272,
                         binary: ['11111111', '11111111', '11111100', '00000000'],
-                        dotted: '255.255.252.0'
+                        dotted: '255.255.252.0',
+                        shorthand: 22
                     },
                     hosts: {
                         first: {
@@ -893,7 +904,8 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
                     ip: [255, 255, 255, 255],
                     decimal: 4294967295,
                     binary: ['11111111', '11111111', '11111111', '11111111'],
-                    dotted: '255.255.255.255'
+                    dotted: '255.255.255.255',
+                    shorthand: 32
                 }
             }
         },
@@ -909,7 +921,8 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
                     ip: [0, 0, 0, 0],
                     decimal: 0,
                     binary: ['00000000', '00000000', '00000000', '00000000'],
-                    dotted: '0.0.0.0'
+                    dotted: '0.0.0.0',
+                    shorthand: 0
                 }
             }
         }
@@ -964,7 +977,8 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
                     ip: [255, 255, 255, 255],
                     decimal: 4294967295,
                     binary: ['11111111', '11111111', '11111111', '11111111'],
-                    dotted: '255.255.255.255'
+                    dotted: '255.255.255.255',
+                    shorthand: 32
                 }
             }
         },
@@ -980,7 +994,8 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
                     ip: [255, 255, 255, 255],
                     decimal: 4294967295,
                     binary: ['11111111', '11111111', '11111111', '11111111'],
-                    dotted: '255.255.255.255'
+                    dotted: '255.255.255.255',
+                    shorthand: 32
                 }
             }
         }
@@ -1066,7 +1081,8 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                         ip: [255, 255, 255, 0],
                         decimal: 4294967040,
                         binary: ['11111111', '11111111', '11111111', '00000000'],
-                        dotted: '255.255.255.0'
+                        dotted: '255.255.255.0',
+                        shorthand: 24
                     },
                     hosts: {
                         first: {
@@ -1102,19 +1118,22 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                         ip: [255, 255, 0, 0],
                         decimal: 4294901760,
                         binary: ['11111111', '11111111', '00000000', '00000000'],
-                        dotted: '255.255.0.0'
+                        dotted: '255.255.0.0',
+                        shorthand: 16
                     },
                     broadcastAddress: {
                         ip: [255, 255, 255, 255],
                         decimal: 4294967295,
                         binary: ['11111111', '11111111', '11111111', '11111111'],
-                        dotted: '255.255.255.255'
+                        dotted: '255.255.255.255',
+                        shorthand: 32
                     },
                     ipMask: {
                         ip: [255, 255, 0, 0],
                         decimal: 4294901760,
                         binary: ['11111111', '11111111', '00000000', '00000000'],
-                        dotted: '255.255.0.0'
+                        dotted: '255.255.0.0',
+                        shorthand: 16
                     },
                     hosts: {
                         first: {
@@ -1127,7 +1146,8 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                             ip: [255, 255, 255, 254],
                             decimal: 4294967294,
                             binary: ['11111111', '11111111', '11111111', '11111110'],
-                            dotted: '255.255.255.254'
+                            dotted: '255.255.255.254',
+                            shorthand: 31
                         },
                         quantity: 65534
                     }
@@ -1161,7 +1181,8 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                         ip: [255, 255, 255, 254],
                         decimal: 4294967294,
                         binary: ['11111111', '11111111', '11111111', '11111110'],
-                        dotted: '255.255.255.254'
+                        dotted: '255.255.255.254',
+                        shorthand: 31
                     },
                     hosts: {
                         quantity: 0
@@ -1221,7 +1242,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1256,7 +1278,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1309,7 +1332,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1344,7 +1368,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1397,7 +1422,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1432,7 +1458,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1484,7 +1511,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1519,7 +1547,8 @@ export const ipsToGetSubnetsResponse: SubnetTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1646,7 +1675,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 240],
                             decimal: 4294967280,
                             binary: ['11111111', '11111111', '11111111', '11110000'],
-                            dotted: '255.255.255.240'
+                            dotted: '255.255.255.240',
+                            shorthand: 28
                         },
                         hosts: {
                             first: {
@@ -1681,7 +1711,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 240],
                             decimal: 4294967280,
                             binary: ['11111111', '11111111', '11111111', '11110000'],
-                            dotted: '255.255.255.240'
+                            dotted: '255.255.255.240',
+                            shorthand: 28
                         },
                         hosts: {
                             first: {
@@ -1733,7 +1764,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1768,7 +1800,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 128],
                             decimal: 4294967168,
                             binary: ['11111111', '11111111', '11111111', '10000000'],
-                            dotted: '255.255.255.128'
+                            dotted: '255.255.255.128',
+                            shorthand: 25
                         },
                         hosts: {
                             first: {
@@ -1820,7 +1853,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 252],
                             decimal: 4294967292,
                             binary: ['11111111', '11111111', '11111111', '11111100'],
-                            dotted: '255.255.255.252'
+                            dotted: '255.255.255.252',
+                            shorthand: 30
                         },
                         hosts: {
                             first: {
@@ -1855,7 +1889,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 252],
                             decimal: 4294967292,
                             binary: ['11111111', '11111111', '11111111', '11111100'],
-                            dotted: '255.255.255.252'
+                            dotted: '255.255.255.252',
+                            shorthand: 30
                         },
                         hosts: {
                             first: {
@@ -1890,7 +1925,8 @@ export const ipsToGetSubnetsVLSMResponse: SubnetVLSMTestsDataType = {
                             ip: [255, 255, 255, 252],
                             decimal: 4294967292,
                             binary: ['11111111', '11111111', '11111111', '11111100'],
-                            dotted: '255.255.255.252'
+                            dotted: '255.255.255.252',
+                            shorthand: 30
                         },
                         hosts: {
                             first: {

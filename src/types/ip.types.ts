@@ -21,6 +21,7 @@ export type IpAddressInfoType = {
     binary: IpAddresBinaryType;
     decimal: number;
     dotted: string;
+    shorthand?: number;
 };
 
 export type NetworkInfoType = {

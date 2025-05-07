@@ -13,6 +13,7 @@ import {
     ipAddressValidation,
     ipShorthandValidation,
     isInRange,
+    possibleShorthandValidation,
     powerOf
 } from '@/utils/validation.util.js';
 import { replaceInString } from '@/utils/common.util.js';
@@ -300,12 +301,17 @@ export function newMaskForSubnet(
  */
 export function createAddressConversions(ipAddress: IpAddressType): IpAddressInfoType {
     if (!ipAddressValidation(ipAddress)) throw Error(ERROR_MESSAGES.validation.ipAddrress);
-    return {
+    const result: IpAddressInfoType = {
         ip: ipAddress,
         decimal: ipToDecimal(ipAddress),
         binary: ipToBinary(ipAddress),
         dotted: ipToDotted(ipAddress)
     };
+    if (possibleShorthandValidation(ipToBinary(ipAddress).join(''))) {
+        result.shorthand = calculateShorthand(ipAddress);
+    }
+
+    return result;
 }
 
 /**
