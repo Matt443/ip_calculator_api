@@ -67,8 +67,8 @@ export default {
         res.send(response);
     },
     async getSubnets(req: Request, res: Response) {
-        const { type, ip, mask, maskType } = getIpAndMask(req.body);
-        const subnetsSetup = getSubnetSetup(req.body);
+        const { type, ip, mask, maskType } = getIpAndMask(req.query as unknown as AllParamsType);
+        const subnetsSetup = getSubnetSetup(req.query as unknown as AllParamsType);
 
         const ipConverted = anyIp[type].toDefault(ip);
         const maskConverted = anyIp[maskType].toDefault(mask);

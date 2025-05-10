@@ -20,7 +20,7 @@ export default () => {
     api.get('/ip/hostQuantity', maskValidation, ipCalculationsController.getNumberOfHosts);
     api.get('/ip/networkInfo', ipAndMaskValidation, ipCalculationsController.getNetworkInfo);
     api.get('/ip/class', ipValidation, ipCalculationsController.getIpClass);
-    api.post(
+    api.get(
         '/ip/subnets',
         ipAndMaskValidation,
         subnetParamsValidation,

@@ -66,8 +66,10 @@ export async function maskValidation(req: Request, res: Response, next: NextFunc
 }
 
 export async function subnetParamsValidation(req: Request, res: Response, next: NextFunction) {
-    let { subnetsHostQuantity, subnetsQuantity } = getSubnetSetup(req.body);
-    const { mask, maskType } = getIpAndMask(req.body);
+    let { subnetsHostQuantity, subnetsQuantity } = getSubnetSetup(
+        req.query as unknown as AllParamsType
+    );
+    const { mask, maskType } = getIpAndMask(req.query as unknown as AllParamsType);
 
     //Checking if minimal one of both is defined
     if (!subnetsQuantity && !subnetsHostQuantity) return sendError(res, 400, 'Bad Request');

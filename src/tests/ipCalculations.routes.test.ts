@@ -4,7 +4,8 @@ import {
     EndpointGetTest,
     EndpointPostTest,
     onlyIpUrlBilder,
-    onlyMaskUrlBilder
+    onlyMaskUrlBilder,
+    subnetsUrlBilder
 } from '@/tests/utils/endpoints.util.js';
 import {
     ipsToGetBroadcastAddress,
@@ -72,17 +73,18 @@ describe('GET /api/ip/networkInfo', () => {
     EndpointGetTest.resultCodeTest('/api/ip/networkInfo', 400);
 });
 
-describe('POST /api/ip/subnets', () => {
+describe('GET /api/ip/subnets', () => {
     afterEach(async () => {
         server.close();
     });
-    EndpointPostTest.successFailTests(
+    EndpointGetTest.successFailTests(
         ['Should get a subnets', 'Should return 400 because data is not correct'],
         '/api/ip/subnets',
-        ipsToGetSubnetsResponse
+        ipsToGetSubnetsResponse,
+        subnetsUrlBilder
     );
-    EndpointPostTest.codeTest('/api/ip/subnets', { ip: '255.255.0.0', type: 'default' }, 400);
-    EndpointPostTest.codeTest('/api/ip/subnets', {}, 400);
+    EndpointGetTest.resultCodeTest('/api/ip/subnets?type=default&ip=255.255.0.0', 400);
+    EndpointGetTest.resultCodeTest('/api/ip/subnets', 400);
 });
 
 describe('POST /api/ip/subnetsVLSM', () => {

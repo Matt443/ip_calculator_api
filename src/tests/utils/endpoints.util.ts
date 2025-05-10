@@ -40,6 +40,7 @@ export class EndpointGetTest extends StandardTest {
             await Promise.all(
                 testData.map(async (ipToTest: TestDataSetFieldType) => {
                     const response = await request(app).get(urlBilder(url, ipToTest));
+                    if (response.status === 400) console.log(ipToTest);
                     expect(JSON.parse(response.text)).toEqual(ipToTest.result);
                 })
             );
@@ -172,4 +173,16 @@ export function onlyMaskUrlBilder(url: string, mask: MaskParamType): string {
  */
 export function onlyIpUrlBilder(url: string, ip: IpParamType): string {
     return `${url}?ip=${ip.ip}&type=${ip.type || 'default'}`;
+}
+
+export function subnetsUrlBilder(
+    url: string,
+    ipToTest: MaskParamType & IpParamType & { subnetsQuantity: number; subnetsHostQuantity: number }
+) {
+    let queryParams: string = calculatingUrlBilder(url, ipToTest);
+    if (typeof ipToTest.subnetsHostQuantity !== 'undefined')
+        queryParams += `&subnetsHostQuantity=${ipToTest.subnetsHostQuantity}`;
+    if (typeof ipToTest.subnetsQuantity !== 'undefined')
+        queryParams += `&subnetsQuantity=${ipToTest.subnetsQuantity}`;
+    return queryParams;
 }
