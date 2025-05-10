@@ -2,13 +2,12 @@ import {
     IpAddresBinaryType,
     IpAddressInfoType,
     IpAddressType,
-    IpFormatType,
     NetworkInfoType
 } from './ip.types.js';
 
 export interface ApiResponse {
     given: string;
-    result: Object;
+    result: object;
 }
 
 export type IpConversionResultType =
@@ -76,3 +75,10 @@ export interface AllParamsType {
     subnetsHostQuantity: number;
     hostQuantities: number[];
 }
+
+export type ipAndMaskConvertedType = {
+    ip: IpAddressInfoType;
+    mask: IpAddressInfoType;
+    maskType: string;
+    type: string;
+};

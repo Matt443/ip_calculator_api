@@ -4,7 +4,8 @@ import {
     IpParamType,
     ResponseIpConversion,
     SubnetParamType,
-    SubnetVLSMParamType
+    SubnetVLSMParamType,
+    ipAndMaskConvertedType
 } from './api.types.js';
 import { IpAddressInfoType, IpAddressType, IpClassType, NetworkInfoType } from './ip.types.js';
 
@@ -51,7 +52,7 @@ export type IpToConvertType = {
 
 export type CalculationTestsFieldType =
     | (IpAndMaskParamType & {
-          result: { given: IpAndMaskParamType } & { result: IpAddressInfoType };
+          result: { given: ipAndMaskConvertedType } & { result: IpAddressInfoType };
       })
     | (IpAndMaskParamType & {
           result: number;

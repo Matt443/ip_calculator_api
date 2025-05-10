@@ -23,7 +23,12 @@ export default {
         const convertedIp = anyIp[type].toDefault(ip);
         const networkAddress = getNetworkAddress(convertedIp, convertedMask);
         const response = {
-            given: { ip, mask: mask },
+            given: {
+                ip: createAddressConversions(convertedIp),
+                mask: createAddressConversions(convertedMask),
+                type,
+                maskType
+            },
             result: createAddressConversions(networkAddress)
         };
 
@@ -36,7 +41,12 @@ export default {
         const convertedIp = anyIp[type].toDefault(ip);
         const broadcastAddress = getBroadcastAddress(convertedIp, convertedMask);
         const response = {
-            given: { ip, mask: mask },
+            given: {
+                ip: createAddressConversions(convertedIp),
+                mask: createAddressConversions(convertedMask),
+                type,
+                maskType
+            },
             result: createAddressConversions(broadcastAddress)
         };
 
