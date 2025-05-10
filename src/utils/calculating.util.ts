@@ -589,7 +589,6 @@ export function calculateProperHostQuantity(
 /**
  *
  * @param {IpAddressType} ipAddress
- * @param {IpAddressType} ipMask
  * @param {IpAddressType} rangeMin
  * @param {IpAddressType} rangeMax
  * @returns {boolean} true if is in range

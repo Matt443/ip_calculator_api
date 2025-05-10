@@ -175,10 +175,16 @@ export function onlyIpUrlBilder(url: string, ip: IpParamType): string {
     return `${url}?ip=${ip.ip}&type=${ip.type || 'default'}`;
 }
 
+/**
+ *
+ * @param {string} url
+ * @param {MaskParamType & IpParamType & { subnetsQuantity: number; subnetsHostQuantity: number}} ipToTest
+ * @returns {string}
+ */
 export function subnetsUrlBilder(
     url: string,
     ipToTest: MaskParamType & IpParamType & { subnetsQuantity: number; subnetsHostQuantity: number }
-) {
+): string {
     let queryParams: string = calculatingUrlBilder(url, ipToTest);
     if (typeof ipToTest.subnetsHostQuantity !== 'undefined')
         queryParams += `&subnetsHostQuantity=${ipToTest.subnetsHostQuantity}`;
