@@ -75,10 +75,3 @@ export interface AllParamsType {
     subnetsHostQuantity: number;
     hostQuantities: number[];
 }
-
-export type ipAndMaskConvertedType = {
-    ip: IpAddressInfoType;
-    mask: IpAddressInfoType;
-    maskType: string;
-    type: string;
-};

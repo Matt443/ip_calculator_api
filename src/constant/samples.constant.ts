@@ -881,21 +881,8 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
             maskType: 'default',
             result: {
                 given: {
-                    ip: {
-                        ip: [192, 168, 0, 1],
-                        decimal: 3232235521,
-                        binary: ['11000000', '10101000', '00000000', '00000001'],
-                        dotted: '192.168.0.1'
-                    },
-                    mask: {
-                        ip: [255, 255, 255, 0],
-                        decimal: 4294967040,
-                        binary: ['11111111', '11111111', '11111111', '00000000'],
-                        dotted: '255.255.255.0',
-                        shorthand: 24
-                    },
-                    maskType: 'default',
-                    type: 'default'
+                    ip: '192.168.0.1',
+                    mask: '255.255.255.0'
                 },
                 result: {
                     ip: [192, 168, 0, 0],
@@ -910,22 +897,8 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
             mask: '32',
             result: {
                 given: {
-                    ip: {
-                        ip: [255, 255, 255, 255],
-                        decimal: 4294967295,
-                        binary: ['11111111', '11111111', '11111111', '11111111'],
-                        dotted: '255.255.255.255',
-                        shorthand: 32
-                    },
-                    mask: {
-                        ip: [255, 255, 255, 255],
-                        decimal: 4294967295,
-                        binary: ['11111111', '11111111', '11111111', '11111111'],
-                        dotted: '255.255.255.255',
-                        shorthand: 32
-                    },
-                    maskType: 'shorthand',
-                    type: 'default'
+                    ip: '255.255.255.255',
+                    mask: '32'
                 },
                 result: {
                     ip: [255, 255, 255, 255],
@@ -941,22 +914,8 @@ export const ipsToGetNetworkAddress: CalculationTestsDataType = {
             mask: '0',
             result: {
                 given: {
-                    ip: {
-                        ip: [0, 0, 0, 0],
-                        decimal: 0,
-                        binary: ['00000000', '00000000', '00000000', '00000000'],
-                        dotted: '0.0.0.0',
-                        shorthand: 0
-                    },
-                    mask: {
-                        ip: [0, 0, 0, 0],
-                        decimal: 0,
-                        binary: ['00000000', '00000000', '00000000', '00000000'],
-                        dotted: '0.0.0.0',
-                        shorthand: 0
-                    },
-                    maskType: 'shorthand',
-                    type: 'default'
+                    ip: '0.0.0.0',
+                    mask: '0'
                 },
                 result: {
                     ip: [0, 0, 0, 0],
@@ -995,21 +954,8 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
             maskType: 'default',
             result: {
                 given: {
-                    ip: {
-                        ip: [192, 168, 0, 1],
-                        decimal: 3232235521,
-                        binary: ['11000000', '10101000', '00000000', '00000001'],
-                        dotted: '192.168.0.1'
-                    },
-                    mask: {
-                        ip: [255, 255, 255, 0],
-                        decimal: 4294967040,
-                        binary: ['11111111', '11111111', '11111111', '00000000'],
-                        dotted: '255.255.255.0',
-                        shorthand: 24
-                    },
-                    maskType: 'default',
-                    type: 'default'
+                    ip: '192.168.0.1',
+                    mask: '255.255.255.0'
                 },
                 result: {
                     ip: [192, 168, 0, 255],
@@ -1024,22 +970,8 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
             mask: '32',
             result: {
                 given: {
-                    ip: {
-                        ip: [255, 255, 255, 255],
-                        decimal: 4294967295,
-                        binary: ['11111111', '11111111', '11111111', '11111111'],
-                        dotted: '255.255.255.255',
-                        shorthand: 32
-                    },
-                    mask: {
-                        ip: [255, 255, 255, 255],
-                        decimal: 4294967295,
-                        binary: ['11111111', '11111111', '11111111', '11111111'],
-                        dotted: '255.255.255.255',
-                        shorthand: 32
-                    },
-                    maskType: 'shorthand',
-                    type: 'default'
+                    ip: '255.255.255.255',
+                    mask: '32'
                 },
                 result: {
                     ip: [255, 255, 255, 255],
@@ -1055,22 +987,8 @@ export const ipsToGetBroadcastAddress: CalculationTestsDataType = {
             mask: '0',
             result: {
                 given: {
-                    ip: {
-                        ip: [0, 0, 0, 0],
-                        decimal: 0,
-                        binary: ['00000000', '00000000', '00000000', '00000000'],
-                        dotted: '0.0.0.0',
-                        shorthand: 0
-                    },
-                    mask: {
-                        ip: [0, 0, 0, 0],
-                        decimal: 0,
-                        binary: ['00000000', '00000000', '00000000', '00000000'],
-                        dotted: '0.0.0.0',
-                        shorthand: 0
-                    },
-                    maskType: 'shorthand',
-                    type: 'default'
+                    ip: '0.0.0.0',
+                    mask: '0'
                 },
                 result: {
                     ip: [255, 255, 255, 255],
