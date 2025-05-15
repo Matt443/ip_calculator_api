@@ -7,8 +7,10 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import helmet from 'helmet';
 import RateLimit from 'express-rate-limit';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 app.use(compression());
 const limiter = RateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
