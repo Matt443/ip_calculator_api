@@ -6,16 +6,16 @@ import networkAddress from '@/routes/ipCalculations.routes.js';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import helmet from 'helmet';
-// import RateLimit from 'express-rate-limit';
+import RateLimit from 'express-rate-limit';
 import cors from 'cors';
 
 const app = express();
 app.use(cors());
 app.use(compression());
-// const limiter = RateLimit({
-//     windowMs: 1 * 60 * 1000, // 1 minute
-//     max: 20
-// });
+const limiter = RateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 20
+});
 
 app.use(
     helmet.contentSecurityPolicy({
@@ -25,7 +25,7 @@ app.use(
     })
 );
 
-// app.use(limiter);
+app.use(limiter);
 
 app.use(bodyParser.json());
 
