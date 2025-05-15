@@ -1189,6 +1189,45 @@ export const ipsToGetNetworkInfo: NetworkInfoTestsDataType = {
                     }
                 }
             }
+        },
+        {
+            ip: '32',
+            mask: '32',
+            type: 'shorthand',
+            result: {
+                given: {
+                    type: 'shorthand',
+                    ip: '32',
+                    mask: '32',
+                    maskType: 'shorthand'
+                },
+                result: {
+                    networkAddress: {
+                        ip: [255, 255, 255, 255],
+                        decimal: 4294967295,
+                        binary: ['11111111', '11111111', '11111111', '11111111'],
+                        dotted: '255.255.255.255',
+                        shorthand: 32
+                    },
+                    broadcastAddress: {
+                        ip: [255, 255, 255, 255],
+                        decimal: 4294967295,
+                        binary: ['11111111', '11111111', '11111111', '11111111'],
+                        dotted: '255.255.255.255',
+                        shorthand: 32
+                    },
+                    ipMask: {
+                        ip: [255, 255, 255, 255],
+                        decimal: 4294967295,
+                        binary: ['11111111', '11111111', '11111111', '11111111'],
+                        dotted: '255.255.255.255',
+                        shorthand: 32
+                    },
+                    hosts: {
+                        quantity: 0
+                    }
+                }
+            }
         }
     ],
     fail: [

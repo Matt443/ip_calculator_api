@@ -36,6 +36,7 @@ export async function ipAndMaskValidation(req: Request, res: Response, next: Nex
 
     if (!type || !ip || !mask || !maskType) return sendError(res, 400, 'Bad Request');
     // Checking if given type and ip is correct
+
     if (
         !ipAddressTypeValidation(maskType) ||
         !ipAddressTypeValidation(type) ||

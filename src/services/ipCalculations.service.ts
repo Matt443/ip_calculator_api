@@ -136,22 +136,20 @@ export function getSingleNetwork(ipAddress: IpAddressType, ipMask: IpAddressType
         first: moveInAddress(true, networkAddress),
         last: moveInAddress(false, broadcastAddress)
     };
-
     const networkInfo: NetworkInfoType = {
         networkAddress: createAddressConversions(networkAddress),
         broadcastAddress: createAddressConversions(broadcastAddress),
         ipMask: createAddressConversions(ipMask),
         hosts: {
-            first: createAddressConversions(hosts.first),
-            last: createAddressConversions(hosts.last),
             quantity: hostQuantity
         }
     };
 
-    if (hostQuantity < 2) {
-        delete networkInfo.hosts.first;
-        delete networkInfo.hosts.last;
+    if (hostQuantity > 0) {
+        networkInfo.hosts.first = createAddressConversions(hosts.first);
+        networkInfo.hosts.last = createAddressConversions(hosts.last);
     }
+
     return networkInfo;
 }
 
