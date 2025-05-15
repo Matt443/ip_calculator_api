@@ -258,11 +258,16 @@ describe('Testing newMaskForSubnet function', () => {
             '11111111',
             '10000000'
         ]); // 255.255.255.128
+        expect(newMaskForSubnet([255, 255, 255, 0], 33, 24)).toEqual([
+            '11111111',
+            '11111111',
+            '11111111',
+            '11111100'
+        ]); // 255.255.255.252
     });
     it('Should return empty array because with this mask new mask cannot be calculated', () => {
         expect(newMaskForSubnet([300, 300, 300, 0], 64, 30)).toEqual([]); //Bad ip
         expect(newMaskForSubnet([-1, -300, -30, 0], 64, 30)).toEqual([]); //Bad ip
-        expect(newMaskForSubnet([255, 255, 255, 0], 62, 30)).toEqual([]); //Number of hosts must be power of 2
         expect(newMaskForSubnet([255, 255, 255, 0], 64, 34)).toEqual([]); //Bad shorthand number
         expect(newMaskForSubnet([255, 255, 255, 0], 128, 32)).toEqual([]); //Too many subnets for ths mask
     });

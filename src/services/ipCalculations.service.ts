@@ -84,12 +84,12 @@ export function getSubnets(
     subnetsQuantity = getSubnetsQuantity({ subnetsHostQuantity, subnetsQuantity }, ipMask);
 
     if (subnetsQuantity === -1 || !subnetsPossibleValidation(ipMask, subnetsQuantity)) return [];
+
     const newMaskBinary = newMaskForSubnet(ipMask, subnetsQuantity, maskShorthand);
 
     const newMask: IpAddressType = ipBinaryToDefault(newMaskBinary);
 
     ipAddress = getNetworkAddress(ipAddress, ipMask);
-
     return getAllSubnets(ipAddress, newMask, subnetsQuantity);
 }
 

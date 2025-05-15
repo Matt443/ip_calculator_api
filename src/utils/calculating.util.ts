@@ -149,9 +149,8 @@ export function whereZerosStart(ipaddress: IpAddressType): number {
 
 export function calculateSubnetsQuantity(numberOfHosts: number, ipMask: IpAddressType): number {
     let hostWith = numberOfHosts + 2;
-
     if (powerOf(hostWith, 2) === -1) {
-        hostWith = findNextHostQuantity(2, numberOfHosts + 2).hostQuantity + 2;
+        hostWith = findNextHostQuantity(2, numberOfHosts + 2).hostQuantity;
     }
     if (!isInRange(numberOfHosts, 0, 4294967296) || !ipAddressValidation(ipMask))
         throw Error(ERROR_MESSAGES.validation.ipAddrress);
@@ -277,14 +276,12 @@ export function newMaskForSubnet(
     maskShorthand: number
 ): IpAddresBinaryType {
     if (subnetsQuantity < 0 || !ipAddressValidation(ipMask) || maskShorthand > 32) return [];
-
-    const bitsToTake: number = powerOf(subnetsQuantity, 2);
+    const bitsToTake: number = findNextHostQuantity(2, subnetsQuantity).power;
     const maxSubnets = getMaxSubnets(ipMask);
 
     if (bitsToTake === -1 || maxSubnets < subnetsQuantity) return [];
 
     const ipMaskBinary: string[] = ipToBinary(ipMask);
-
     const newMaskBinary = replaceInString(
         ipMaskBinary.join(''),
         maskShorthand,
