@@ -1,0 +1,905 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Sample API",
+        "version": "1.0.0",
+        "description": "This is a simple API example"
+    },
+    "servers": [{ "url": "http://localhost:3002" }],
+    "paths": {
+        "/api/ip/conversions/binary": {
+            "get": {
+                "summary": "Get IP address in binary form",
+                "tags": ["Conversions"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "192.168.0.1"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Converted address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "string",
+                                            "example": "192.168.0.1"
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "joined": {
+                                                    "type": "string",
+                                                    "example": "11000000.10101000.00000000.00000001"
+                                                },
+                                                "separated": {
+                                                    "type": "array",
+                                                    "example": [
+                                                        "11000000",
+                                                        "10101000",
+                                                        "00000000",
+                                                        "00000001"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/conversions/decimal": {
+            "get": {
+                "summary": "Get IP address in decimal form",
+                "tags": ["Conversions"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "11000000101010000000000000000001"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Converted address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "string",
+                                            "example": "11000000101010000000000000000001"
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "decimal": {
+                                                    "type": "number",
+                                                    "example": "3232235521"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/conversions/default": {
+            "get": {
+                "summary": "Get IP address in default form",
+                "tags": ["Conversions"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "24"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Converted address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "string",
+                                            "example": "24"
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "dotted": {
+                                                    "type": "number",
+                                                    "example": "255.255.255.0"
+                                                },
+                                                "separated": {
+                                                    "type": "array",
+                                                    "example": [255, 255, 255, 0]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/conversions/shorthand": {
+            "get": {
+                "summary": "Get IP address in shorthand form",
+                "tags": ["Conversions"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "4294967040"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Converted address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "string",
+                                            "example": "4294967040"
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "shorthand": {
+                                                    "type": "number",
+                                                    "example": "24"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/networkAddress": {
+            "get": {
+                "summary": "Get network address based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "192.168.0.1"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "4294967040"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "mask"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "maskType"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Network address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ip": {
+                                                    "type": "string",
+                                                    "example": "192.168.0.1"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "default"
+                                                },
+                                                "mask": {
+                                                    "type": "string",
+                                                    "example": "4294967040"
+                                                },
+                                                "maskType": {
+                                                    "type": "string",
+                                                    "example": "decimal"
+                                                }
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ip": {
+                                                    "type": "array",
+                                                    "example": [192, 168, 0, 1]
+                                                },
+                                                "decimal": {
+                                                    "type": "number",
+                                                    "example": "3232235520"
+                                                },
+                                                "binary": {
+                                                    "type": "array",
+                                                    "example": [
+                                                        "11000000",
+                                                        "10101000",
+                                                        "00000000",
+                                                        "00000000"
+                                                    ]
+                                                },
+                                                "dotted": {
+                                                    "type": "string",
+                                                    "example": "192.168.0.1"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/broadcastAddress": {
+            "get": {
+                "summary": "Get broadcast address based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "3232235521"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "4294901760"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "mask"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "maskType"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Broadcast address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ip": {
+                                                    "type": "string",
+                                                    "example": "3232235521"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "decimal"
+                                                },
+                                                "mask": {
+                                                    "type": "string",
+                                                    "example": "4294901760"
+                                                },
+                                                "maskType": {
+                                                    "type": "string",
+                                                    "example": "decimal"
+                                                }
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ip": {
+                                                    "type": "array",
+                                                    "example": [192, 168, 255, 255]
+                                                },
+                                                "decimal": {
+                                                    "type": "number",
+                                                    "example": "3232301055"
+                                                },
+                                                "binary": {
+                                                    "type": "array",
+                                                    "example": [
+                                                        "11000000",
+                                                        "10101000",
+                                                        "11111111",
+                                                        "11111111"
+                                                    ]
+                                                },
+                                                "dotted": {
+                                                    "type": "string",
+                                                    "example": "192.168.255.255"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/networkInfo": {
+            "get": {
+                "summary": "Get complete network info based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "11000000101010000000000000000001"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "8"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "mask"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "maskType"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Network info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ip": {
+                                                    "type": "string",
+                                                    "example": "11000000101010000000000000000001"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "binary"
+                                                },
+                                                "mask": {
+                                                    "type": "string",
+                                                    "example": "8"
+                                                },
+                                                "maskType": {
+                                                    "type": "string",
+                                                    "example": "shorthand"
+                                                }
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "networkAddress": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ip": {
+                                                            "type": "array",
+                                                            "example": [192, 0, 0, 0]
+                                                        },
+                                                        "decimal": {
+                                                            "type": "number",
+                                                            "example": 3221225472
+                                                        },
+                                                        "binary": {
+                                                            "type": "array",
+                                                            "example": [
+                                                                "11000000",
+                                                                "00000000",
+                                                                "00000000",
+                                                                "00000000"
+                                                            ]
+                                                        },
+                                                        "dotted": {
+                                                            "type": "string",
+                                                            "example": "192.0.0.0"
+                                                        },
+                                                        "shorthand": {
+                                                            "type": "number",
+                                                            "example": "2"
+                                                        }
+                                                    }
+                                                },
+                                                "broadcastAddress": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ip": {
+                                                            "type": "array",
+                                                            "example": [192, 255, 255, 255]
+                                                        },
+                                                        "decimal": {
+                                                            "type": "number",
+                                                            "example": "3232301055"
+                                                        },
+                                                        "binary": {
+                                                            "type": "array",
+                                                            "example": [
+                                                                "11000000",
+                                                                "10101000",
+                                                                "11111111",
+                                                                "11111111"
+                                                            ]
+                                                        },
+                                                        "dotted": {
+                                                            "type": "string",
+                                                            "example": "192.168.255.255"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/hostQuantity": {
+            "get": {
+                "summary": "Get subnets number of hosts based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "11111111111111110000000000000000"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "mask"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subnets data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "object",
+                                            "example": {
+                                                "maskType": "binary",
+                                                "mask": "11111111111111110000000000000000"
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "example": { "hostQuantity": 65534 }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/class": {
+            "get": {
+                "summary": "Get subnets number of hosts based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "192.168.0.1"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subnets data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "given": {
+                                            "type": "object",
+                                            "example": {
+                                                "maskType": "default",
+                                                "mask": "192.168.0.1"
+                                            }
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "recognisedClass": {
+                                                    "type": "object",
+                                                    "example": {
+                                                        "name": "C",
+                                                        "min": [192, 0, 0, 0],
+                                                        "max": [223, 255, 255, 255],
+                                                        "defaultMask": [255, 255, 255, 0],
+                                                        "hostQuantity": 254
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/subnets": {
+            "get": {
+                "summary": "Get subnets info based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "11000000101010000000000000000001"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "ip"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "type"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "255.255.255.0"
+                        },
+                        "description": "Ip address in any format",
+                        "required": true,
+                        "name": "mask"
+                    },
+                    {
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["default", "binary", "decimal", "shorthand"]
+                        },
+                        "description": "Required for every type except of type: default",
+                        "name": "maskType"
+                    },
+                    {
+                        "in": "query",
+                        "name": "subnetsQuantity",
+                        "schema": {
+                            "type": "number",
+                            "example": 2
+                        },
+                        "description": "Number of subnets. One from parameters: subnetsQuantity and subnetsHostQuantity is required."
+                    },
+                    {
+                        "in": "query",
+                        "name": "subnetsHostQuantity",
+                        "schema": {
+                            "type": "number",
+                            "example": 126
+                        },
+                        "description": "Number of hosts in every subnets"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subnets data"
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        },
+        "/api/ip/subnetsVLSM": {
+            "post": {
+                "summary": "Get subnets info based on given ip address and mask ",
+                "tags": ["Calculations"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "ip": {
+                                        "type": "string",
+                                        "example": "192.168.0.1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": ["default", "binary", "decimal", "shorthand"]
+                                    },
+                                    "mask": {
+                                        "type": "string",
+                                        "example": "255.255.255.0"
+                                    },
+                                    "maskType": {
+                                        "type": "string",
+                                        "enum": ["default", "binary", "decimal", "shorthand"]
+                                    },
+                                    "hostQuantities": {
+                                        "type": "array",
+                                        "example": [30, 32]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subnets data"
+                    },
+                    "400": {
+                        "description": "Data incorrect"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "NetworkInfo": {
+                "type": "object",
+                "properties": {
+                    "networkAddress": {
+                        "$ref": "#/components/schemas/IpAllFormats"
+                    },
+                    "broadcastAddress": {
+                        "$ref": "#/components/schemas/IpAllFormats"
+                    },
+                    "ipMask": {
+                        "$ref": "#/components/schemas/IpAllFormats"
+                    },
+                    "hosts": {
+                        "type": "object",
+                        "properties": {
+                            "first": {
+                                "$ref": "#/components/schemas/IpAllFormats"
+                            },
+                            "last": {
+                                "$ref": "#/components/schemas/IpAllFormats"
+                            },
+                            "quantity": { "type": "integer", "example": 126 }
+                        }
+                    }
+                }
+            },
+            "IpAllFormats": {
+                "type": "object",
+                "properties": {
+                    "binary": {
+                        "type": "array",
+                        "example": ["11111111", "11111111", "11111111", "00000000"]
+                    },
+                    "default": { "type": "array", "example": [255, 255, 255, 0] },
+                    "decimal": { "type": "integer", "example": 4294967040 },
+                    "shorthand": {
+                        "type": "integer",
+                        "maximum": 32,
+                        "minimum": 0,
+                        "example": 24
+                    },
+                    "dotted": { "type": "string", "example": "255.255.255.0" }
+                },
+                "required": ["binary", "default", "decimal", "dotted"]
+            }
+        }
+    }
+}

@@ -8,7 +8,8 @@ import compression from 'compression';
 import helmet from 'helmet';
 import RateLimit from 'express-rate-limit';
 import cors from 'cors';
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 const app = express();
 app.use(cors());
 app.use(compression());
@@ -28,9 +29,9 @@ app.use(
 app.use(limiter);
 
 app.use(bodyParser.json());
-
 app.use('/api', ipConversions());
 app.use('/api', networkAddress());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 let port = process.env.PORT;
 if (process.env.NODE_ENV === 'test') {

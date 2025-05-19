@@ -8,7 +8,6 @@ import {
     subnetParamsValidation
 } from '@/middlewares/validation.middlewares.js';
 import ipCalculationsController from '@/controllers/ipCalculations.controller.js';
-
 export default () => {
     const api = Router();
     api.get('/ip/networkAddress', ipAndMaskValidation, ipCalculationsController.getNetworkAddress);
