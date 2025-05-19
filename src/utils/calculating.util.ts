@@ -5,7 +5,7 @@ import {
     NetworkInfoType,
     subnetSettingType,
     subnetSettingVLSM_Type
-} from '@/types/ip.types';
+} from '@/types/ip.types.js';
 import { type IpAddresBinaryType } from '@/types/ip.types.js';
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import { getNumberOfHosts, getSingleNetwork } from '@/services/ipCalculations.service.js';
@@ -228,7 +228,7 @@ export function ipBalancer(ipAddress: IpAddressType): IpAddressType {
  * @returns {boolean} checks if one address if the same like another
  */
 export function isIpEqual(firstIpAddress: IpAddressType, secondIpAddress: IpAddressType): boolean {
-    return firstIpAddress.every((octet: number, index) => {
+    return firstIpAddress.every((octet: number, index: number) => {
         if (octet === secondIpAddress[index]) return true;
         return false;
     });

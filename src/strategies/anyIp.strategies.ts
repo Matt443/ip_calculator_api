@@ -1,4 +1,4 @@
-import { ResponseIpConversion } from '@/types/api.types';
+import { ResponseIpConversion } from '@/types/api.types.js';
 import { IpAddresBinaryType, IpAddressType, IpFormatType } from '@/types/ip.types.js';
 import { anyIpAddressStrategy } from '@/types/strategy.types.js';
 import {

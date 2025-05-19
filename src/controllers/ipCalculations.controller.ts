@@ -8,7 +8,7 @@ import {
     recogniseClass
 } from '@/services/ipCalculations.service.js';
 import { anyIp } from '@/strategies/anyIp.strategies.js';
-import { AllParamsType } from '@/types/api.types';
+import { AllParamsType } from '@/types/api.types.js';
 import { IpAddressType, IpFormatType, NetworkInfoType } from '@/types/ip.types.js';
 import { getIpAndMask, getQueryParam, getSubnetSetup } from '@/utils/api.util.js';
 import { createAddressConversions } from '@/utils/calculating.util.js';

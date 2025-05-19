@@ -1,4 +1,4 @@
-import { type IpAddressType } from '@/types/ip.types.js';
+import { type IpAddressType } from '@/types/ip.types';
 import { ERROR_MESSAGES } from './errors.constants';
 import {
     CalculationTestsDataType,

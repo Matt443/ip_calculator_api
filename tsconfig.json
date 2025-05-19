@@ -16,7 +16,7 @@
         },
         "types": ["node", "jest", "express"]
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "src/swagger.json"],
     "exclude": ["node_modules"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]

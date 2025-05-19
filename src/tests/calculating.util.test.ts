@@ -49,7 +49,7 @@ import {
     sampleIpRange,
     sampleIpRange_complicated
 } from '@/constant/samples.constant.js';
-import { IpAddressType } from '@/types/ip.types';
+import { IpAddressType } from '@/types/ip.types.js';
 import { getSingleNetwork } from '@/services/ipCalculations.service.js';
 import {
     IpToFixType,

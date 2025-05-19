@@ -1,4 +1,4 @@
-import { AllParamsType } from '@/types/api.types';
+import { AllParamsType } from '@/types/api.types.js';
 import { IpFormatType, subnetSettingType } from '@/types/ip.types.js';
 /**
  * Checks if certain param was given

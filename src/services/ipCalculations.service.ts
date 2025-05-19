@@ -1,6 +1,6 @@
 import { ERROR_MESSAGES } from '@/constant/errors.constants.js';
 import { ipClasses } from '@/constant/supported.constants.js';
-import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types';
+import { IpAddressType, NetworkInfoType, subnetSettingType } from '@/types/ip.types.js';
 import { IpClassType } from '@/types/ip.types.js';
 import {
     calculateAddress,
