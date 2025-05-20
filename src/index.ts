@@ -30,6 +30,9 @@ app.use(
 app.use(limiter);
 
 app.use(bodyParser.json());
+app.get('/', (req, res) => {
+    res.redirect('https://ip-calculator-api.onrender.com/api-docs/');
+});
 app.use('/api', ipConversions());
 app.use('/api', networkAddress());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
