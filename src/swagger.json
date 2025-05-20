@@ -1,11 +1,11 @@
 {
     "openapi": "3.0.1",
     "info": {
-        "title": "Sample API",
-        "version": "1.0.0",
-        "description": "This is a simple API example"
+        "title": "Ip API",
+        "version": "0.7",
+        "description": "An API for calculating IP addresses"
     },
-    "servers": [{ "url": "http://localhost:3002" }],
+    "servers": [{ "url": "https://ip-calculator-api.onrender.com" }],
     "paths": {
         "/api/ip/conversions/binary": {
             "get": {

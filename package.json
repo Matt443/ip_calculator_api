@@ -45,7 +45,7 @@
         "webpack": "^5.99.5"
     },
     "scripts": {
-        "test": "jest --watchAll --coverage  --detectOpenHandles",
+        "test": "jest --watchAll --coverage  --detectOpenHandles src/*",
         "start": "node dist/index.js",
         "dev": "nodemon",
         "build": "tsc && tsc-alias",
