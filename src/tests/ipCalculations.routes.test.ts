@@ -103,7 +103,7 @@ describe('POST /api/ip/class', () => {
         server.close();
     });
     EndpointGetTest.successFailTests(
-        ['Should get subnets with VLSM method', 'Should return 400 because data is not correct'],
+        ['Should get class of an ip address', 'Should return 400 because data is not correct'],
         '/api/ip/class',
         ipsToRecognizeClass,
         onlyIpUrlBilder

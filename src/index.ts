@@ -31,11 +31,11 @@ app.use(limiter);
 
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
-    res.redirect('https://ip-calculator-api.onrender.com/api-docs/');
+    res.redirect('https://api.ip-calculator.marcinregula.de/api/docs');
 });
 app.use('/api', ipConversions());
 app.use('/api', networkAddress());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 let port = process.env.PORT;
 if (process.env.NODE_ENV === 'test') {

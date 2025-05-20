@@ -5,7 +5,7 @@
         "version": "0.7",
         "description": "An API for calculating IP addresses"
     },
-    "servers": [{ "url": "https://ip-calculator-api.onrender.com" }],
+    "servers": [{ "url": "https://api.ip-calculator.marcinregula.de" }],
     "paths": {
         "/api/ip/conversions/binary": {
             "get": {
