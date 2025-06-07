@@ -124,7 +124,7 @@ export type SubnetVLSMTestsDataType = {
 
 export type RecogniseClassTestsFieldType =
     | (IpParamType & {
-          result: { given: IpParamType } & { recognisedClass: IpClassType | false };
+          result: { given: IpParamType } & { result: IpClassType | false };
       })
     | (any & { result: number });
 

@@ -2050,50 +2050,50 @@ export const ipsToRecognizeClass: RecogniseClassTestsDataType = {
         {
             ip: '10.0.0.1',
             type: 'default',
-            result: { given: { ip: '10.0.0.1', type: 'default' }, recognisedClass: ipClasses[0] }
+            result: { given: { ip: '10.0.0.1', type: 'default' }, result: ipClasses[0] }
         },
         {
             ip: '128.1.3.1',
             type: 'default',
-            result: { given: { ip: '128.1.3.1', type: 'default' }, recognisedClass: ipClasses[1] }
+            result: { given: { ip: '128.1.3.1', type: 'default' }, result: ipClasses[1] }
         },
         {
             ip: '192.168.0.1',
             type: 'default',
-            result: { given: { ip: '192.168.0.1', type: 'default' }, recognisedClass: ipClasses[2] }
+            result: { given: { ip: '192.168.0.1', type: 'default' }, result: ipClasses[2] }
         },
         {
             ip: '224.1.1.1',
             type: 'default',
-            result: { given: { ip: '224.1.1.1', type: 'default' }, recognisedClass: ipClasses[3] }
+            result: { given: { ip: '224.1.1.1', type: 'default' }, result: ipClasses[3] }
         },
         {
             ip: '254.0.0.1',
             type: 'default',
-            result: { given: { ip: '254.0.0.1', type: 'default' }, recognisedClass: ipClasses[4] }
+            result: { given: { ip: '254.0.0.1', type: 'default' }, result: ipClasses[4] }
         },
         {
             ip: '255.0.0.0',
             type: 'default',
-            result: { given: { ip: '255.0.0.0', type: 'default' }, recognisedClass: false }
+            result: { given: { ip: '255.0.0.0', type: 'default' }, result: false }
         },
         {
             ip: '127.0.0.1',
             type: 'default',
-            result: { given: { ip: '127.0.0.1', type: 'default' }, recognisedClass: false }
+            result: { given: { ip: '127.0.0.1', type: 'default' }, result: false }
         },
 
         {
             ip: '24',
             type: 'shorthand',
-            result: { given: { ip: '24', type: 'shorthand' }, recognisedClass: false }
+            result: { given: { ip: '24', type: 'shorthand' }, result: false }
         },
         {
             ip: '167772161',
             type: 'decimal',
             result: {
                 given: { ip: '167772161', type: 'decimal' },
-                recognisedClass: ipClasses[0]
+                result: ipClasses[0]
             }
         },
         {
@@ -2101,7 +2101,7 @@ export const ipsToRecognizeClass: RecogniseClassTestsDataType = {
             type: 'binary',
             result: {
                 given: { ip: '00001010000000000000000000000001', type: 'binary' },
-                recognisedClass: ipClasses[0]
+                result: ipClasses[0]
             }
         }
     ],

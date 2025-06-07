@@ -100,8 +100,8 @@ export default {
 
         const recognisedClass = recogniseClass(ipConverted);
 
-        const response = { recognisedClass, given: { ip, type } };
-        if (!recognisedClass) response.recognisedClass = false;
+        const response = { result: recognisedClass, given: { ip, type } };
+        if (!recognisedClass) response.result = false;
 
         res.send(response);
     }
