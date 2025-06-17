@@ -132,5 +132,4 @@ dist
 dist
 ignore
 tmp
-**/docs/
 sample
