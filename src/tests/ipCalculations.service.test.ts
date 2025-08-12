@@ -106,7 +106,7 @@ describe('Testing getSubnets function', () => {
 });
 
 describe('Testing getSubnetsVLSM function', () => {
-    it('Should return a complete information about subnets for given ip, mask, and host quantitities using VLSM', () => {
+    (it('Should return a complete information about subnets for given ip, mask, and host quantitities using VLSM', () => {
         expect(getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 50])).toEqual(
             ipsToGetSubnetsVLSM.success[0].results
         );
@@ -133,7 +133,7 @@ describe('Testing getSubnetsVLSM function', () => {
             expect(() => {
                 getSubnetsVLSM([192, 168, 0, 1], [255, 255, 255, 0], [100, 50, 0]);
             }).toThrow(); //Bad Host quantity
-        });
+        }));
 });
 
 describe('Testing recogniseClass function', () => {
